@@ -2,6 +2,7 @@
 import "./App.css";
 import React from "react";
 import { useEffect, useState } from "react";
+import { ContenedorOpcionesLogin } from "./components/ContenedorOpcionesLogin/ContenedorOpcionesLogin";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -14,12 +15,9 @@ function App() {
 
   return (
     <>
-      {todos.map((todo) => (
-        <div key={todo.id}>
-          <h1>{todo.title}</h1>
-          <p>{todo.completed}</p>
-        </div>
-      ))}
+    <div>
+    <ContenedorOpcionesLogin />
+    </div>
     </>
   );
 }
