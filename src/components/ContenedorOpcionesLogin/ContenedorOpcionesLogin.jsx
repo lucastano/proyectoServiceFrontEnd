@@ -34,15 +34,19 @@ export const ContenedorOpcionesLogin = () => {
     }
 
     return (
-        <div>
-            <h1>Login</h1>
-            <h2>Seleccione una opción de acceso</h2>
-            <Button onClick={manejarClickLoginCliente}>Como cliente</Button>
-            <Button onClick={manejarClickLoginAdmin}>Como admin</Button>
-            <Button onClick={manejarClickLoginTecnico}>Como tecnico</Button>
-            {mostrarLoginCliente && <ModalLoginCliente onClose={manejarCierreModal}/>}
-            {mostrarLoginTecnico && <ModalLoginTecnico onClose={manejarCierreModal}/>}
-            {mostrarLoginAdmin && <ModalLoginAdmin onClose={manejarCierreModal}/>}
+        <div class="flex flex-col space-y-4 border rounded-lg shadow-md p-11">
+            <div>
+                <h1>Login</h1>
+                <h2>Seleccione una opción de acceso</h2>
+            </div>
+            <div class="flex space-x-4">
+                <Button onClick={manejarClickLoginCliente}>Como cliente</Button>
+                <Button onClick={manejarClickLoginAdmin}>Como admin</Button>
+                <Button onClick={manejarClickLoginTecnico}>Como tecnico</Button>
+            </div>
+                {mostrarLoginCliente && <ModalLoginCliente onClose={manejarCierreModal}/>}
+                {mostrarLoginTecnico && <ModalLoginTecnico onClose={manejarCierreModal}/>}
+                {mostrarLoginAdmin && <ModalLoginAdmin onClose={manejarCierreModal}/>}
         </div>
     );
 };

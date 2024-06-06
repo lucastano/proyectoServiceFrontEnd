@@ -4,7 +4,7 @@ import { Modal, Button } from 'keep-react';
 export const ModalConfirmacionAltaServicio = ({ onClose }) => {
     return (
        <div>
-        <Modal onClose={onClose}>
+        <Modal onClose={onClose} isOpen={true}>
             <Modal.Body className="space-y-3">
                 <Modal.Content>
                     <div className="!mb-6">

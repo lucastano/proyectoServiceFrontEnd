@@ -61,51 +61,45 @@ export const FormularioAltaCliente = () => {
   }
 
   return (
-    <div>
-    <form className="mx-auto max-w-md space-y-2 rounded-lg border p-8 shadow-md" onSubmit={enviarFormulario}>
-    <fieldset className="space-y-1">
-      <Label htmlFor="email">Email: </Label>
-      <div className="relative">
+  <>
+    <form className="rounded-lg border p-8 shadow-md text-left w-2/5" onSubmit={enviarFormulario}>
+    <div className="mb-4 space-y-2">
+      <Label htmlFor="email" >Email: </Label>
         <Input
           placeholder="Email"
-          className="ps-11"
+          className="ps-4"
           onChange={(e) => manejarCambioEmail(e)}
         />
       </div>
-    </fieldset>
-    <fieldset className="space-y-1">
+      <div className="mb-4 space-y-2">
       <Label htmlFor="nombre">Nombre:</Label>
-      <div className="relative">
         <Input
           placeholder="Nombre"
-          className="ps-11"
+          className="ps-4"
           onChange={(e) => manejarCambioNombre(e)}
         />
       </div>
+      <div className="mb-4 space-y-2">
       <Label htmlFor="apellido">Apellido: </Label>
-      <div className="relative">
         <Input
           placeholder="Apellido"
-          className="ps-11"
+          className="ps-4"
           onChange={(e) => manejarCambioApellido(e)}
         />
       </div>
-    </fieldset>
-    <fieldset className="space-y-1">
+      <div className="mb-50 space-y-2">
       <Label htmlFor="cedula">Cedula de identidad (sin guión): </Label>
-      <div className="relative">
         <Input
           placeholder="Cedula de identidad"
-          className="ps-11"
+          className="ps-4"
           onChange={(e) => manejarCambioCedula(e)}
         />
       </div>
-    </fieldset>
-    <Button size="sm" color="secondary" type="submit">
+    <Button size="sm" color="secondary" type="submit" className="mt-8">
       Registrar cliente
     </Button>
   </form>
     {confirmacionAbierta && <ModalConfirmacionAltaCliente onClose={manejarCierreModalConfirmacion} />}
-  </div>
+  </>
   );
 };

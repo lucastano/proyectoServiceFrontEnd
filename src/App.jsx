@@ -1,24 +1,15 @@
 // App.jsx
 import "./App.css";
 import React from "react";
-import { useEffect, useState } from "react";
 import { ContenedorOpcionesLogin } from "./components/ContenedorOpcionesLogin/ContenedorOpcionesLogin";
+import { FormularioAltaCliente } from "./components/FormularioAltaCliente/FormularioAltaCliente";
+import { FormularioAltaServicio } from "./components/FormularioAltaServicio/FormularioAltaServicio";
 
 function App() {
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/todos")
-      .then((response) => response.json())
-      .then((json) => setTodos(json));
-  }, []);
-
   return (
-    <>
-    <div>
-    <ContenedorOpcionesLogin />
+    <div className="w-screen flex items-center justify-center">
+    <FormularioAltaServicio />
     </div>
-    </>
   );
 }
 

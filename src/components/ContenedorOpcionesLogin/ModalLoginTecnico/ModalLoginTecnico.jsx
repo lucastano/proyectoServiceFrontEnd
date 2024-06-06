@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button } from 'keep-react';
+import { Modal, Button, Label, Input } from 'keep-react';
 
 
 export const ModalLoginTecnico = ({ onClose }) => {
@@ -21,27 +21,36 @@ export const ModalLoginTecnico = ({ onClose }) => {
 
     return (
         <div>
-            <Modal onClose={onClose} isOpen={true}>
-                <Modal.Body>
-                    <Modal.Content>
-                        <h1>Ingreso de técnico</h1>
-                            <form>
-                                <label>
-                                    Usuario:
-                                    <input type="text" onChange={e => manejarCambioUsuario(e)}/>
-                                </label>
-                                <label>
-                                    Contraseña:
-                                    <input type="password" onChange={e => manejarCambioContrasena(e)}/>
-                                </label>
-                            </form>  
-                    </Modal.Content>
-                        <Modal.Footer>
-                            <Button onClick={onClose}>Cerrar</Button>
-                            <Button onClick={realizarLoginTecnico}>Ingresar</Button>
-                        </Modal.Footer>
-                </Modal.Body>
-            </Modal>
-        </div>
+        <Modal onClose={onClose} isOpen={true}>
+            <Modal.Body className="space-y-3">
+                <Modal.Content>
+                    <div className="!mb-6">
+                    <h3 className="mb-2 text-body-1 font-medium text-metal-900">Ingreso de tecnico</h3>
+                        <form className="mx-auto max-w-md space-y-2 p-4">
+                        <fieldset className="space-y-1">
+                            <Label htmlFor="usuario">Usuario: </Label>
+                            <Input
+                                placeholder="Usuario"
+                                onChange={(e) => manejarCambioUsuario(e)}
+                            />
+                        </fieldset>
+                        <fieldset className="space-y-1">
+                            <Label htmlFor="contrasena">Contraseña: </Label>
+                            <Input
+                                placeholder="Contraseña"
+                                type="password"
+                                onChange={(e) => manejarCambioContrasena(e)}
+                            />
+                        </fieldset>
+                        </form>
+                    </div>
+                </Modal.Content>
+                    <Modal.Footer>
+                        <Button onClick={onClose} variant="outline" color="secondary" size="sm">Cerrar</Button>
+                        <Button onClick={realizarLoginTecnico} size="sm">Ingresar</Button>
+                    </Modal.Footer>
+            </Modal.Body>
+        </Modal>
+    </div>
     )
 }

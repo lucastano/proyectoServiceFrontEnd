@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Input, Label, Button, Textarea } from "keep-react";
+import { ModalConfirmacionAltaServicio } from '../ModalConfirmacionAltaServicio/ModalConfirmacionAltaServicio';
 
 
 export const FormularioAltaServicio = () => {
@@ -57,78 +58,66 @@ export const FormularioAltaServicio = () => {
     };
 
     return (
-        <div>
-    <form className="mx-auto max-w-md space-y-2 rounded-lg border p-8 shadow-md" onSubmit={enviarFormulario}>
-        <fieldset className="space-y-1">
+    <>
+    <form className="rounded-lg border p-8 shadow-md text-left w-2/5" onSubmit={enviarFormulario}>
+        <div className="mb-4 space-y-2">
             <Label htmlFor="numeroSerie">Numero de serie: </Label>
-            <div className="relative">
                 <Input
                     id="numeroSerie"
                     placeholder="Numero de serie"
-                    className="ps-11"
+                    className="ps-4"
                     onChange={(e) => manejarCambioNumeroSerie(e)}
                 />
             </div>
-        </fieldset>
-        <fieldset className="space-y-1">
+        <div className="mb-4 space-y-2">
             <Label htmlFor="name">Nombre: </Label>
-            <div className="relative">
                 <Input
                     id="name"
                     placeholder="Nombre"
-                    className="ps-11"
+                    className="ps-4"
                     onChange={(e) => manejarCambioNombre(e)}
                 />
             </div>
-        </fieldset>
-        <fieldset className="space-y-1">
+        <div className="mb-4 space-y-2">
             <Label htmlFor="marca">Marca: </Label>
-            <div className="relative">
                 <Input
                     id="marca"
                     placeholder="Marca"
-                    className="ps-11"
+                    className="ps-4"
                     onChange={(e) => manejarCambioMarca(e)}
                 />
             </div>
-        </fieldset>
-        <fieldset className="space-y-1">
+        <div className="mb-4 space-y-2">
             <Label htmlFor="modelo">Modelo: </Label>
-            <div className="relative">
                 <Input
                     id="modelo"
                     placeholder="Modelo"
-                    className="ps-11"
+                    className="ps-4"
                     onChange={(e) => manejarCambioModelo(e)}
                 />
             </div>
-        </fieldset>
-        <fieldset className="space-y-1">
+        <div className="mb-4 space-y-2">
             <Label htmlFor="color">Color: </Label>
-            <div className="relative">
                 <Input
                     id="color"
                     placeholder="Color"
-                    className="ps-11"
+                    className="ps-4"
                     onChange={(e) => manejarCambioColor(e)}
                 />
             </div>
-        </fieldset>
-        <fieldset className="space-y-1">
+        <div className="mb-4 space-y-2">
             <Label htmlFor="descripcion">Descripcion: </Label>
-            <div className="relative">
                 <Textarea
                     id="descripcion"
                     placeholder="Escriba una descripcion aqui..."
-                    className="ps-11"
+                    className="ps-4"
                     onChange={(e) => manejarCambioDescripcion(e)}
                 />
             </div>
-        </fieldset>
         <Button size="sm" color="secondary" type="submit">
              Registrar Servicio
         </Button>
     </form>
         {confirmacionAbierta && <ModalConfirmacionAltaServicio onClose={manejarCierreModalConfirmacion} />}
-    </div>);
+    </>);
 }
