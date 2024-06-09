@@ -34,12 +34,12 @@ export const ContenedorOpcionesLogin = () => {
     }
 
     return (
-        <div class="flex flex-col space-y-4 border rounded-lg shadow-md p-11">
+        <div className="flex flex-col space-y-4 border rounded-lg shadow-md p-11">
             <div>
                 <h1>Login</h1>
                 <h2>Seleccione una opción de acceso</h2>
             </div>
-            <div class="flex space-x-4">
+            <div className="flex space-x-4">
                 <Button onClick={manejarClickLoginCliente}>Como cliente</Button>
                 <Button onClick={manejarClickLoginAdmin}>Como admin</Button>
                 <Button onClick={manejarClickLoginTecnico}>Como tecnico</Button>

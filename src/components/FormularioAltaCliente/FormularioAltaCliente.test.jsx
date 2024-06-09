@@ -1,36 +1,77 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { FormularioAltaCliente } from './FormularioAltaCliente';
+
 
 jest.mock('keep-react', () => ({
     Input: jest.fn((props) => <input {...props} />),
     Label: jest.fn((props) => <label {...props} />),
     Button: jest.fn((props) => <button {...props} />),
-    Modal: jest.fn((props) => <dialog{...props} />),
 }));
+
+jest.mock('../ModalConfirmacionAltaCliente/ModalConfirmacionAltaCliente', () => {
+    return {
+        ModalConfirmacionAltaCliente: jest.fn(() => <div>Mocked ModalConfirmacionAltaCliente</div>)
+    };
+});
 
 describe('FormularioAltaCliente', () => {
     test('renders without crashing', () => {
         render(<FormularioAltaCliente />);
     });
+    
+    test('renders form fields correctly', () => {
+        render(<FormularioAltaCliente />);
+        
+        expect(screen.getByLabelText('Nombre:')).toBeInTheDocument();
+        expect(screen.getByLabelText('Apellido:')).toBeInTheDocument();
+        expect(screen.getByLabelText('Email:')).toBeInTheDocument();
+        expect(screen.getByLabelText('Cedula de identidad (sin guión):')).toBeInTheDocument();
+    });
 
-    test('calls the submit function when the button is clicked', () => {
-        // Interceptar console.log
-        console.log = jest.fn();
 
-        const { getByPlaceholderText, getByText } = render(<FormularioAltaCliente />);
+    test('updates state when input values change', () => {
+        render(<FormularioAltaCliente />);
+        
+        const nombreInput = screen.getByLabelText('Nombre:');
+        const apellidoInput = screen.getByLabelText('Apellido:');
+        const emailInput = screen.getByLabelText('Email:');
+        const cedulaInput = screen.getByLabelText('Cedula de identidad (sin guión):');
 
-        // Simular el llenado del formulario
-        fireEvent.change(getByPlaceholderText('Nombre'), { target: { value: 'John' } });
-        fireEvent.change(getByPlaceholderText('Apellido'), { target: { value: 'Doe' } });
-        fireEvent.change(getByPlaceholderText('Email'), { target: { value: 'john.doe@example.com' } });
-        fireEvent.change(getByPlaceholderText('Cedula de identidad'), { target: { value: '12345678' } });
+        fireEvent.change(nombreInput, { target: { value: 'TestName' } });
+        fireEvent.change(apellidoInput, { target: { value: 'TestLastname' } });
+        fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+        fireEvent.change(cedulaInput, { target: { value: '12345678' } });
 
-        // Encontrar el botón y hacer clic en él
-        const submitButton = getByText('Registrar cliente');
-        fireEvent.click(submitButton);
+        expect(nombreInput.value).toBe('TestName');
+        expect(apellidoInput.value).toBe('TestLastname');
+        expect(emailInput.value).toBe('test@example.com');
+        expect(cedulaInput.value).toBe('12345678');
+    });
 
-        // Verificar que console.log fue llamado
-        expect(console.log).toHaveBeenCalledWith('Nombre: John, Apellido: Doe, Email: john.doe@example.com, Cédula: 12345678');
+    test('opens confirmation modal when form is submitted with valid data', () => {
+        render(<FormularioAltaCliente />);
+        
+        const nombreInput = screen.getByLabelText('Nombre:');
+        const apellidoInput = screen.getByLabelText('Apellido:');
+        const emailInput = screen.getByLabelText('Email:');
+        const cedulaInput = screen.getByLabelText('Cedula de identidad (sin guión):');
+
+        fireEvent.change(nombreInput, { target: { value: 'Nombreprueba' } });
+        fireEvent.change(apellidoInput, { target: { value: 'Apellidoprueba' } });
+        fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+        fireEvent.change(cedulaInput, { target: { value: '12345678' } });
+        fireEvent.submit(screen.getByRole('button', { name: 'Registrar cliente' }));
+        
+        
+        expect(screen.getByText('Mocked ModalConfirmacionAltaCliente')).toBeInTheDocument();
+    });
+
+    test('does not open confirmation modal when form is submitted with invalid data', () => {
+        render(<FormularioAltaCliente />);
+        
+        fireEvent.submit(screen.getByRole('button', { name: 'Registrar cliente' }));
+        
+        expect(screen.queryByText('Mocked ModalConfirmacionAltaCliente')).not.toBeInTheDocument();
     });
 });

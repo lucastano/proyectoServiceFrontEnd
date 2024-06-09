@@ -7,8 +7,14 @@ jest.mock('keep-react', () => ({
     Input: jest.fn((props) => <input {...props} />),
     Label: jest.fn((props) => <label {...props} />),
     Button: jest.fn((props) => <button {...props} />),
-    Textarea: jest.fn((props) => <textarea {...props} />)
-  }));
+    Textarea: jest.fn((props) => <textarea {...props} />),
+}));
+
+jest.mock('../ModalConfirmacionAltaServicio/ModalConfirmacionAltaServicio', () => {
+    return {
+        ModalConfirmacionAltaServicio: jest.fn(() => <div>Mocked ModalConfirmacionAltaServicio</div>)
+    };
+});
 
 describe('FormularioAltaServicio', () => {
     test('renders without crashing', () => {
@@ -51,54 +57,25 @@ describe('FormularioAltaServicio', () => {
         expect(descripcionInput.value).toBe('Descripción del servicio 1');
     });
 
-    test('validates name correctly', () => {
-        console.log = jest.fn();
+    test('opens confirmation modal when form is submitted with valid data', () => {
         render(<FormularioAltaServicio />);
         
-        const nombreInput = screen.getByLabelText('Nombre:');
-        const submitButton = screen.getByText('Registrar Servicio');
-
-        fireEvent.change(nombreInput, { target: { value: 'Servicio 1' } });
-        fireEvent.click(submitButton);
-
-        expect(console.log).not.toHaveBeenCalledWith('Error: Datos invalidos');
+        fireEvent.change(screen.getByLabelText('Numero de serie:'), { target: { value: '123456' } });
+        fireEvent.change(screen.getByLabelText('Nombre:'), { target: { value: 'Test Service' } });
+        fireEvent.change(screen.getByLabelText('Marca:'), { target: { value: 'Test Brand' } });
+        fireEvent.change(screen.getByLabelText('Modelo:'), { target: { value: 'Test Model' } });
+        fireEvent.change(screen.getByLabelText('Color:'), { target: { value: 'Test Color' } });
+        fireEvent.change(screen.getByLabelText('Descripcion:'), { target: { value: 'Test Description' } });
+        fireEvent.submit(screen.getByRole('button', { name: 'Registrar Servicio' }));
+        
+        expect(screen.getByText('Mocked ModalConfirmacionAltaServicio')).toBeInTheDocument();
     });
 
-    test('displays error message when name is invalid', () => {
-        console.log = jest.fn();
+    test('does not open confirmation modal when form is submitted with invalid data', () => {
         render(<FormularioAltaServicio />);
         
-        const nombreInput = screen.getByLabelText('Nombre:');
-        const submitButton = screen.getByText('Registrar Servicio');
-
-        fireEvent.change(nombreInput, { target: { value: '1237{-+' } });
-        fireEvent.click(submitButton);
-
-        expect(console.log).toHaveBeenCalledWith('Error: Datos invalidos');
-    });
-
-    test('logs form data when submitted with valid name', () => {
-        console.log = jest.fn();
-
-        render(<FormularioAltaServicio />);
+        fireEvent.submit(screen.getByRole('button', { name: 'Registrar Servicio' }));
         
-        const numeroSerieInput = screen.getByLabelText('Numero de serie:');
-        const nombreInput = screen.getByLabelText('Nombre:');
-        const marcaInput = screen.getByLabelText('Marca:');
-        const modeloInput = screen.getByLabelText('Modelo:');
-        const colorInput = screen.getByLabelText('Color:');
-        const descripcionInput = screen.getByLabelText('Descripcion:');
-        const submitButton = screen.getByText('Registrar Servicio');
-
-        fireEvent.change(numeroSerieInput, { target: { value: '123456' } });
-        fireEvent.change(nombreInput, { target: { value: 'Servicio 1' } });
-        fireEvent.change(marcaInput, { target: { value: 'Marca 1' } });
-        fireEvent.change(modeloInput, { target: { value: 'Modelo 1' } });
-        fireEvent.change(colorInput, { target: { value: 'Rojo' } });
-        fireEvent.change(descripcionInput, { target: { value: 'Descripción del servicio 1' } });
-        fireEvent.click(submitButton);
-
-        expect(console.log).toHaveBeenCalledWith('Numero de serie: 123456, Nombre: Servicio 1, Marca: Marca 1, Modelo: Modelo 1, Color: Rojo');
-        expect(console.log).toHaveBeenCalledWith('Descripcion: Descripción del servicio 1');
+        expect(screen.queryByText('Mocked ModalConfirmacionAltaServicio')).not.toBeInTheDocument();
     });
 });

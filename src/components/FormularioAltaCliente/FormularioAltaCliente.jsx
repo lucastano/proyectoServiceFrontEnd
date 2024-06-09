@@ -20,23 +20,18 @@ export const FormularioAltaCliente = () => {
     };
 
     const validarCedula = (numero) => {
-      const regex = /^\d{8}$/;
+      const regex = /^\d{8,12}$/;
       return regex.test(numero);
     };
 
     const enviarFormulario = (evento) => {
       evento.preventDefault();
   
-      const nombreValido = validarNombreApellido(nombre);
-      const apellidoValido = validarNombreApellido(apellido);
-      const emailValido = validarEmail(email);
-      const cedulaValida = validarCedula(cedula); 
-  
-      if (nombreValido && apellidoValido && emailValido && cedulaValida) {
+      if (validarNombreApellido(nombre) && validarNombreApellido(apellido) && validarEmail(email) && validarCedula(cedula)) {
         console.log(`Nombre: ${nombre}, Apellido: ${apellido}, Email: ${email}, Cédula: ${cedula}`);
         setConfirmacionAbierta(true);
       } else {
-        console.log('Error: Ingrese nombre, apellido y email válidos.');
+        console.log('Error: Ingrese nombre, apellido, cedula y email válidos.');
       }
     };
 
@@ -66,14 +61,16 @@ export const FormularioAltaCliente = () => {
     <div className="mb-4 space-y-2">
       <Label htmlFor="email" >Email: </Label>
         <Input
+          id="email"
           placeholder="Email"
           className="ps-4"
           onChange={(e) => manejarCambioEmail(e)}
         />
       </div>
       <div className="mb-4 space-y-2">
-      <Label htmlFor="nombre">Nombre:</Label>
+      <Label htmlFor="nombre">Nombre: </Label>
         <Input
+          id="nombre"
           placeholder="Nombre"
           className="ps-4"
           onChange={(e) => manejarCambioNombre(e)}
@@ -82,6 +79,7 @@ export const FormularioAltaCliente = () => {
       <div className="mb-4 space-y-2">
       <Label htmlFor="apellido">Apellido: </Label>
         <Input
+          id="apellido"
           placeholder="Apellido"
           className="ps-4"
           onChange={(e) => manejarCambioApellido(e)}
@@ -90,6 +88,7 @@ export const FormularioAltaCliente = () => {
       <div className="mb-50 space-y-2">
       <Label htmlFor="cedula">Cedula de identidad (sin guión): </Label>
         <Input
+          id="cedula"
           placeholder="Cedula de identidad"
           className="ps-4"
           onChange={(e) => manejarCambioCedula(e)}

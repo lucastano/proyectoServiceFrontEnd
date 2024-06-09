@@ -45,15 +45,40 @@ export const FormularioAltaServicio = () => {
         return regex.test(valor);
     };
 
+    const validarNumeroSerie = (valor) => {
+        const regex = /^[0-9]+$/;
+        return valor !== '' && regex.test(valor);
+    }
+
+    const validarMarca = (valor) => {
+        const regex = /^[a-zA-Z0-9\s]+$/;
+        return regex.test(valor);
+    }
+
+    const validarModelo = (valor) => {
+        const regex = /^[a-zA-Z0-9\s]+$/;
+        return regex.test(valor);
+    }
+
+    const validarColor = (valor) => {
+        const regex = /^[a-zA-Z\s]+$/;
+        return regex.test(valor);
+    }
+
+    const validarDescripcion = (valor) => {
+        const regex = /^[a-zA-Z0-9\s]+$/;
+        return regex.test(valor);
+    }
+    
     const enviarFormulario = (evento) => {
         evento.preventDefault();
-    
-        if (validarNombre(nombre)) {
-          console.log(`Numero de serie: ${numeroSerie}, Nombre: ${nombre}, Marca: ${marca}, Modelo: ${modelo}, Color: ${color}`);
-          console.log(`Descripcion: ${descripcion}`);
-          setConfirmacionAbierta(true);
+
+        if (validarNumeroSerie(numeroSerie) && validarNombre(nombre) && validarMarca(marca) && validarModelo(modelo) && validarColor(color) && validarDescripcion(descripcion)) {
+            console.log(`Numero de serie: ${numeroSerie}, Nombre: ${nombre}, Marca: ${marca}, Modelo: ${modelo}, Color: ${color}`);
+            console.log(`Descripcion: ${descripcion}`);
+            setConfirmacionAbierta(true);
         } else {
-          console.log('Error: Datos invalidos');
+            console.log('Error: Datos invalidos');
         }
     };
 

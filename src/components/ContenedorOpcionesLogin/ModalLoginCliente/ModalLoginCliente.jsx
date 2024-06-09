@@ -16,6 +16,7 @@ export const ModalLoginCliente = ({ onClose }) => {
 
     const realizarLoginCliente = () => {
         //completar con llamada a la API
+        console.log('Usuario: ', usuario);
     }
 
 

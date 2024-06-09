@@ -16,6 +16,7 @@ export const ModalLoginTecnico = ({ onClose }) => {
 
     const realizarLoginTecnico = () => {
         //completar con llamada a la API
+        console.log('Usuario: ', usuario);
     }
 
 

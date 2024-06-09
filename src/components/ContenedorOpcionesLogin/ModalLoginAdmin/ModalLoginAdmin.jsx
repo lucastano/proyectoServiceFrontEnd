@@ -16,6 +16,7 @@ export const ModalLoginAdmin = ({ onClose }) => {
 
     const realizarLoginAdmin = () => {
         //completar con llamada a la API
+        console.log('Usuario:', usuario);
     }
 
 
