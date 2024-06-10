@@ -14,7 +14,7 @@ export const ModalConfirmacionAltaServicio = ({ onClose }) => {
                         </p>
                     </div>
                     </Modal.Content>
-                    <Modal.Footer>
+                    <Modal.Footer >
                         <Button onClick={onClose} size="sm" color="primary">
                             Cerrar
                         </Button>

@@ -2,80 +2,102 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { FormularioAltaServicio } from './FormularioAltaServicio';
 
-
-jest.mock('keep-react', () => ({
-    Input: jest.fn((props) => <input {...props} />),
-    Label: jest.fn((props) => <label {...props} />),
-    Button: jest.fn((props) => <button {...props} />),
-    Textarea: jest.fn((props) => <textarea {...props} />),
-}));
-
-jest.mock('../ModalConfirmacionAltaServicio/ModalConfirmacionAltaServicio', () => {
-    return {
-        ModalConfirmacionAltaServicio: jest.fn(() => <div>Mocked ModalConfirmacionAltaServicio</div>)
-    };
-});
-
 describe('FormularioAltaServicio', () => {
-    test('renders without crashing', () => {
-        render(<FormularioAltaServicio />);
-    });
-    
-    test('renders form fields correctly', () => {
+    test('renders the form correctly', () => {
         render(<FormularioAltaServicio />);
         
+        // Assert that all input fields are rendered
+        expect(screen.getByLabelText('Cedula de identidad (sin guión):')).toBeInTheDocument();
+        expect(screen.getByLabelText('Nombre - Usuario:')).toBeInTheDocument();
+        expect(screen.getByLabelText('Apellido:')).toBeInTheDocument();
+        expect(screen.getByLabelText('Email:')).toBeInTheDocument();
+        expect(screen.getByLabelText('Teléfono:')).toBeInTheDocument();
+        expect(screen.getByLabelText('Dirección:')).toBeInTheDocument();
         expect(screen.getByLabelText('Numero de serie:')).toBeInTheDocument();
         expect(screen.getByLabelText('Nombre:')).toBeInTheDocument();
         expect(screen.getByLabelText('Marca:')).toBeInTheDocument();
         expect(screen.getByLabelText('Modelo:')).toBeInTheDocument();
         expect(screen.getByLabelText('Color:')).toBeInTheDocument();
-        expect(screen.getByLabelText('Descripcion:')).toBeInTheDocument();
+        expect(screen.getByLabelText('Descripción:')).toBeInTheDocument();
     });
 
     test('updates state when input values change', () => {
         render(<FormularioAltaServicio />);
         
-        const numeroSerieInput = screen.getByLabelText('Numero de serie:');
-        const nombreInput = screen.getByLabelText('Nombre:');
-        const marcaInput = screen.getByLabelText('Marca:');
-        const modeloInput = screen.getByLabelText('Modelo:');
-        const colorInput = screen.getByLabelText('Color:');
-        const descripcionInput = screen.getByLabelText('Descripcion:');
-
-        fireEvent.change(numeroSerieInput, { target: { value: '123456' } });
-        fireEvent.change(nombreInput, { target: { value: 'Servicio 1' } });
-        fireEvent.change(marcaInput, { target: { value: 'Marca 1' } });
-        fireEvent.change(modeloInput, { target: { value: 'Modelo 1' } });
-        fireEvent.change(colorInput, { target: { value: 'Rojo' } });
-        fireEvent.change(descripcionInput, { target: { value: 'Descripción del servicio 1' } });
-
-        expect(numeroSerieInput.value).toBe('123456');
-        expect(nombreInput.value).toBe('Servicio 1');
-        expect(marcaInput.value).toBe('Marca 1');
-        expect(modeloInput.value).toBe('Modelo 1');
-        expect(colorInput.value).toBe('Rojo');
-        expect(descripcionInput.value).toBe('Descripción del servicio 1');
+        // Simulate user input
+        fireEvent.change(screen.getByLabelText('Cedula de identidad (sin guión):'), { target: { value: '12345678' } });
+        fireEvent.change(screen.getByLabelText('Nombre - Usuario:'), { target: { value: 'John' } });
+        fireEvent.change(screen.getByLabelText('Apellido:'), { target: { value: 'Doe' } });
+        fireEvent.change(screen.getByLabelText('Email:'), { target: { value: 'john.doe@example.com' } });
+        fireEvent.change(screen.getByLabelText('Teléfono:'), { target: { value: '1234567890' } });
+        fireEvent.change(screen.getByLabelText('Dirección:'), { target: { value: '123 Main St' } });
+        fireEvent.change(screen.getByLabelText('Numero de serie:'), { target: { value: '987654321' } });
+        fireEvent.change(screen.getByLabelText('Nombre:'), { target: { value: 'Product' } });
+        fireEvent.change(screen.getByLabelText('Marca:'), { target: { value: 'Brand' } });
+        fireEvent.change(screen.getByLabelText('Modelo:'), { target: { value: 'Model' } });
+        fireEvent.change(screen.getByLabelText('Color:'), { target: { value: 'Red' } });
+        fireEvent.change(screen.getByLabelText('Descripción:'), { target: { value: 'Lorem ipsum dolor sit amet' } });
+        
+        // Assert that state is updated correctly
+        expect(screen.getByLabelText('Cedula de identidad (sin guión):')).toHaveValue('12345678');
+        expect(screen.getByLabelText('Nombre - Usuario:')).toHaveValue('John');
+        expect(screen.getByLabelText('Apellido:')).toHaveValue('Doe');
+        expect(screen.getByLabelText('Email:')).toHaveValue('john.doe@example.com');
+        expect(screen.getByLabelText('Teléfono:')).toHaveValue('1234567890');
+        expect(screen.getByLabelText('Dirección:')).toHaveValue('123 Main St');
+        expect(screen.getByLabelText('Numero de serie:')).toHaveValue('987654321');
+        expect(screen.getByLabelText('Nombre:')).toHaveValue('Product');
+        expect(screen.getByLabelText('Marca:')).toHaveValue('Brand');
+        expect(screen.getByLabelText('Modelo:')).toHaveValue('Model');
+        expect(screen.getByLabelText('Color:')).toHaveValue('Red');
+        expect(screen.getByLabelText('Descripción:')).toHaveValue('Lorem ipsum dolor sit amet');
     });
 
-    test('opens confirmation modal when form is submitted with valid data', () => {
+    test('displays confirmation modal when form is submitted with valid data', () => {
         render(<FormularioAltaServicio />);
         
-        fireEvent.change(screen.getByLabelText('Numero de serie:'), { target: { value: '123456' } });
-        fireEvent.change(screen.getByLabelText('Nombre:'), { target: { value: 'Test Service' } });
-        fireEvent.change(screen.getByLabelText('Marca:'), { target: { value: 'Test Brand' } });
-        fireEvent.change(screen.getByLabelText('Modelo:'), { target: { value: 'Test Model' } });
-        fireEvent.change(screen.getByLabelText('Color:'), { target: { value: 'Test Color' } });
-        fireEvent.change(screen.getByLabelText('Descripcion:'), { target: { value: 'Test Description' } });
-        fireEvent.submit(screen.getByRole('button', { name: 'Registrar Servicio' }));
+        // Simulate user input
+        fireEvent.change(screen.getByLabelText('Cedula de identidad (sin guión):'), { target: { value: '12345678' } });
+        fireEvent.change(screen.getByLabelText('Nombre - Usuario:'), { target: { value: 'John' } });
+        fireEvent.change(screen.getByLabelText('Apellido:'), { target: { value: 'Doe' } });
+        fireEvent.change(screen.getByLabelText('Email:'), { target: { value: 'john.doe@example.com' } });
+        fireEvent.change(screen.getByLabelText('Teléfono:'), { target: { value: '1234567890' } });
+        fireEvent.change(screen.getByLabelText('Dirección:'), { target: { value: '123 Main St' } });
+        fireEvent.change(screen.getByLabelText('Numero de serie:'), { target: { value: '987654321' } });
+        fireEvent.change(screen.getByLabelText('Nombre:'), { target: { value: 'Product' } });
+        fireEvent.change(screen.getByLabelText('Marca:'), { target: { value: 'Brand' } });
+        fireEvent.change(screen.getByLabelText('Modelo:'), { target: { value: 'Model' } });
+        fireEvent.change(screen.getByLabelText('Color:'), { target: { value: 'Red' } });
+        fireEvent.change(screen.getByLabelText('Descripción:'), { target: { value: 'Lorem ipsum dolor sit amet' } });
         
-        expect(screen.getByText('Mocked ModalConfirmacionAltaServicio')).toBeInTheDocument();
+        // Submit the form
+        fireEvent.submit(screen.getByText('Registrar Servicio'));
+        
+        // Assert that confirmation modal is displayed
+        expect(screen.getByText('Confirmación de alta de servicio')).toBeInTheDocument();
     });
-
-    test('does not open confirmation modal when form is submitted with invalid data', () => {
+    test('does not display confirmation modal when form is submitted with invalid data', () => {
         render(<FormularioAltaServicio />);
         
-        fireEvent.submit(screen.getByRole('button', { name: 'Registrar Servicio' }));
+        // Simulate user input with invalid data
+        fireEvent.change(screen.getByLabelText('Cedula de identidad (sin guión):'), { target: { value: '123' } });
+        fireEvent.change(screen.getByLabelText('Nombre - Usuario:'), { target: { value: 'John123' } });
+        fireEvent.change(screen.getByLabelText('Apellido:'), { target: { value: 'Doe123' } });
+        fireEvent.change(screen.getByLabelText('Email:'), { target: { value: 'john.doe@example' } });
+        fireEvent.change(screen.getByLabelText('Teléfono:'), { target: { value: '123abc' } });
+        fireEvent.change(screen.getByLabelText('Dirección:'), { target: { value: '123 Main St!' } });
+        fireEvent.change(screen.getByLabelText('Numero de serie:'), { target: { value: 'abc123' } });
+        fireEvent.change(screen.getByLabelText('Nombre:'), { target: { value: 'Product123' } });
+        fireEvent.change(screen.getByLabelText('Marca:'), { target: { value: 'Brand123' } });
+        fireEvent.change(screen.getByLabelText('Modelo:'), { target: { value: 'Model123' } });
+        fireEvent.change(screen.getByLabelText('Color:'), { target: { value: 'Red123' } });
+        fireEvent.change(screen.getByLabelText('Descripción:'), { target: { value: 'Lorem ipsum dolor sit amet!' } });
         
-        expect(screen.queryByText('Mocked ModalConfirmacionAltaServicio')).not.toBeInTheDocument();
+        // Submit the form
+        fireEvent.submit(screen.getByText('Registrar Servicio'));
+        
+        // Assert that confirmation modal is not displayed
+        expect(screen.queryByText('Confirmación de alta de servicio')).toBeNull();
     });
+    // Add more tests here to achieve 100% coverage
 });
