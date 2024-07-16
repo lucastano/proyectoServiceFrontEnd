@@ -21,12 +21,15 @@ import {
   presupuestarReparacionError,
   altaTecnicoExito,
   altaTecnicoError,
-  loginClienteExito,
-  loginAdminExito,
-  loginTecnicoExito,
+  loginExito,
   loginError,
   logoutExito,
+  aceptarPresupuestoExito,
+  aceptarPresupuestoError,
+  rechazarPresupuestoExito,
+  rechazarPresupuestoError,
 } from "./actions";
+
 
 //get administradores
 async function getAdministradores(dispatch) {
@@ -34,7 +37,8 @@ async function getAdministradores(dispatch) {
   const opciones = {
     method: "GET",
     headers: {
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
   };
 
@@ -55,15 +59,16 @@ async function getClientes(dispatch) {
   const opciones = {
     method: "GET",
     headers: {
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
   };
 
   try {
     const respuesta = await fetch(url, opciones);
     const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(traerClientesExito(datos));
+    console.log(datos.clientes);
+    dispatch(traerClientesExito(datos.clientes));
   } catch (error) {
     console.error("Error al obtener clientes:", error);
     dispatch(traerClientesError(error));
@@ -73,10 +78,12 @@ async function getClientes(dispatch) {
 //get cliente por ci
 async function getClientePorCI(cedula, dispatch) {
   const url = `https://localhost:7105/api/Clientes/ObtenerClientePorCi?ci=${cedula}`;
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
     headers: {
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
   };
 
@@ -97,7 +104,8 @@ async function getReparaciones(dispatch) {
   const opciones = {
     method: "GET",
     headers: {
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
   };
 
@@ -118,7 +126,8 @@ async function getReparacionesPorCI(cedula, dispatch) {
   const opciones = {
     method: "GET",
     headers: {
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
   };
 
@@ -140,7 +149,8 @@ async function getReparacionesEnTaller(dispatch) {
   const opciones = {
     method: "GET",
     headers: {
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
   };
 
@@ -161,7 +171,8 @@ async function getReparacionesPresupuestadas(dispatch) {
   const opciones = {
     method: "GET",
     headers: {
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
   };
 
@@ -182,7 +193,8 @@ async function getTecnicos(dispatch) {
   const opciones = {
     method: "GET",
     headers: {
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
   };
 
@@ -190,7 +202,7 @@ async function getTecnicos(dispatch) {
     const respuesta = await fetch(url, opciones);
     const datos = await respuesta.json();
     console.log(datos);
-    dispatch(traerTecnicosExito(datos));
+    dispatch(traerTecnicosExito(datos.tecnicos));
   } catch (error) {
     console.error("Error al obtener técnicos:", error);
     dispatch(traerTecnicosError(error));
@@ -206,7 +218,8 @@ async function postCliente(nuevoCliente, dispatch) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
     body: data,
   };
@@ -232,6 +245,7 @@ async function postReparacion(nuevaReparacion, dispatch) {
     headers: {
       "Content-Type": "application/json",
       accept: "*/*",
+      Authorization: `Bearer ${token}`
     },
     body: data,
   };
@@ -249,14 +263,21 @@ async function postReparacion(nuevaReparacion, dispatch) {
 
 //post presupuestacion reparacion
 async function postPresupuestacionReparacion(reparacion, dispatch) {
-  const { idReparacion, manoObra, descripcion } = reparacion;
-  const url = `https://localhost:7105/api/Reparaciones/Presupuestar?id=${idReparacion}&manoObra=${manoObra}&descripcion=${descripcion}`;
+  const { idReparacion, manoObra, descripcion, fechaPromesaEntrega } = reparacion;
+  const url = 'https://localhost:7105/api/Reparaciones/Presupuestar';
   const opciones = {
     method: "POST",
     headers: {
       accept: "*/*",
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     },
-    body: null, // No data in the body for this request
+    body: JSON.stringify({
+      id: idReparacion,
+      manoObra: manoObra,
+      descripcion: descripcion,
+      fechaPromesaEntrega: fechaPromesaEntrega
+    })
   };
 
   try {
@@ -270,6 +291,97 @@ async function postPresupuestacionReparacion(reparacion, dispatch) {
   }
 }
 
+async function postTerminarReparacion(terminoReparacion, dispatch) {
+  const { idReparacion, fueReparada } = terminoReparacion;
+  const url = `https://localhost:7105/api/Reparaciones/TerminarReparacion?id=${idReparacion}&reparada=${fueReparada}`;
+  const opciones = {
+    method: "POST",
+    headers: {
+      accept: "text/plain",
+      Authorization: `Bearer ${token}`
+    },
+  };
+
+  try {
+    const respuesta = await fetch(url, opciones);
+    const datos = await respuesta.json();
+    console.log(datos);
+    dispatch(terminarReparacionExito(datos));
+  } catch (error) {
+    console.error("Error al terminar reparación:", error);
+    dispatch(terminarReparacionError(error));
+  }
+
+}
+async function postEntregarReparacion(reparacion, dispatch) {
+  const { idReparacion } = reparacion;
+  const url = `https://localhost:7105/api/Reparaciones/EntregarReparacion?id=${idReparacion}`;
+  const opciones = {
+    method: "POST",
+    headers: {
+      accept: "text/plain",
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  try {
+    const respuesta = await fetch(url, opciones);
+    const datos = await respuesta.json();
+    console.log(datos);
+    dispatch(entregarReparacionExito(datos));
+  } catch (error) {
+    console.error("Error al entregar reparación:", error);
+    dispatch(entregarReparacionError(error));
+  }
+}
+
+async function postAceptarPresupuesto(reparacion, dispatch) {
+  const { idReparacion } = reparacion;
+  const url = `https://localhost:7105/api/Reparaciones/AceptarPresupuesto?id=${idReparacion}`;
+  const opciones = {
+    method: "POST",
+    headers: {
+      accept: "*/*",
+      Authorization: `Bearer ${token}`
+    },
+    body: ''
+  };
+
+  try {
+    const respuesta = await fetch(url, opciones);
+    const datos = await respuesta.json();
+    console.log(datos);
+    dispatch(aceptarPresupuestoExito(datos));
+  } catch (error) {
+    console.error("Error al aceptar presupuesto:", error);
+    dispatch(aceptarPresupuestoError(error));
+  }
+}
+
+
+async function postRechazarPresupuesto(rechazo, dispatch) {
+  const { id, costo, razon } = rechazo;
+  const url = `https://localhost:7105/api/Reparaciones/RechazarPresupuesto?id=${id}&costo=${costo}&razon=${razon}`;
+  const opciones = {
+    method: "POST",
+    headers: {
+      accept: "*/*",
+      Authorization: `Bearer ${token}`
+    },
+    body: ''
+  };
+
+  try {
+    const respuesta = await fetch(url, opciones);
+    const datos = await respuesta.json();
+    console.log(datos);
+    dispatch(rechazarPresupuestoExito(datos));
+  } catch (error) {
+    console.error("Error al rechazar presupuesto:", error);
+    dispatch(rechazarPresupuestoError(error));
+  }
+}
+
 //post tecnico
 async function postTecnico(nuevoTecnico, dispatch) {
   const url = "https://localhost:7105/api/Tecnicos";
@@ -279,7 +391,8 @@ async function postTecnico(nuevoTecnico, dispatch) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      accept: "text/plain",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
     body: data,
   };
@@ -304,7 +417,8 @@ async function postAdministrador(nuevoAdmin, dispatch) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      accept: "*/*",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     },
     body: data,
   };
@@ -320,91 +434,36 @@ async function postAdministrador(nuevoAdmin, dispatch) {
   }
 }
 
-//post login cliente
-async function loginCliente(userCliente, dispatch) {
+//post login
+async function login(user, dispatch) {
   const url = "https://localhost:7105/api/Seguridad";
-  const data = JSON.stringify(userCliente);
+  const data = JSON.stringify(user);
 
   const opciones = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      accept: "*/*",
+      accept: "application/json",
     },
     body: data,
   };
   try {
     const respuesta = await fetch(url, opciones);
     const datos = await respuesta.json();
-    console.log(datos);
+    console.log(datos); 
 
-    if (data.token) {
-      localStorage.setItem("token", data.token);
+    if (datos.token) {
+      localStorage.setItem("token", datos.token);
     };
 
-    dispatch(loginClienteExito(datos));
+    dispatch(loginExito(datos.usuario));
   } catch (error) {
     console.error("Error al realizar login:", error);
     dispatch(loginError(error));
   }
 }
 
-//post login tecnico
-async function loginTecnico(userTecnico, dispatch) {
-  const url = "https://localhost:7105/api/Seguridad";
-  const data = JSON.stringify(userTecnico);
 
-  const opciones = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      accept: "*/*",
-    },
-    body: data,
-  };
-  try {
-    const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(loginTecnicoExito(datos));
-
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-    };
-  } catch (error) {
-    console.error("Error al realizar login:", error);
-    dispatch(loginError(error));
-  }
-}
-
-//post login tecnico
-async function loginAdmin(userAdmin, dispatch) {
-  const url = "https://localhost:7105/api/Seguridad";
-  const data = JSON.stringify(userAdmin);
-
-  const opciones = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      accept: "*/*",
-    },
-    body: data,
-  };
-  try {
-    const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-    };
-
-    dispatch(loginAdminExito(datos));
-  } catch (error) {
-    console.error("Error al realizar login:", error);
-    dispatch(loginError(error));
-  }
-}
 
 async function logout(dispatch) {
   localStorage.removeItem("token");
@@ -425,8 +484,10 @@ export {
   postPresupuestacionReparacion,
   postTecnico,
   postAdministrador,
-  loginAdmin,
-  loginCliente,
-  loginTecnico,
+  postEntregarReparacion,
+  postAceptarPresupuesto,
+  postRechazarPresupuesto,
+  postTerminarReparacion,
+  login,
   logout
 };

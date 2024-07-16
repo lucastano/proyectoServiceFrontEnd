@@ -9,12 +9,25 @@ export const useCedulaSesion = () => {
     return cedula;
   };
 
+const getEmailSesion = state => state.sesion.email;
+
+export const useEmailSesion = () => {
+    const cedula = useSelector(getEmailSesion); 
+    return cedula;
+  };
 const getRolSesion = state => state.sesion.rol;
 
 export const useRolSesion = () => {
     const rol = useSelector(getRolSesion); 
     return rol;
   
+}
+
+const getIdSesion = state => state.sesion.id;
+
+export const useIdSesion = () => {
+    const id = useSelector(getIdSesion); 
+    return id;
 }
 
 const getError = state => state.error;
@@ -30,3 +43,45 @@ export const useServicios = () => {
     const servicios = useSelector(getServicios); 
     return servicios;
 };
+
+const getClientes = state => state.clientes;
+
+export const useClientes = () => {
+    const clientes = useSelector(getClientes); 
+    return clientes;
+
+}
+
+const getClientePorCi = (state, ci) => state.clientes.find(cliente => cliente.ci === ci);
+
+export const useClientePorCi = (ci) => {
+    const cliente = useSelector(state => getClientePorCi(state, ci));
+    return cliente;
+}
+const getServicioPorId = (state, id) => state.servicios.find(servicio => servicio.id === id);
+
+export const useServicioPorId = (id) => {
+    const servicio = useSelector(state => getServicioPorId(state, id));
+    return servicio;
+}
+
+const getTecnicoPorId = (state, id) => state.tecnicos.find(tecnico => tecnico.id === id);
+
+export const useTecnicoPorId = (id) => {
+    const tecnico = useSelector(state => getTecnicoPorId(state, id));
+    return tecnico;
+}
+
+const getServiciosPorTecnico = (state, idTecnico) => state.servicios.filter(servicio => servicio.idTecnico === idTecnico);
+
+export const useServiciosPorTecnico = (idTecnico) => {
+    const servicios = useSelector(state => getServiciosPorTecnico(state, idTecnico));
+    return servicios;
+}
+
+const getTecnicos = state => state.tecnicos;
+
+export const useTecnicos = () => {
+    const tecnicos = useSelector(getTecnicos); 
+    return tecnicos;
+}

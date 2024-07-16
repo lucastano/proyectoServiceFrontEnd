@@ -26,8 +26,11 @@ import {
   useServicios,
   useEmailSesion,
 } from "../../store/selectors";
+import OpcionesPresupuesto from "../OpcionesPresupuesto/OpcionesPresupuesto";
+import OpcionesTerminarEntregar from "../OpcionesTerminarEntregar/OpcionesTerminarEntregar";
+import ModalEditarPresupuestoServicio from "../ModalEditarPresupuestoServicio/ModalEditarPresupuestoServicio";
 
-const ListaVisualizacionServiciosCliente = () => {
+const ListaVisualizacionServiciosTecnico = () => {
   const servicios = useServicios();
   const rolSesion = useRolSesion();
   const emailSesion = useEmailSesion();
@@ -36,7 +39,7 @@ const ListaVisualizacionServiciosCliente = () => {
   const [stringFiltro, setStringFiltro] = useState("");
   const [fechaFiltro, setFechaFiltro] = useState("");
 
-  if (!rolSesion || rolSesion !== "Cliente" || !emailSesion) {
+  if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
     return null;
   }
 
@@ -167,6 +170,16 @@ const ListaVisualizacionServiciosCliente = () => {
               <TableHead>
                 <div className="w-[80px]">Costo</div>
               </TableHead>
+              <TableHead>
+                <div className="w-[250px]">Presupuesto</div>
+              </TableHead>
+              <TableHead>
+                <div className="w-[250px]">Modificar</div>
+              </TableHead>
+              <TableHead>
+                <div className="max-w-[250px]">Otros</div>
+              </TableHead>
+              {/* columna de componente para botones de terminar y entregar */}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -176,6 +189,10 @@ const ListaVisualizacionServiciosCliente = () => {
                 <div className="max-w-[250px] truncate">{servicio.producto}</div>
                 <TableCell>{servicio.fecha}</TableCell>
                 <TableCell>{servicio.costo}</TableCell>
+                <TableCell><OpcionesPresupuesto idServicio={servicio.id} /></TableCell>
+                {/* tambien agregar EditarServicio donde esta EditarPresupuestoServicio*/}
+                <TableCell><ButtonGroup><ModalEditarPresupuestoServicio idServicio={servicio.id} />< ModalEditarServicio idServicio={servicio.id}/></ButtonGroup></TableCell>
+                <TableCell><OpcionesTerminarEntregar idServicio={servicio.id}/></TableCell>
               </TableRow>
             ))
             }
@@ -186,4 +203,4 @@ const ListaVisualizacionServiciosCliente = () => {
   );
 };
 
-export default ListaVisualizacionServiciosCliente;
+export default ListaVisualizacionServiciosTecnico;

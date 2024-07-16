@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Input, Label, Button } from 'keep-react';
-import { ModalConfirmacionAltaCliente } from '../ModalConfirmacionAltaCliente/ModalConfirmacionAltaCliente';
+import {
+    useRolSesion,
+    useEmailSesion,
+  } from "../../store/selectors";
+import { postTecnico } from '../../store/effects';
 
-export const FormularioAltaCliente = () => {
+export const FormularioAltaTecnico = () => {
+    const dispatch = useDispatch();
+    const rolSesion = useRolSesion();
+    const emailSesion = useEmailSesion();
+
+    if (!rolSesion || rolSesion !== "Administrador" || !emailSesion) {
+        return null;
+    }
+     
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
     const [email, setEmail] = useState('');
-    const [cedula, setCedula] = useState('');
-    const [confirmacionAbierta, setConfirmacionAbierta] = useState(false);
+    const [contrasena, setContrasena] = useState('');
 
     const validarNombreApellido = (valor) => {
       const regex = /^[a-zA-Z]+$/;
@@ -19,19 +31,38 @@ export const FormularioAltaCliente = () => {
       return regex.test(email);
     };
 
-    const validarCedula = (numero) => {
-      const regex = /^\d{8,12}$/;
-      return regex.test(numero);
+    const validarContrasena = (contrasena) => {
+        const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+        return regex.test(contrasena);
     };
 
     const enviarFormulario = (evento) => {
       evento.preventDefault();
   
-      if (validarNombreApellido(nombre) && validarNombreApellido(apellido) && validarEmail(email) && validarCedula(cedula)) {
-        console.log(`Nombre: ${nombre}, Apellido: ${apellido}, Email: ${email}, Cédula: ${cedula}`);
-        setConfirmacionAbierta(true);
+      if (validarNombreApellido(nombre) && validarNombreApellido(apellido) && validarEmail(email) && validarContrasena(contrasena)) {
+        console.log(`Nombre: ${nombre}, Apellido: ${apellido}, Email: ${email}, Contrasena: ${contrasena}`);
+        const nuevoTecnico = {
+            nombre: nombre,
+            apellido: apellido,
+            email: email,
+            contrasena: contrasena
+        };
+
+        dispatch(postTecnico(nuevoTecnico, dispatch));
+        toast.success('Técnico registrado exitosamente');
       } else {
-        console.log('Error: Ingrese nombre, apellido, cedula y email válidos.');
+        if (!validarNombreApellido(nombre)) {
+          toast.error('Nombre invalido');
+          }
+          if (!validarNombreApellido(apellido)) {
+            toast.error('Apellido invalido');
+          }
+          if (!validarEmail(email)) {
+            toast.error('Email invalido');
+          }
+          if (!validarContrasena(contrasena)) {
+            toast.error('Contraseña inválida. Recuerde que debe ser de al menos 8 caracteres, contener al menos una letra mayúscula, un número y un caracter especial');
+          }
       }
     };
 
@@ -47,13 +78,9 @@ export const FormularioAltaCliente = () => {
     setEmail(event.target.value);
   };
 
-  const manejarCambioCedula = (event) => {
-    setCedula(event.target.value);
+  const manejarCambioContrasena = (event) => {
+    setContrasena(event.target.value);
   };
-
-  const manejarCierreModalConfirmacion = () => {
-    setConfirmacionAbierta(false);
-  }
 
   return (
   <>
@@ -86,19 +113,18 @@ export const FormularioAltaCliente = () => {
         />
       </div>
       <div className="mb-50 space-y-2">
-      <Label htmlFor="cedula">Cedula de identidad (sin guión): </Label>
+      <Label htmlFor="contrasena">Contraseña: </Label>
         <Input
-          id="cedula"
-          placeholder="Cedula de identidad"
+          id="contrasena"
+          placeholder="Contraseña"
           className="ps-4"
-          onChange={(e) => manejarCambioCedula(e)}
+          onChange={(e) => manejarCambioContrasena(e)}
         />
       </div>
     <Button size="sm" color="secondary" type="submit" className="mt-8">
-      Registrar cliente
+      Registrar tecnico
     </Button>
   </form>
-    {confirmacionAbierta && <ModalConfirmacionAltaCliente onClose={manejarCierreModalConfirmacion} />}
   </>
   );
 };

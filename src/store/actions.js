@@ -21,8 +21,10 @@ export const ALTA_SERVICIO_EXITO = 'ALTA_SERVICIO_EXITO';
 export const ALTA_SERVICIO_ERROR = 'ALTA_SERVICIO_ERROR';
 export const ALTA_REPARACION_EXITO = 'ALTA_REPARACION_EXITO';
 export const ALTA_REPARACION_ERROR = 'ALTA_REPARACION_ERROR';
-export const PRESUPUESTAR_SERVICIO_EXITO = 'PRESUPUESTAR_SERVICIO_EXITO';
-export const PRESUPUESTAR_SERVICIO_ERROR = 'PRESUPUESTAR_SERVICIO_ERROR';
+export const PRESUPUESTAR_REPARACION_EXITO = 'PRESUPUESTAR_REPARACION_EXITO';
+export const PRESUPUESTAR_REPARACION_ERROR = 'PRESUPUESTAR_REPARACION_ERROR';
+export const ENTREGAR_REPARACION_EXITO = 'ENTREGAR_REPARACION_EXITO';
+export const ENTREGAR_REPARACION_ERROR = 'ENTREGAR_REPARACION_ERROR';
 export const ALTA_TECNICO_EXITO = 'ALTA_TECNICO_EXITO';
 export const ALTA_TECNICO_ERROR = 'ALTA_TECNICO_ERROR';
 export const ALTA_ADMIN_EXITO = 'ALTA_ADMIN_EXITO';
@@ -31,19 +33,78 @@ export const TRAER_TECNICOS_EXITO = 'TRAER_TECNICOS_EXITO';
 export const TRAER_TECNICOS_ERROR = 'TRAER_TECNICOS_ERROR';
 export const TRAER_ADMINS_EXITO = 'TRAER_ADMINS_EXITO';
 export const TRAER_ADMINS_ERROR = 'TRAER_ADMINS_ERROR';
-export const LOGIN_CLIENTE_EXITO = 'LOGIN_CLIENTE_EXITO';
-export const LOGIN_TECNICO_EXITO = 'LOGIN_TECNICO_EXITO';
-export const LOGIN_ADMIN_EXITO = 'LOGIN_ADMIN_EXITO';
+export const LOGIN_EXITO = 'LOGIN_EXITO';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT_EXITO = 'LOGOUT_EXITO';
+export const RECHAZAR_PRESUPUESTO_EXITO = 'RECHAZAR_PRESUPUESTO_EXITO';
+export const RECHAZAR_PRESUPUESTO_ERROR = 'RECHAZAR_PRESUPUESTO_ERROR';
+export const TERMINAR_REPARACION_EXITO = 'TERMINAR_REPARACION_EXITO';
+export const TERMINAR_REPARACION_ERROR = 'TERMINAR_REPARACION_ERROR';
+export const ACEPTAR_PRESUPUESTO_EXITO = 'ACEPTAR_PRESUPUESTO_EXITO';
+export const ACEPTAR_PRESUPUESTO_ERROR = 'ACEPTAR_PRESUPUESTO_ERROR';
 
-export const presupuestarServicioExito = (servicio) => {
+export const terminarReparacionExito = (reparacion) => {
+    return {
+        type: TERMINAR_REPARACION_EXITO,
+        payload: reparacion
+    };
+}
+
+export const terminarReparacionError = (error) => {
+    return {
+        type: TERMINAR_REPARACION_ERROR,
+        payload: error
+    };
+};
+
+export const rechazarPresupuestoExito = (servicio) => {
+    return {
+        type: RECHAZAR_PRESUPUESTO_EXITO,
+        payload: servicio
+    };
+};
+
+export const rechazarPresupuestoError = (error) => {
+    return {
+        type: RECHAZAR_PRESUPUESTO_ERROR,
+        payload: error
+    };
+};
+
+export const aceptarPresupuestoExito = (servicio) => {
+    return {
+        type: ACEPTAR_PRESUPUESTO_EXITO,
+        payload: servicio
+    };
+};
+
+export const aceptarPresupuestoError = (error) => {
+    return {
+        type: ACEPTAR_PRESUPUESTO_ERROR,
+        payload: error
+    };
+}
+export const entregarReparacionExito = (reparacion) => {
+    return {
+        type: ENTREGAR_REPARACION_EXITO,
+        payload: reparacion
+    };
+};
+
+export const entregarReparacionError = (error) => {
+    return {
+        type: ENTREGAR_REPARACION_ERROR,
+        payload: error
+    };
+};
+
+export const presupuestarReparacionExito = (servicio) => {
     return {
         type: PRESUPUESTAR_SERVICIO_EXITO,
         payload: servicio
     };
 };
-export const presupuestarServicioError = (error) => {
+export const presupuestaReparacionError = (error) => {
     return {
         type: PRESUPUESTAR_SERVICIO_ERROR,
         payload: error
@@ -219,21 +280,9 @@ export const altaServicioError = (error) => {
         payload: error
     };
 };
-export const loginClienteExito = (usuario) => {
+export const loginExito = (usuario) => {
     return {
-        type: LOGIN_CLIENTE_EXITO,
-        payload: usuario
-    };
-};
-export const loginTecnicoExito = (usuario) => {
-    return {
-        type: LOGIN_TECNICO_EXITO,
-        payload: usuario
-    };
-};
-export const loginAdminExito = (usuario) => {
-    return {
-        type: LOGIN_ADMIN_EXITO,
+        type: LOGIN_EXITO,
         payload: usuario
     };
 };
