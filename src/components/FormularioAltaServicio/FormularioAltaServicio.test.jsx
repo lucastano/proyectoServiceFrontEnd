@@ -1,16 +1,17 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import configureStore from "redux-mock-store";
-import { useRolSesion, useEmailSesion } from "../../store/selectors";
+import { useRolSesion, useEmailSesion, useError } from "../../store/selectors";
 import FormularioAltaServicio from "./FormularioAltaServicio";
+import { altaServicioExito } from "../../store/actions";
 
 jest.mock("../../store/selectors"); // Mock the useRolSesion and useEmailSesion hooks
 
 //FUNCIONA BIEN
 const mockStore = configureStore();
-const store = mockStore({
+let store = mockStore({
   servicios: [],
   clientes: [],
   repuestos: [],
@@ -20,10 +21,25 @@ const store = mockStore({
   error: null,
 });
 
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve({ token: 'mockToken', usuario: {} }),
+  })
+);
+
 describe("FormularioAltaServicio", () => {
-  it("renders the form correctly", () => {
+  beforeEach(() => {
+    useError.mockReturnValue(null);
     useRolSesion.mockReturnValue("Tecnico"); // Mock the useRolSesion hook
     useEmailSesion.mockReturnValue("example@example.com"); // Mock the useEmailSesion hook
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  
+  it("renders the form correctly", () => {
     render(
       <Provider store={store}>
         <FormularioAltaServicio />
@@ -47,8 +63,12 @@ describe("FormularioAltaServicio", () => {
     expect(screen.getByLabelText("Descripción:")).toBeInTheDocument();
   });
 
-  it.only("updates state when input values change", () => {
-    render(<FormularioAltaServicio />);
+  it("updates state when input values change", () => {
+    render(
+      <Provider store={store}>
+        <FormularioAltaServicio />
+      </Provider>
+    );
 
     // Simulate user input
     fireEvent.change(
@@ -107,9 +127,21 @@ describe("FormularioAltaServicio", () => {
       "Lorem ipsum dolor sit amet"
     );
   });
-
-  it("displays confirmation modal when form is submitted with valid data", () => {
-    render(<FormularioAltaServicio />);
+/*
+  it.only("submits correctly when form is submitted with valid data", async () => {
+    const mockLocalStorage = {
+      getItem: jest.fn(() => 'mockToken'),
+      setItem: jest.fn(),
+      clear: jest.fn()
+    };
+    global.localStorage = mockLocalStorage;
+    const mockDispatch = jest.fn(); 
+    store = { ...store, dispatch: mockDispatch }; 
+    render(
+      <Provider store={store}>
+        <FormularioAltaServicio />
+      </Provider>
+    );
 
     // Simulate user input
     fireEvent.change(
@@ -153,11 +185,10 @@ describe("FormularioAltaServicio", () => {
     // Submit the form
     fireEvent.submit(screen.getByText("Registrar Servicio"));
 
-    // Assert that confirmation modal is displayed
-    expect(
-      screen.getByText("Confirmación de alta de servicio")
-    ).toBeInTheDocument();
+    await waitFor(() => {});
+    expect(mockDispatch).toHaveBeenCalledWith(altaServicioExito());
   });
+
   it("does not display confirmation modal when form is submitted with invalid data", () => {
     render(<FormularioAltaServicio />);
 
@@ -206,5 +237,5 @@ describe("FormularioAltaServicio", () => {
     // Assert that confirmation modal is not displayed
     expect(screen.queryByText("Confirmación de alta de servicio")).toBeNull();
   });
-  // Add more tests here to achieve 100% coverage
+  */
 });

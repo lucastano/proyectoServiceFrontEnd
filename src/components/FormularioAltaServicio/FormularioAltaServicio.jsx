@@ -4,12 +4,14 @@ import {
   useRolSesion,
   useEmailSesion,
   useIdSesion,
+  useClientePorCi,
+  useError,
 } from "../../store/selectors";
-import { useClientePorCi } from "../../store/selectors";
 import { useDispatch } from "react-redux";
 import { postCliente, postReparacion } from "../../store/effects";
 import { format } from "date-fns";
 import { Calendar } from 'phosphor-react'
+import { limpiarError } from "../../store/actions"; 
 
 const FormularioAltaServicio = () => {
   const dispatch = useDispatch();
@@ -184,7 +186,7 @@ const FormularioAltaServicio = () => {
     );
   };
 
-  const altaClienteServicio = () => {
+  const altaClienteServicio = async () => {
     const nuevoUsuario = {
       ci: cedulaUsuario,
       nombre: nombreUsuario,
@@ -194,17 +196,19 @@ const FormularioAltaServicio = () => {
       direccion: direccionUsuario,
     };
 
-    dispatch(postCliente(nuevoUsuario, dispatch));
+    await postCliente(nuevoUsuario, dispatch);
 
-    const clientePorCi = useClientePorCi(cedulaUsuario);
-    if (clientePorCi == undefined) {
+    const error = useError();
+
+    if (error) {
       toast.error("Error al dar de alta el cliente");
+      dispatch(limpiarError());
     } else {
       toast("Cliente dado de alta correctamente");
     }
   };
 
-  const enviarFormulario = (evento) => {
+  const enviarFormulario = async (evento) => {
     evento.preventDefault();
 
     if (validarFormulario()) {
@@ -215,7 +219,7 @@ const FormularioAltaServicio = () => {
         !usuarioEncontrado &&
         validarNuevoUsuario
       ) {
-        altaClienteServicio();
+        await altaClienteServicio();
       }
 
       const nuevaReparacion = {
@@ -227,12 +231,13 @@ const FormularioAltaServicio = () => {
         fechaPromesaPresupuesto: fechaPromesaPresupuesto,
       };
 
-      dispatch(postReparacion(nuevaReparacion, dispatch));
+      await postReparacion(nuevaReparacion, dispatch);
 
       const error = useError();
 
       if (error) {
         toast.error("Error al dar de alta la reparacion");
+        dispatch(limpiarError);
       } else {
         toast("Reparacion dada de alta correctamente");
       }
@@ -249,7 +254,7 @@ const FormularioAltaServicio = () => {
       >
         <div className="mb-4 space-y-2">
           <Label htmlFor="cedulaUsuario">
-            Cedula de identidad (sin guión):{" "}
+            Cedula de identidad (sin guión):
           </Label>
           <Input
             id="cedulaUsuario"

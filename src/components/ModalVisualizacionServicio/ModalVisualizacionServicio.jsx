@@ -63,6 +63,7 @@ export const ModalVisualizacionServicio = (idServicio) => {
               <p>Costo: {costo}</p>
             </div>
             </ModalHeader>
+            <SeccionMensajes idServicio={idServicio}/>
           <ModalFooter>
           <ModalClose asChild>
             <Button size="sm" color="primary">

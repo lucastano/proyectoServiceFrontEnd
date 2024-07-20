@@ -15,8 +15,8 @@ import {
   traerTecnicosError,
   altaClienteExito,
   altaClienteError,
-  altaReparacionExito,
-  altaReparacionError,
+  altaServicioExito,
+  altaServicioError,
   presupuestarReparacionExito,
   presupuestarReparacionError,
   altaTecnicoExito,
@@ -28,12 +28,69 @@ import {
   aceptarPresupuestoError,
   rechazarPresupuestoExito,
   rechazarPresupuestoError,
+  terminarReparacionExito,
+  terminarReparacionError,
+  entregarReparacionExito,
+  entregarReparacionError,
+  cambiarPresupuestoExito,
+  cambiarPresupuestoError,
 } from "./actions";
 
+const apiUrl = "https://proyectoserviceapirest20240712211208.azurewebsites.net";
+
+async function putServicio(dispatch, servicio) {
+  const { id, fechaPromesaPresupuesto, numeroSerie, descripcion } = servicio;
+  const url = `${apiUrl}/api/Reparaciones/ModificarDatosReparacion?id=${id}&fechaPromesaPresupuesto=${fechaPromesaPresupuesto}&numeroSerie=${numeroSerie}&descripcion=${descripcion}`;
+  const token = localStorage.getItem("token"); 
+
+  const opciones = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      accept: "*/*",
+      Authorization: `Bearer ${token}`
+    },
+  };
+
+  try {
+    const respuesta = await fetch(url, opciones);
+    const datos = await respuesta.json();
+    console.log(datos);
+    dispatch(cambiarServicioExito(datos));
+  } catch (error) {
+    console.error(error);
+    dispatch(cambiarServicioError(error));
+  }
+}
+async function putPresupuesto(dispatch, presupuesto) {
+  const {id, costo, descripcion } = presupuesto;
+  const url = `${apiUrl}/api/Reparaciones/ModificarPresupuestoReparacion?id=${id}&costo=${costo}&descripcion=${descripcion}`;
+const token = localStorage.getItem("token"); 
+
+  const opciones = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      accept: "*/*",
+      Authorization: `Bearer ${token}`
+    },
+  };
+
+  try {
+    const respuesta = await fetch(url, opciones);
+    const datos = await respuesta.json();
+    console.log(datos);
+    dispatch(cambiarPresupuestoExito(datos));
+  } catch (error) {
+    console.error(error);
+    dispatch(cambiarPresupuestoError(error));
+  }
+}
 
 //get administradores
 async function getAdministradores(dispatch) {
-  const url = "https://localhost:7105/api/Administradores";
+  const url = "${apiUrl}/api/Administradores";
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
     headers: {
@@ -55,7 +112,8 @@ async function getAdministradores(dispatch) {
 
 //get clientes
 async function getClientes(dispatch) {
-  const url = "https://localhost:7105/api/Clientes";
+  const url = "${apiUrl}/api/Clientes";
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
     headers: {
@@ -77,7 +135,7 @@ async function getClientes(dispatch) {
 
 //get cliente por ci
 async function getClientePorCI(cedula, dispatch) {
-  const url = `https://localhost:7105/api/Clientes/ObtenerClientePorCi?ci=${cedula}`;
+  const url = `${apiUrl}/api/Clientes/ObtenerClientePorCi?ci=${cedula}`;
   const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
@@ -100,7 +158,8 @@ async function getClientePorCI(cedula, dispatch) {
 
 //get reparaciones
 async function getReparaciones(dispatch) {
-  const url = "https://localhost:7105/api/Reparaciones/TodasLasReparaciones";
+  const url = "${apiUrl}/api/Reparaciones/TodasLasReparaciones";
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
     headers: {
@@ -122,7 +181,8 @@ async function getReparaciones(dispatch) {
 
 //get reparaciones por ci
 async function getReparacionesPorCI(cedula, dispatch) {
-  const url = `https://localhost:7105/api/Reparaciones/ObtenerReparacionesPorCi?ci=${cedula}`;
+  const url = `${apiUrl}/api/Reparaciones/ObtenerReparacionesPorCi?ci=${cedula}`;
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
     headers: {
@@ -145,7 +205,8 @@ async function getReparacionesPorCI(cedula, dispatch) {
 
 //get reparaciones en taller
 async function getReparacionesEnTaller(dispatch) {
-  const url = "https://localhost:7105/api/Reparaciones/EnTaller";
+  const url = "${apiUrl}/api/Reparaciones/EnTaller";
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
     headers: {
@@ -167,7 +228,8 @@ async function getReparacionesEnTaller(dispatch) {
 
 //get reparaciones presupuestadas
 async function getReparacionesPresupuestadas(dispatch) {
-  const url = "https://localhost:7105/api/Reparaciones/Presupuestadas";
+  const url = "${apiUrl}/api/Reparaciones/Presupuestadas";
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
     headers: {
@@ -189,7 +251,8 @@ async function getReparacionesPresupuestadas(dispatch) {
 
 //get tecnicos
 async function getTecnicos(dispatch) {
-  const url = "https://localhost:7105/api/Tecnicos";
+  const url = "${apiUrl}/api/Tecnicos";
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
     headers: {
@@ -211,9 +274,9 @@ async function getTecnicos(dispatch) {
 
 //post cliente
 async function postCliente(nuevoCliente, dispatch) {
-  const url = "https://localhost:7105/api/Clientes";
+  const url = "${apiUrl}/api/Clientes";
   const data = JSON.stringify(nuevoCliente);
-
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "POST",
     headers: {
@@ -237,9 +300,9 @@ async function postCliente(nuevoCliente, dispatch) {
 
 //post reparacion
 async function postReparacion(nuevaReparacion, dispatch) {
-  const url = "https://localhost:7105/api/Reparaciones";
+  const url = "${apiUrl}/api/Reparaciones";
   const data = JSON.stringify(nuevaReparacion);
-
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "POST",
     headers: {
@@ -254,17 +317,18 @@ async function postReparacion(nuevaReparacion, dispatch) {
     const respuesta = await fetch(url, opciones);
     const datos = await respuesta.json();
     console.log(datos);
-    dispatch(altaReparacionExito(datos));
+    dispatch(altaServicioExito(datos));
   } catch (error) {
     console.error("Error al crear reparación:", error);
-    dispatch(altaReparacionError(error));
+    dispatch(altaServicioError(error));
   }
 }
 
 //post presupuestacion reparacion
 async function postPresupuestacionReparacion(reparacion, dispatch) {
   const { idReparacion, manoObra, descripcion, fechaPromesaEntrega } = reparacion;
-  const url = 'https://localhost:7105/api/Reparaciones/Presupuestar';
+  const url = '${apiUrl}/api/Reparaciones/Presupuestar';
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "POST",
     headers: {
@@ -293,7 +357,8 @@ async function postPresupuestacionReparacion(reparacion, dispatch) {
 
 async function postTerminarReparacion(terminoReparacion, dispatch) {
   const { idReparacion, fueReparada } = terminoReparacion;
-  const url = `https://localhost:7105/api/Reparaciones/TerminarReparacion?id=${idReparacion}&reparada=${fueReparada}`;
+  const url = `${apiUrl}/api/Reparaciones/TerminarReparacion?id=${idReparacion}&reparada=${fueReparada}`;
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "POST",
     headers: {
@@ -315,7 +380,8 @@ async function postTerminarReparacion(terminoReparacion, dispatch) {
 }
 async function postEntregarReparacion(reparacion, dispatch) {
   const { idReparacion } = reparacion;
-  const url = `https://localhost:7105/api/Reparaciones/EntregarReparacion?id=${idReparacion}`;
+  const url = `${apiUrl}/api/Reparaciones/EntregarReparacion?id=${idReparacion}`;
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "POST",
     headers: {
@@ -337,7 +403,8 @@ async function postEntregarReparacion(reparacion, dispatch) {
 
 async function postAceptarPresupuesto(reparacion, dispatch) {
   const { idReparacion } = reparacion;
-  const url = `https://localhost:7105/api/Reparaciones/AceptarPresupuesto?id=${idReparacion}`;
+  const url = `${apiUrl}/api/Reparaciones/AceptarPresupuesto?id=${idReparacion}`;
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "POST",
     headers: {
@@ -361,7 +428,7 @@ async function postAceptarPresupuesto(reparacion, dispatch) {
 
 async function postRechazarPresupuesto(rechazo, dispatch) {
   const { id, costo, razon } = rechazo;
-  const url = `https://localhost:7105/api/Reparaciones/RechazarPresupuesto?id=${id}&costo=${costo}&razon=${razon}`;
+  const url = `${apiUrl}/api/Reparaciones/RechazarPresupuesto?id=${id}&costo=${costo}&razon=${razon}`;
   const opciones = {
     method: "POST",
     headers: {
@@ -384,9 +451,9 @@ async function postRechazarPresupuesto(rechazo, dispatch) {
 
 //post tecnico
 async function postTecnico(nuevoTecnico, dispatch) {
-  const url = "https://localhost:7105/api/Tecnicos";
+  const url = "${apiUrl}/api/Tecnicos";
   const data = JSON.stringify(nuevoTecnico);
-
+  const token = localStorage.getItem("token"); 
   const opciones = {
     method: "POST",
     headers: {
@@ -410,7 +477,7 @@ async function postTecnico(nuevoTecnico, dispatch) {
 
 //post administrador
 async function postAdministrador(nuevoAdmin, dispatch) {
-  const url = "https://localhost:7105/api/Administradores";
+  const url = "${apiUrl}/api/Administradores";
   const data = JSON.stringify(nuevoAdmin);
 
   const opciones = {
@@ -436,7 +503,7 @@ async function postAdministrador(nuevoAdmin, dispatch) {
 
 //post login
 async function login(user, dispatch) {
-  const url = "https://localhost:7105/api/Seguridad";
+  const url = "${apiUrl}/api/Seguridad";
   const data = JSON.stringify(user);
 
   const opciones = {
@@ -489,5 +556,7 @@ export {
   postRechazarPresupuesto,
   postTerminarReparacion,
   login,
-  logout
+  logout,
+  putServicio,
+  putPresupuesto,
 };

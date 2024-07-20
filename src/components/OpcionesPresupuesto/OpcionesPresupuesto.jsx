@@ -22,8 +22,7 @@ const OpcionesPresupuesto = (idServicio) => {
     }
   };
 
-  const fuePresupuestado =
-    servicioPorId.descripcionPresupuesto == "" && servicioPorId.manoDeObra == 0;
+  const tienePresupuesto = servicioPorId.estado === "Presupuestada";
 
   return (
     <div>
@@ -32,11 +31,11 @@ const OpcionesPresupuesto = (idServicio) => {
         <Button
           position="center"
           onClick={manejarClickAceptarPresupuesto}
-          disabled={!fuePresupuestado}
+          disabled={!tienePresupuesto}
         >
           Aceptar
         </Button>
-        <ModalRechazarPresupuesto idServicio={idServicio} />
+        <ModalRechazarPresupuesto idServicio={idServicio} tienePresupuesto={tienePresupuesto}/>
       </ButtonGroup>
     </div>
   );

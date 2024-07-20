@@ -14,14 +14,14 @@ import {
 import { useDispatch } from "react-redux";
 import { format } from "date-fns";
 import { Calendar } from "phosphor-react";
-import { useServicioPorId } from "../../store/selectors";
+import { useServicioPorId, useError } from "../../store/selectors";
 import { postPresupuestacionReparacion } from "../../store/effects";
+import { limpiarError } from "../../store/actions";
 
 const ModalIngresarPresupuesto = (idServicio) => {
   const dispatch = useDispatch();
   const servicioPorId = useServicioPorId(idServicio);
-  const fuePresupuestado =
-    servicioPorId.descripcionPresupuesto == "" && servicioPorId.manoDeObra == 0;
+  const fuePresupuestado = servicioPorId.estado !== "EnTaller";
 
   const [manoDeObra, setManoDeObra] = useState(0);
   const [descripcion, setDescripcion] = useState("");
@@ -39,7 +39,7 @@ const ModalIngresarPresupuesto = (idServicio) => {
     setDescripcion(e.target.value);
   };
 
-  const manejarClickIngresoPresupuesto = () => {
+  const manejarClickIngresoPresupuesto = async () => {
     const presupuesto = {
       idReparacion: idServicio,
       manoObra: manoDeObra,
@@ -47,15 +47,21 @@ const ModalIngresarPresupuesto = (idServicio) => {
       fechaPromesaEntrega: fechaPromesaEntrega,
     };
 
-    dispatch(postPresupuestacionReparacion(presupuesto, dispatch));
+    await postPresupuestacionReparacion(presupuesto, dispatch);
 
-    if (servicioPorId.estado == "Presupuestado") {
+    const error = useError();
+
+
+    if (!error) {
       toast("Presupuesto ingresado", {
         description: "El presupuesto ha sido ingresado correctamente",
       });
     } else {
       toast.error("Ha habido un error al ingresar el presupuesto");
+      dispatch(limpiarError());
     }
+
+    document.getElementById("buttonModal").click();
   };
 
   return (
@@ -63,15 +69,15 @@ const ModalIngresarPresupuesto = (idServicio) => {
         <ModalAction asChild>
           <Button
             position="start"
-            onClick={manejarClickPresupuestar}
             disabled={fuePresupuestado}
+            id="buttonModal"
           >
             Presupuestar
           </Button>
         </ModalAction>
         <ModalBody className="space-y-3">
           <ModalContent>
-            <ModalClose className="absolute right-4 top-4" />
+            <ModalClose className="absolute right-4 top-4"/>
             <ModalHeader>
               <div className="!mb-6">
                 <h3 className="mb-2 text-body-1 font-medium text-metal-900">
@@ -128,11 +134,9 @@ const ModalIngresarPresupuesto = (idServicio) => {
               </div>
             </ModalHeader>
             <ModalFooter className="justify-center">
-              <ModalClose asChild>
                 <Button onClick={manejarClickIngresoPresupuesto} size="md">
                   Ingresar Presupuesto
                 </Button>
-              </ModalClose>
             </ModalFooter>
           </ModalContent>
         </ModalBody>

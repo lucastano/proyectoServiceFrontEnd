@@ -170,7 +170,7 @@ const ListaVisualizacionServiciosCliente = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {serviciosFiltrados.forEach((servicio) => (
+            {serviciosFiltrados && serviciosFiltrados.forEach((servicio) => (
               <TableRow key={servicio.id}>
                 <TableCell>{servicio.id}</TableCell>
                 <div className="max-w-[250px] truncate">{servicio.producto}</div>

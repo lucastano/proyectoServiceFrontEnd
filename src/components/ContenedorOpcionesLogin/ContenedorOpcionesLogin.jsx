@@ -3,7 +3,7 @@ import { ModalLoginCliente } from './ModalLoginCliente/ModalLoginCliente';
 import { ModalLoginTecnico } from './ModalLoginTecnico/ModalLoginTecnico';
 import { ModalLoginAdmin } from './ModalLoginAdmin/ModalLoginAdmin';
 
-export const ContenedorOpcionesLogin = () => {
+const ContenedorOpcionesLogin = () => {
     return (
         <div className="flex flex-col space-y-4 border rounded-lg shadow-md p-11">
             <div>
@@ -18,3 +18,5 @@ export const ContenedorOpcionesLogin = () => {
         </div>
     );
 };
+
+export default ContenedorOpcionesLogin;

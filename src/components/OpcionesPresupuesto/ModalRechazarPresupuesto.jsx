@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Modal, Button, Textarea, toast, ModalClose, ModalAction, ModalBody, ModalContent, ModalFooter, Label, Input } from "keep-react";
 import { useDispatch } from "react-redux";
-import { useServicioPorId } from "../../store/selectors";
+import { useServicioPorId, useError } from "../../store/selectors";
 import { postRechazarPresupuesto } from "../../store/effects";
+import { limpiarError } from "../../store/actions";
 
-const ModalRechazarPresupuesto = (idServicio) => {
+const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
   const dispatch = useDispatch();
   const servicioPorId = useServicioPorId(idServicio);
   const [costo, setCosto] = useState(0);
@@ -22,28 +23,33 @@ const ModalRechazarPresupuesto = (idServicio) => {
     setRazon(e.target.value);
   };
 
-  const manejarClickRechazarPresupuesto = () => {
+  const manejarClickRechazarPresupuesto = async () => {
     const rechazoPresupuesto = {
       id: idServicio,
       costo: costo,
       razon: razon,
     };
 
-    dispatch(postRechazarPresupuesto(rechazoPresupuesto, dispatch));
+    await postRechazarPresupuesto(rechazoPresupuesto, dispatch);
 
-    if (servicioPorId.estado == "Rechazado") {
+    const error = useError();
+
+    if (!error) {
       toast("Presupuesto rechazado", {
         description: "El presupuesto ha sido rechazado correctamente",
       });
     } else {
       toast.error("Ha habido un error al rechazar el presupuesto");
+      dispatch(limpiarError());
     }
+
+    document.getElementById("buttonModal").click();
   };
 
   return (
     <Modal>
       <ModalAction asChild>
-        <Button position="end" disabled={servicioPorId.estado != "Terminada"}>
+        <Button position="end" disabled={!tienePresupuesto} id="buttonModal">
           Rechazar
         </Button>
       </ModalAction>

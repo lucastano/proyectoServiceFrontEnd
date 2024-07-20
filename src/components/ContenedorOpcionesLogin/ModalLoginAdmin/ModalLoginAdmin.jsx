@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Modal, Button, Label, Input, toast, ModalAction, ModalBody, ModalClose, ModalHeader, ModalFooter, ModalContent } from "keep-react";
 import { login } from "../../../store/effects";
-import { useRolSesion } from "../../../store/selectors";
-import { getClientes } from "../../../store/effects";
+import { useRolSesion, useError } from "../../../store/selectors";
+import { limpiarError } from "../../../store/actions";
 
 export const ModalLoginAdmin = () => {
   const dispatch = useDispatch();
@@ -30,14 +30,19 @@ export const ModalLoginAdmin = () => {
       rol: "Administrador",
     };
 
-    try {
-      dispatch(login(usuarioParaLogin, dispatch));
-      toast("Login exitoso");
-      dispatch(getClientes(dispatch));
-      document.getElementById("modalButton").click();
-    } catch (error) {
+
+    await login(usuarioParaLogin, dispatch);
+
+    const error = useError();
+
+    if (error) {
       toast.error("Error al iniciar sesión");
+      dispatch(limpiarError());
+    } else {
+      toast("Login exitoso");
     }
+    
+    document.getElementById("modalButton").click();
   };
 
   return (

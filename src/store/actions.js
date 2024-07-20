@@ -1,6 +1,7 @@
 export const TRAER_SERVICIO_EXITO = 'TRAER_SERVICIO_EXITO';
 export const TRAER_SERVICIO_ERROR = 'TRAER_SERVICIO_ERROR';
 export const TRAER_CLIENTE_EXITO = 'TRAER_CLIENTE_EXITO';
+export const TRAER_CLIENTE_ERROR = 'TRAER_CLIENTE_ERROR';
 export const TRAER_SERVICIOS_CLIENTE_EXITO = 'TRAER_SERVICIOS_CLIENTE_EXITO';
 export const TRAER_SERVICIOS_CLIENTE_ERROR = 'TRAER_SERVICIOS_CLIENTE_ERROR';
 export const TRAER_REPUESTOS_EXITO = 'TRAER_REPUESTOS_EXITO';
@@ -42,7 +43,60 @@ export const TERMINAR_REPARACION_EXITO = 'TERMINAR_REPARACION_EXITO';
 export const TERMINAR_REPARACION_ERROR = 'TERMINAR_REPARACION_ERROR';
 export const ACEPTAR_PRESUPUESTO_EXITO = 'ACEPTAR_PRESUPUESTO_EXITO';
 export const ACEPTAR_PRESUPUESTO_ERROR = 'ACEPTAR_PRESUPUESTO_ERROR';
+export const CAMBIAR_PRESUPUESTO_EXITO = 'CAMBIAR_PRESUPUESTO_EXITO';
+export const CAMBIAR_PRESUPUESTO_ERROR = 'CAMBIAR_PRESUPUESTO_ERROR';
+export const LIMPIAR_ERROR = 'LIMPIAR_ERROR';
+export const CAMBIAR_SERVICIO_EXITO = 'CAMBIAR_SERVICIO_EXITO';
+export const CAMBIAR_SERVICIO_ERROR = 'CAMBIAR_SERVICIO_ERROR';
+export const PRESUPUESTAR_SERVICIO_EXITO = 'PRESUPUESTAR_SERVICIO_EXITO';
+export const PRESUPUESTAR_SERVICIO_ERROR = 'PRESUPUESTAR_SERVICIO_ERROR';
 
+export const prespuestarReparacionExito = (servicio) => {
+    return {
+        type: PRESUPUESTAR_REPARACION_EXITO,
+        payload: servicio
+    };
+};
+
+export const presupuestarReparacionError = (error) => {
+    return {
+        type: PRESUPUESTAR_REPARACION_ERROR,
+        payload: error
+    };
+
+}
+export const cambiarServicioExito = (servicio) => {
+    return {
+        type: CAMBIAR_SERVICIO_EXITO,
+        payload: servicio
+    };
+}
+
+export const cambiarServicioError = (error) => {
+    return {
+        type: CAMBIAR_SERVICIO_ERROR,
+        payload: error
+    };
+}
+
+export const limpiarError = () => {
+    return {
+        type: LIMPIAR_ERROR
+    }
+}
+
+export const cambiarPresupuestoExito = (reparacion) => {
+    return {
+        type: CAMBIAR_PRESUPUESTO_EXITO,
+        payload: reparacion
+    };
+}
+export const cambiarPresupuestoError = (error) => {
+    return {
+        type: CAMBIAR_PRESUPUESTO_ERROR,
+        payload: error
+    };
+}
 export const terminarReparacionExito = (reparacion) => {
     return {
         type: TERMINAR_REPARACION_EXITO,

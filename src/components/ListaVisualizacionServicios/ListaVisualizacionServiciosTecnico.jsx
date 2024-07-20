@@ -61,9 +61,11 @@ const ListaVisualizacionServiciosTecnico = () => {
     if (tipoFiltro == "Numero de orden") {
       return servicios.filter((servicio) => servicio.id.includes(stringFiltro));
     } else if (tipoFiltro == "Fecha") {
-      const fechaFiltroFormateada = format(parseISO(fechaFiltro), 'yyyy-MM-dd');
-      return servicios.filter((servicio) =>
-        format(parseISO(servicio.fecha), 'yyyy-MM-dd') === fechaFiltroFormateada
+      const fechaFiltroFormateada = format(parseISO(fechaFiltro), "yyyy-MM-dd");
+      return servicios.filter(
+        (servicio) =>
+          format(parseISO(servicio.fecha), "yyyy-MM-dd") ===
+          fechaFiltroFormateada
       );
     } else if (tipoFiltro == "Estado") {
       return servicios.filter((servicio) =>
@@ -158,7 +160,7 @@ const ListaVisualizacionServiciosTecnico = () => {
         <Table>
           <TableHeader>
             <TableRow>
-            <TableHead>
+              <TableHead>
                 <div className="w-[80px]">Numero de orden</div>
               </TableHead>
               <TableHead>
@@ -179,23 +181,36 @@ const ListaVisualizacionServiciosTecnico = () => {
               <TableHead>
                 <div className="max-w-[250px]">Otros</div>
               </TableHead>
-              {/* columna de componente para botones de terminar y entregar */}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {serviciosFiltrados.forEach((servicio) => (
-              <TableRow key={servicio.id}>
-                <TableCell>{servicio.id}</TableCell>
-                <div className="max-w-[250px] truncate">{servicio.producto}</div>
-                <TableCell>{servicio.fecha}</TableCell>
-                <TableCell>{servicio.costo}</TableCell>
-                <TableCell><OpcionesPresupuesto idServicio={servicio.id} /></TableCell>
-                {/* tambien agregar EditarServicio donde esta EditarPresupuestoServicio*/}
-                <TableCell><ButtonGroup><ModalEditarPresupuestoServicio idServicio={servicio.id} />< ModalEditarServicio idServicio={servicio.id}/></ButtonGroup></TableCell>
-                <TableCell><OpcionesTerminarEntregar idServicio={servicio.id}/></TableCell>
-              </TableRow>
-            ))
-            }
+            {serviciosFiltrados &&
+              serviciosFiltrados.forEach((servicio) => (
+                <TableRow key={servicio.id}>
+                  <TableCell>{servicio.id}</TableCell>
+                  <TableCell>
+                    <div className="max-w-[250px] truncate">
+                      {servicio.producto}
+                    </div>
+                  </TableCell>
+                  <TableCell>{servicio.fecha}</TableCell>
+                  <TableCell>{servicio.costo}</TableCell>
+                  <TableCell>
+                    <OpcionesPresupuesto idServicio={servicio.id} />
+                  </TableCell>
+                  <TableCell>
+                    <ButtonGroup>
+                      <ModalEditarPresupuestoServicio
+                        idServicio={servicio.id}
+                      />
+                      <ModalEditarServicio idServicio={servicio.id} />
+                    </ButtonGroup>
+                  </TableCell>
+                  <TableCell>
+                    <OpcionesTerminarEntregar idServicio={servicio.id} />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>

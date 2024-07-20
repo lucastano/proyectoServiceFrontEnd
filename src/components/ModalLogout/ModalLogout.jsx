@@ -1,33 +1,55 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { SignOut } from "phosphor-react";
-import { Modal, Button, toast, ModalAction, ModalBody, ModalContent, ModalClose, ModalHeader, ModalFooter } from "keep-react";
+import {
+  Modal,
+  Button,
+  toast,
+  ModalAction,
+  ModalBody,
+  ModalContent,
+  ModalClose,
+  ModalHeader,
+  ModalFooter,
+} from "keep-react";
 import { logout } from "../../store/effects";
+import { limpiarError } from "../../store/actions";
+import { useError } from "../../store/selectors";
 
 export const ModalLogout = () => {
   const dispatch = useDispatch();
 
   const manejarLogout = () => {
-    localStorage.removeItem("token");;
-    dispatch(logout(dispatch));
-    const history = useHistory();
-    history.push("/");
-    toast.success('Logout realizado con éxito');   
+    localStorage.removeItem("token");
+    logout(dispatch);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("Error al realizar logout");
+      dispatch(limpiarError());
+    } else {
+      const navigate = useNavigate();
+      navigate("/");
+      toast.success("Logout realizado con éxito");
+    }
+
+    document.getElementById("buttonModal").click();
   };
 
   return (
     <div>
       <Modal>
         <ModalAction asChild>
-          <span>
-            <SignOut size={20} />
+          <span id="buttonModal">
+            <SignOut size={20}/>
             Salir
           </span>
         </ModalAction>
         <ModalBody className="flex flex-col items-center">
           <ModalContent>
-            <ModalClose className="absolute right-4 top-4" />
+            <ModalClose className="absolute right-4 top-4"/>
             <ModalHeader>
               <div className="!mb-6">
                 <h3 className="mb-2 text-body-1 font-medium text-metal-900">

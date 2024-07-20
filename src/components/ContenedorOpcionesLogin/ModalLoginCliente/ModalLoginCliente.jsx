@@ -14,7 +14,8 @@ import {
   ModalContent,
 } from "keep-react";
 import { login } from "../../../store/effects";
-import { useRolSesion } from "../../../store/selectors";
+import { useRolSesion, useError } from "../../../store/selectors";
+import { limpiarError } from "../../../store/actions";
 
 export const ModalLoginCliente = () => {
   const dispatch = useDispatch();
@@ -41,13 +42,18 @@ export const ModalLoginCliente = () => {
       rol: "Cliente",
     };
 
-    try {
-      dispatch(login(usuarioParaLogin, dispatch));
-      toast("Login exitoso");
-      document.getElementById("modalButton").click();
-    } catch (error) {
+    await login(usuarioParaLogin, dispatch);
+
+    const error = useError();
+
+    if (error) {
       toast.error("Error al iniciar sesión");
+      dispatch(limpiarError());
+    } else {
+      toast("Login exitoso");
     }
+    
+    document.getElementById("modalButton").click();
   };
 
   return (

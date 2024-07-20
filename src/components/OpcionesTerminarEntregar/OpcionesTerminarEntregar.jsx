@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Button, toast } from "keep-react";
-import { useServicioPorId } from "../../store/selectors";
+import { useError, useServicioPorId } from "../../store/selectors";
 import { postEntregarReparacion } from "../../store/effects";
 import  ModalTerminarServicio  from "./ModalTerminarServicio";
+import { limpiarError } from "../../store/actions";
 
 
 const OpcionesTerminarEntregar = (idServicio) => {
     const dispatch = useDispatch();
     const servicioPorId = useServicioPorId(idServicio);
     
-    const manejarClickEntregar = () => {
-        dispatch(postEntregarReparacion(servicioPorId, dispatch));
+    const manejarClickEntregar = async () => {
+        await postEntregarReparacion(servicioPorId, dispatch);
         
-        if (servicioPorId.estado == "Entregado") {
+        const error = useError();
+        if (!error) {
             toast('Entrega realizada', {
                 description: 'El servicio ha sido entregado al cliente',
               });
         } else {
             toast.error('Ha habido un error al realizar la entrega');
+            dispatch(limpiarError());
         }
         
     }
@@ -26,7 +29,7 @@ const OpcionesTerminarEntregar = (idServicio) => {
     return (
         <div className="max-w-[250px]">
             <ModalTerminarServicio idServicio={idServicio} />
-            <Button onClick={manejarClickEntregar}>Entregar</Button>
+            <Button onClick={manejarClickEntregar} disabled={servicioPorId.estado !== "Terminada"}>Entregar</Button>
         </div>
     );
 };

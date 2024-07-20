@@ -1,21 +1,20 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { ModalLoginTecnico } from './ModalLoginTecnico';
-import { useDispatch } from "react-redux";
+import React from "react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
+import { ModalLoginTecnico } from "./ModalLoginTecnico";
+import { login } from "../../../store/effects";
 
 
-//FUNCIONA BIEN
-const mockDispatch = jest.fn();
-
-jest.mock("react-redux", () => ({
-  ...jest.requireActual("react-redux"),
+//FUNCIONA BIEN CONFIRMADO
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
   useDispatch: () => mockDispatch,
   useSelector: () => null,
 }));
 
-jest.mock("../../../store/effects", () => ({
-  login: jest.fn(),
-}));
+jest.mock("../../../store/effects");
+
+const mockDispatch = jest.fn();
+const mockLogin = login;
 
 describe.skip('ModalLoginTecnico', () => {
     it('should render the modal with the correct inputs and buttons', () => {
@@ -61,6 +60,15 @@ describe.skip('ModalLoginTecnico', () => {
         const ingresarButton = getByText("Ingresar");
         fireEvent.click(ingresarButton);
     
-        expect(mockDispatch).toHaveBeenCalled();
+        await waitFor(() => {
+          expect(mockLogin).toHaveBeenCalledWith(
+            {
+              email: "testuser",
+              password: "testpassword",
+              rol: "Tecnico",
+            },
+            expect.any(Function)
+          );
+        });
       });
 });

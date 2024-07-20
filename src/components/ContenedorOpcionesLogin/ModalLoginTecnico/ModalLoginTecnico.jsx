@@ -14,7 +14,8 @@ import {
   ModalContent,
 } from "keep-react";
 import { login } from "../../../store/effects";
-import { useRolSesion } from "../../../store/selectors";
+import { useRolSesion, useError } from "../../../store/selectors";
+import { limpiarError } from "../../../store/actions";
 
 export const ModalLoginTecnico = () => {
   const dispatch = useDispatch();
@@ -42,14 +43,18 @@ export const ModalLoginTecnico = () => {
       rol: "Tecnico",
     };
 
-    try {
-      dispatch(login(usuarioParaLogin, dispatch));
-      toast("Login exitoso");
-      dispatch(getClientes(dispatch));
-      document.getElementById("modalButton").click();
-    } catch (error) {
+    await login(usuarioParaLogin, dispatch);
+
+    const error = useError();
+
+    if (error) {
       toast.error("Error al iniciar sesión");
+      dispatch(limpiarError());
+    } else {
+      toast("Login exitoso");
     }
+    
+    document.getElementById("modalButton").click();
   };
 
   return (
@@ -59,7 +64,7 @@ export const ModalLoginTecnico = () => {
       </ModalAction>
       <ModalBody className="space-y-3">
         <ModalContent>
-          <ModalClose className="absolute right-4 top-4" />
+          <ModalClose className="absolute right-4 top-4"/>
           <ModalHeader>
             <div className="!mb-6">
               <h3 className="mb-2 text-body-1 font-medium text-metal-900">

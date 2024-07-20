@@ -6,9 +6,9 @@ import configureStore from "redux-mock-store";
 import ComponenteNavbar from "./ComponenteNavbar";
 import { useRolSesion, useEmailSesion } from "../../store/selectors";
 
-jest.mock("../../store/selectors"); // Mock the useRolSesion and useEmailSesion hooks
+jest.mock("../../store/selectors");
 
-//FUNCIONA BIEN
+//FUNCIONA BIEN CHECKED
 const mockStore = configureStore();
 const store = mockStore({
   servicios: [],

@@ -1,52 +1,50 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { ModalLoginCliente } from './ModalLoginCliente';
+import React from "react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
+import { ModalLoginCliente } from "./ModalLoginCliente";
+import { login } from "../../../store/effects";
 
-
-//FUNCIONA BIEN
-const mockDispatch = jest.fn();
-
-jest.mock('react-redux', () => ({
-    ...jest.requireActual('react-redux'),
-    useDispatch: () => mockDispatch,
-    useSelector: () => null,
+//FUNCIONA BIEN CONFIRMADO
+jest.mock("react-redux", () => ({
+  ...jest.requireActual("react-redux"),
+  useDispatch: () => mockDispatch,
+  useSelector: () => null,
 }));
 
-jest.mock("../../../store/effects", () => ({
-    login: jest.fn(),
-  }));
+jest.mock("../../../store/effects");
 
-describe.skip('ModalLoginCliente', () => {
-  it('should render the modal with the correct title', () => {
+const mockDispatch = jest.fn();
+const mockLogin = login;
+
+describe.skip("ModalLoginCliente", () => {
+  it("should render the modal with the correct title", () => {
     const { getByText } = render(<ModalLoginCliente />);
-    const comoClienteButton = getByText('Como cliente');
+    const comoClienteButton = getByText("Como cliente");
     fireEvent.click(comoClienteButton);
-    const tituloModal = getByText('Ingreso de cliente');
+    const tituloModal = getByText("Ingreso de cliente");
     expect(tituloModal).toBeInTheDocument();
   });
 
-
   it('should update the "email" state when the input value changes', () => {
     const { getByPlaceholderText, getByText } = render(<ModalLoginCliente />);
-    const comoClienteButton = getByText('Como cliente');
+    const comoClienteButton = getByText("Como cliente");
     fireEvent.click(comoClienteButton);
-    const usernameInput = getByPlaceholderText('Email');
-    fireEvent.change(usernameInput, { target: { value: 'testuser' } });
-    expect(usernameInput.value).toBe('testuser');
+    const usernameInput = getByPlaceholderText("Email");
+    fireEvent.change(usernameInput, { target: { value: "testuser" } });
+    expect(usernameInput.value).toBe("testuser");
   });
 
   it('should update the "contrasena" state when the input value changes', () => {
     const { getByPlaceholderText, getByText } = render(<ModalLoginCliente />);
-    const comoClienteButton = getByText('Como cliente');
+    const comoClienteButton = getByText("Como cliente");
     fireEvent.click(comoClienteButton);
-    const contrasenaInput = getByPlaceholderText('Contraseña');
-    fireEvent.change(contrasenaInput, { target: { value: 'testpassword' } });
-    expect(contrasenaInput.value).toBe('testpassword');
+    const contrasenaInput = getByPlaceholderText("Contraseña");
+    fireEvent.change(contrasenaInput, { target: { value: "testpassword" } });
+    expect(contrasenaInput.value).toBe("testpassword");
   });
 
-  it('should call realizarLoginCliente with correct data when the "Ingresar" button is clicked', () => {
+  it('should call realizarLoginCliente with correct data when the "Ingresar" button is clicked', async () => {
     const { getByText, getByPlaceholderText } = render(<ModalLoginCliente />);
-    const comoClienteButton = getByText('Como cliente');
+    const comoClienteButton = getByText("Como cliente");
     fireEvent.click(comoClienteButton);
 
     const emailInput = getByPlaceholderText("Email");
@@ -56,6 +54,15 @@ describe.skip('ModalLoginCliente', () => {
     const ingresarButton = getByText("Ingresar");
     fireEvent.click(ingresarButton);
 
-    expect(mockDispatch).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockLogin).toHaveBeenCalledWith(
+        {
+          email: "testuser",
+          password: "testpassword",
+          rol: "Cliente",
+        },
+        expect.any(Function)
+      );
+    });
   });
 });

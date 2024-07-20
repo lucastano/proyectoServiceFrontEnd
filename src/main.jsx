@@ -1,19 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { Provider } from 'react-redux'
 import App from './App.jsx'
 import './index.css'
 import { ToastWrapper } from 'keep-react'
 import {
   BrowserRouter,
 } from "react-router-dom";
-import { ThemeProvider } from "./components/theme-provider.jsx";
+import { ThemeProvider } from "./components/theme-provider";
+import store from './store/store'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <Provider store={store} >
       <App />
+      </Provider>
     <ToastWrapper
         toastOptions={{
           classNames: {

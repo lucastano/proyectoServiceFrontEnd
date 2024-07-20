@@ -1,12 +1,12 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '@testing-library/jest-dom'
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ModalLogout } from './ModalLogout';
 
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
-    useHistory: jest.fn(),
+    useNavigate: jest.fn(),
 }));
 
 const mockRemoveItem = jest.fn();
@@ -38,7 +38,7 @@ describe.skip('ModalLogout', () => {
     test('calls manejarLogout and redirects to "/" when Cerrar button is clicked', () => {
         const onClose = jest.fn();
         const pushSpy = jest.fn();
-        useHistory.mockReturnValue({ push: pushSpy });
+        useNavigate.mockReturnValue({ push: pushSpy });
 
         render(<ModalLogout onClose={onClose} />);
         

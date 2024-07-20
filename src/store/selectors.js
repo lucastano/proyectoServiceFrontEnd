@@ -2,20 +2,20 @@ import { useSelector } from 'react-redux';
 
 export const getSesion = state => state.sesion;
 
-const getCISesion = state => state.sesion.ci;
+const getCISesion = state => getSesion(state)?.ci;
 
 export const useCedulaSesion = () => {
     const cedula = useSelector(getCISesion); 
     return cedula;
   };
 
-const getEmailSesion = state => state.sesion.email;
+const getEmailSesion = state => getSesion(state)?.email;
 
 export const useEmailSesion = () => {
     const cedula = useSelector(getEmailSesion); 
     return cedula;
   };
-const getRolSesion = state => state.sesion.rol;
+const getRolSesion = state => getSesion(state)?.rol;
 
 export const useRolSesion = () => {
     const rol = useSelector(getRolSesion); 

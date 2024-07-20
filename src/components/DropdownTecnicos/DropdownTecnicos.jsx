@@ -17,9 +17,6 @@ const DropdownTecnicos = () => {
 
   const tecnicos = useTecnicos();
 
-  //checkear que el usuario sea administrador
-  //traer lista de tecnicos
-  //<Link to={`/tecnico/${idTecnico}`}>Ver datos del técnico</Link>
   return (
     <>
       <Dropdown>

@@ -11,6 +11,7 @@ import { Sidebar, SidebarBody, SidebarItem, SidebarList, SidebarFooter } from "k
 import { useRolSesion, useEmailSesion } from "../../store/selectors";
 import { ModalLogout } from "../ModalLogout/ModalLogout";
 import  DropdownTecnicos  from "../DropdownTecnicos/DropdownTecnicos";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 const ComponenteNavbar = () => {
   const rolSesion = useRolSesion();

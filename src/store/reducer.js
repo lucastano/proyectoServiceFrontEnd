@@ -34,6 +34,11 @@ import {
   RECHAZAR_PRESUPUESTO_ERROR,
   TERMINAR_REPARACION_EXITO,
   TERMINAR_REPARACION_ERROR,
+  CAMBIAR_PRESUPUESTO_EXITO,
+  CAMBIAR_PRESUPUESTO_ERROR,
+  CAMBIAR_SERVICIO_EXITO,
+  CAMBIAR_SERVICIO_ERROR,
+  LIMPIAR_ERROR,
 } from "./actions";
 
 const initialState = {
@@ -256,6 +261,37 @@ const reducer = (state = initialState, action) => {
         error: null,
       };
     case TERMINAR_REPARACION_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case CAMBIAR_PRESUPUESTO_EXITO:
+      return {
+        ...state,
+        servicios: state.servicios.map((servicio) =>
+          servicio.id === action.payload.id ? action.payload : servicio
+        ),
+        error: null,
+      };
+    case CAMBIAR_PRESUPUESTO_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case LIMPIAR_ERROR:
+      return {
+        ...state,
+        error: null,
+      };
+    case CAMBIAR_SERVICIO_EXITO:
+      return {
+        ...state,
+        servicios: state.servicios.map((servicio) =>
+          servicio.id === action.payload.id ? action.payload : servicio
+        ),
+        error: null,
+      };
+    case CAMBIAR_SERVICIO_ERROR:
       return {
         ...state,
         error: action.payload,

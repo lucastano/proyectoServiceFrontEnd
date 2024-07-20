@@ -3,20 +3,25 @@ import { Modal, Button, toast, ModalAction, ModalBody, ModalContent, ModalFooter
 import { useDispatch } from "react-redux";
 import { useServicioPorId } from "../../store/selectors";
 import { postTerminarReparacion } from "../../store/effects";
+import { limpiarError } from "../../store/actions";
 
 const ModalTerminarServicio = (idServicio) => {
   const dispatch = useDispatch();
   const servicioPorId = useServicioPorId(idServicio);
 
-  const manejarClickReparado = (reparado) => () => {
+  const fuePresupuestada = servicioPorId.estado === "PresupuestoAceptado" || servicioPorId.estado === "PresupuestoNoAceptado";
+
+  const manejarClickReparado = (reparado) => async () => {
     const terminoReparacion = {
       idReparacion: idServicio,
       fueReparada: reparado,
     };
 
-    dispatch(postTerminarReparacion(terminoReparacion, dispatch));
+    await postTerminarReparacion(terminoReparacion, dispatch);
 
-    if (servicioPorId.reparada != undefined) {
+    const error = useError();
+
+    if(!error) {
       const descripcionToast =
         servicioPorId.reparada == true
           ? "Servicio fue reparado"
@@ -26,18 +31,21 @@ const ModalTerminarServicio = (idServicio) => {
       });
     } else {
       toast.error("Ha habido un error al finalizar el servicio");
+      dispatch(limpiarError());
     }
+
+    document.getElementById("modalButton").click();
   };
 
   return (
     <div>
       <Modal>
         <ModalAction asChild>
-          <Button>Terminar</Button>
+          <Button id="modalButton" disabled={!fuePresupuestada}>Terminar</Button>
         </ModalAction>
         <ModalBody className="space-y-3">
           <ModalContent>
-            <ModalClose className="absolute right-4 top-4" />
+            <ModalClose className="absolute right-4 top-4"/>
             <ModalHeader>
               <div className="!mb-6">
                 <h3 className="mb-2 text-body-1 font-medium text-metal-900">
@@ -49,7 +57,6 @@ const ModalTerminarServicio = (idServicio) => {
               </div>
             </ModalHeader>
             <ModalFooter>
-              <ModalClose asChild>
                 <Button
                   onClick={manejarClickReparado(true)}
                   color="primary"
@@ -57,8 +64,6 @@ const ModalTerminarServicio = (idServicio) => {
                 >
                   Reparado
                 </Button>
-              </ModalClose>
-              <ModalClose asChild>
                 <Button
                   onClick={manejarClickReparado(false)}
                   color="error"
@@ -66,7 +71,6 @@ const ModalTerminarServicio = (idServicio) => {
                 >
                   No reparado
                 </Button>
-              </ModalClose>
             </ModalFooter>
           </ModalContent>
         </ModalBody>

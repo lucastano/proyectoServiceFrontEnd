@@ -1,7 +1,25 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Modal, ModalAction, ModalBody, ModalClose, ModalFooter, ModalHeader, Label, Input, Textarea, Button, ModalContent } from "keep-react";
-import { useServicioPorId, useRolSesion, useEmailSesion } from "../../store/selectors";
+import {
+  Modal,
+  ModalAction,
+  ModalBody,
+  ModalClose,
+  ModalFooter,
+  ModalHeader,
+  Label,
+  Input,
+  Textarea,
+  Button,
+  ModalContent,
+} from "keep-react";
+import {
+  useServicioPorId,
+  useRolSesion,
+  useEmailSesion,
+  useError,
+} from "../../store/selectors";
+import { limpiarError } from "../../store/actions";
 
 const ModalEditarPresupuestoServicio = (idServicio) => {
   const dispatch = useDispatch();
@@ -14,35 +32,47 @@ const ModalEditarPresupuestoServicio = (idServicio) => {
   }
 
   const [costo, setCosto] = useState(servicioPorId.costo);
-  const [descripcionPresupuesto, setDescripcionPresupuesto] = useState(servicioPorId.descripcionPresupuesto);
+  const [descripcionPresupuesto, setDescripcionPresupuesto] = useState(
+    servicioPorId.descripcionPresupuesto
+  );
 
   const manejarCambioCosto = (e) => {
     const esDigitoValido = /^\d$/.test(e.target.value);
 
     if (esDigitoValido) {
-        setCosto(e.target.value);
+      setCosto(e.target.value);
     }
-  }
+  };
 
   const manejarCambioDescripcion = (e) => {
     setDescripcionPresupuesto(e.target.value);
-  }
+  };
 
-  const editarPresupuesto = () => {
+  const editarPresupuesto = async () => {
     const reparacionEditada = {
-        id: idServicio,
-        costo: costo,
-        descripcion: descripcionPresupuesto,
+      id: idServicio,
+      costo: costo,
+      descripcion: descripcionPresupuesto,
+    };
+
+    await putPresupuesto(dispatch, reparacionEditada);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("Error al modificar presupuesto");
+      dispatch(limpiarError());
+    } else {
+      toast("Edicion de presupuesto realizada correctamente");
     }
-    //hacer logica para editar presupuesto - effect, actions y cambio en reducer
 
     document.getElementById("modalButton").click();
-  }
+  };
 
   return (
     <Modal>
       <ModalAction asChild>
-        <Button>Editar presupuesto</Button>
+        <Button id="modalButton">Editar presupuesto</Button>
       </ModalAction>
       <ModalBody className="space-y-3">
         <ModalContent>
@@ -73,7 +103,15 @@ const ModalEditarPresupuestoServicio = (idServicio) => {
             </div>
           </ModalHeader>
           <ModalFooter>
-            <Button onClick={editarPresupuesto} disabled={costo == servicioPorId.costo && descripcionPresupuesto == servicioPorId.descripcionPresupuesto}>Editar</Button>
+            <Button
+              onClick={editarPresupuesto}
+              disabled={
+                costo == servicioPorId.costo &&
+                descripcionPresupuesto == servicioPorId.descripcionPresupuesto
+              }
+            >
+              Editar
+            </Button>
           </ModalFooter>
         </ModalContent>
       </ModalBody>

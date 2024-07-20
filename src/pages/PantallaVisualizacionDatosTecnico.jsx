@@ -1,9 +1,11 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
 import VisualizacionDatosTecnico from "../components/VisualizacionDatosTecnico/VisualizacionDatosTecnico";
 
-const PantallaVisualizacionDatosTecnico = (idTecnico) => {
+const PantallaVisualizacionDatosTecnico = () => {
+  const { idTecnico } = useParams();
   const rolSesion = useRolSesion();
   const emailSesion = useEmailSesion();
 

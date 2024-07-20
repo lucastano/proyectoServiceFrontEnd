@@ -2,7 +2,7 @@ import React from 'react';
 import { render} from '@testing-library/react';
 import { ContenedorOpcionesLogin } from './ContenedorOpcionesLogin';
 
-//FUNCIONA BIEN
+//FUNCIONA BIEN CONFIRMADO
 jest.mock('./ModalLoginCliente/ModalLoginCliente', () => ({
     ModalLoginCliente: jest.fn(() => <div data-testid="modal-login-cliente" />)
 }));

@@ -1,9 +1,11 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Modal, ModalAction, ModalBody, ModalClose, ModalFooter, ModalHeader, Label, Input, Textarea, Button, ModalContent, DatePicker, Popover, PopoverContent, PopoverTrigger } from "keep-react";
-import { useServicioPorId, useRolSesion, useEmailSesion } from "../../store/selectors";
+import { useServicioPorId, useRolSesion, useEmailSesion, useError } from "../../store/selectors";
 import { format } from "date-fns";
 import { Calendar } from "phosphor-react";
+import { limpiarError } from "../../store/actions";
+import { putServicio } from "../../store/effects";
 
 const ModalEditarServicio = (idServicio) => {
   const dispatch = useDispatch();
@@ -27,14 +29,24 @@ const ModalEditarServicio = (idServicio) => {
     setNumeroSerie(e.target.value);
   }
 
-  const editarServicio = () => {
+  const editarServicio = async () => {
     const servicioEditado = {
         id: idServicio,
         fechaPromesaPresupuesto: fechaPromesaPresupuesto,
         numeroSerie: numeroSerie,
         descripcion: descripcion,
     }
-    //hacer logica para editar servicio - effect, actions y cambio en reducer
+
+    await putServicio(dispatch, servicioEditado);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("Error al modificar servicio");
+      dispatch(limpiarError());
+    } else {
+      toast("Edicion de servicio realizada correctamente");
+    }
 
     document.getElementById("modalButton").click();
   }
@@ -42,7 +54,7 @@ const ModalEditarServicio = (idServicio) => {
   return (
     <Modal>
       <ModalAction asChild>
-        <Button>Editar servicio</Button>
+        <Button id="modalButton">Editar servicio</Button>
       </ModalAction>
       <ModalBody className="space-y-3">
         <ModalContent>
@@ -105,7 +117,7 @@ const ModalEditarServicio = (idServicio) => {
             </div>
           </ModalHeader>
           <ModalFooter>
-            <Button onClick={editarPresupuesto} disabled={fechaPromesaPresupuesto == servicioPorId.fechaPromesaPresupuesto && descripcion == servicioPorId.descripcion && numeroSerie == servicioPorId.numeroSerie}>Editar</Button>
+            <Button onClick={editarServicio} disabled={fechaPromesaPresupuesto == servicioPorId.fechaPromesaPresupuesto && descripcion == servicioPorId.descripcion && numeroSerie == servicioPorId.numeroSerie}>Editar</Button>
           </ModalFooter>
         </ModalContent>
       </ModalBody>

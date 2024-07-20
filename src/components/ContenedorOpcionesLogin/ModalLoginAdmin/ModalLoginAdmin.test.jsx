@@ -1,19 +1,20 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import { ModalLoginAdmin } from "./ModalLoginAdmin";
 import { useDispatch } from "react-redux";
+import { login } from "../../../store/effects";
 
-//FUNCIONA BIEN
-const mockDispatch = jest.fn();
+//FUNCIONA BIEN CONFIRMADO
 jest.mock("react-redux", () => ({
   ...jest.requireActual("react-redux"),
   useDispatch: () => mockDispatch,
   useSelector: () => null,
 }));
 
-jest.mock("../../../store/effects", () => ({
-  login: jest.fn(),
-}));
+jest.mock("../../../store/effects");
+
+const mockDispatch = jest.fn();
+const mockLogin = login;
 
 describe.skip("ModalLoginAdmin", () => {
   it("should render the modal with the correct title", () => {
@@ -54,6 +55,14 @@ describe.skip("ModalLoginAdmin", () => {
     const ingresarButton = getByText("Ingresar");
     fireEvent.click(ingresarButton);
 
-    expect(mockDispatch).toHaveBeenCalled();
+    await waitFor(() => {expect(mockLogin).toHaveBeenCalledWith(
+      {
+        email: "testuser",
+        password: "testpassword",
+        rol: "Administrador",
+      },
+      expect.any(Function) 
+    );})
+    
   });
 });
