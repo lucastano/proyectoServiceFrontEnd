@@ -15,21 +15,23 @@ import {
 } from "keep-react";
 import {
   useServicioPorId,
-  useRolSesion,
-  useEmailSesion,
+  //useRolSesion,
+  //useEmailSesion,
   useError,
 } from "../../store/selectors";
 import { limpiarError } from "../../store/actions";
 
 const ModalEditarPresupuestoServicio = (idServicio) => {
   const dispatch = useDispatch();
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
+  //const rolSesion = useRolSesion();
+  //const emailSesion = useEmailSesion();
   const servicioPorId = useServicioPorId(idServicio);
 
+  /*
   if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
     return null;
   }
+  */
 
   const [costo, setCosto] = useState(servicioPorId.costo);
   const [descripcionPresupuesto, setDescripcionPresupuesto] = useState(

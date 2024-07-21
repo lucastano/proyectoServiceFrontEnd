@@ -5,13 +5,15 @@ import NuevoMensaje from "../NuevoMensaje/NuevoMensaje";
 
 
 function SeccionMensajes(idServicio) {
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
+  //const rolSesion = useRolSesion();
+  //const emailSesion = useEmailSesion();
   const servicioPorId = useServicioPorId(idServicio);
 
+  /*
   if (!rolSesion || !emailSesion) {
     return null;
   }
+  */
 
   const mensajesServicio = servicioPorId.mensajes;
   /*

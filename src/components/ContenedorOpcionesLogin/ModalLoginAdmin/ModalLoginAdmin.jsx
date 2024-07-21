@@ -4,16 +4,20 @@ import { Modal, Button, Label, Input, toast, ModalAction, ModalBody, ModalClose,
 import { login } from "../../../store/effects";
 import { useRolSesion, useError } from "../../../store/selectors";
 import { limpiarError } from "../../../store/actions";
+import { useNavigate } from "react-router-dom";
 
 export const ModalLoginAdmin = () => {
   const dispatch = useDispatch();
-  const rolSesion = useRolSesion();
+  //const rolSesion = useRolSesion();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
 
+  /*
   if (rolSesion) {
     return;
   }
+  */
 
   const manejarCambioEmail = (evento) => {
     setEmail(evento.target.value);
@@ -39,6 +43,7 @@ export const ModalLoginAdmin = () => {
       toast.error("Error al iniciar sesión");
       dispatch(limpiarError());
     } else {
+      navigate("/metricas");
       toast("Login exitoso");
     }
     

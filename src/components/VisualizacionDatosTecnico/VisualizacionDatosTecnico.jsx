@@ -1,20 +1,22 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardTitle, Label, Table, Divider, TableCell,  TableHead, TableHeader, TableRow } from "keep-react";
 import {
-  useRolSesion,
-  useEmailSesion,
+  //useRolSesion,
+  //useEmailSesion,
   useServiciosPorTecnico,
     useTecnicoPorId,
 } from "../../store/selectors";
 import ModalVisualizacionServicio from "../ModalVisualizacionServicio/ModalVisualizacionServicio";
 
 const VisualizacionDatosTecnico = (idTecnico) => {
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
+ // const rolSesion = useRolSesion();
+  //const emailSesion = useEmailSesion();
 
+  /*
   if (!rolSesion || rolSesion !== "Administrador" || !emailSesion) {
     return null;
   }
+  */
 
   const servicios = useServiciosPorTecnico(idTecnico);
   const tecnico = useTecnicoPorId(idTecnico);

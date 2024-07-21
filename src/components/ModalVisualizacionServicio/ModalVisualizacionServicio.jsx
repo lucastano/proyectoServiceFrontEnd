@@ -1,22 +1,24 @@
 import React from "react";
 import { Modal, Button, ModalAction, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalClose } from "keep-react";
 import {
-  useCedulaSesion,
-  useRolSesion,
+  //useCedulaSesion,
+  //useRolSesion,
   useServicioPorId,
 } from "../../store/selectors";
 
 export const ModalVisualizacionServicio = (idServicio) => {
-  const cedulaSesion = useCedulaSesion();
-  const rolSesion = useRolSesion();
+  //const cedulaSesion = useCedulaSesion();
+  //const rolSesion = useRolSesion();
   const servicio = useServicioPorId(idServicio);
 
+  /*
   if (
     !cedulaSesion ||
     (rolSesion == "Cliente" && cedulaSesion !== servicio.clienteCedula)
   ) {
     return null;
   }
+  */
 
   const {
     id,

@@ -22,9 +22,9 @@ import {
 import { Calendar } from "phosphor-react";
 import { format, parseISO } from "date-fns";
 import {
-  useRolSesion,
+  //useRolSesion,
   useServicios,
-  useEmailSesion,
+  //useEmailSesion,
 } from "../../store/selectors";
 import OpcionesPresupuesto from "../OpcionesPresupuesto/OpcionesPresupuesto";
 import OpcionesTerminarEntregar from "../OpcionesTerminarEntregar/OpcionesTerminarEntregar";
@@ -32,16 +32,18 @@ import ModalEditarPresupuestoServicio from "../ModalEditarPresupuestoServicio/Mo
 
 const ListaVisualizacionServiciosTecnico = () => {
   const servicios = useServicios();
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
+  //const rolSesion = useRolSesion();
+  //const emailSesion = useEmailSesion();
 
   const [tipoFiltro, setTipoFiltro] = useState("");
   const [stringFiltro, setStringFiltro] = useState("");
   const [fechaFiltro, setFechaFiltro] = useState("");
 
+  /*
   if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
     return null;
   }
+  */
 
   const manejarCambioNumeroOrden = (e) => {
     tipoFiltro == "Numero de orden" && setStringFiltro(e.target.value);

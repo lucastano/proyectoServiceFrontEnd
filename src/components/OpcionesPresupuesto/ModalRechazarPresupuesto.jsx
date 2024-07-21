@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Modal, Button, Textarea, toast, ModalClose, ModalAction, ModalBody, ModalContent, ModalFooter, Label, Input } from "keep-react";
 import { useDispatch } from "react-redux";
-import { useServicioPorId, useError } from "../../store/selectors";
+import {/* useServicioPorId,*/ useError } from "../../store/selectors";
 import { postRechazarPresupuesto } from "../../store/effects";
 import { limpiarError } from "../../store/actions";
 
 const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
   const dispatch = useDispatch();
-  const servicioPorId = useServicioPorId(idServicio);
+  //const servicioPorId = useServicioPorId(idServicio);
   const [costo, setCosto] = useState(0);
   const [razon, setRazon] = useState("");
 

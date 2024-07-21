@@ -13,7 +13,7 @@ const PantallaLandingAdmin = () => {
   return (
     <div className="flex">
       <ComponenteNavbar className="w-1/3" />
-      {/* ACA VA LO DE METRICAS */}
+      <MetricasNegocio className="w-2/3" />
     </div>
   );
 }

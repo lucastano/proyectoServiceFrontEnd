@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Input, Label, Button, Textarea, Divider, toast, Popover, PopoverContent, PopoverTrigger, DatePicker } from "keep-react";
 import {
-  useRolSesion,
-  useEmailSesion,
+  //useRolSesion,
+  //useEmailSesion,
   useIdSesion,
   useClientePorCi,
   useError,
@@ -15,13 +15,15 @@ import { limpiarError } from "../../store/actions";
 
 const FormularioAltaServicio = () => {
   const dispatch = useDispatch();
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
+  //const rolSesion = useRolSesion();
+  //const emailSesion = useEmailSesion();
   const idSesion = useIdSesion();
 
+  /*
   if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
     return null;
   }
+  */
 
   const [cedulaUsuario, setCedulaUsuario] = useState("");
   const [nombreUsuario, setNombreUsuario] = useState("");

@@ -16,16 +16,20 @@ import {
 import { login } from "../../../store/effects";
 import { useRolSesion, useError } from "../../../store/selectors";
 import { limpiarError } from "../../../store/actions";
+import { useNavigate } from "react-router-dom";
 
 export const ModalLoginTecnico = () => {
   const dispatch = useDispatch();
-  const rolSesion = useRolSesion();
+  //const rolSesion = useRolSesion();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
 
+  /*
   if (rolSesion) {
     return;
   }
+  */
 
 
   const manejarCambioEmail = (evento) => {
@@ -51,7 +55,8 @@ export const ModalLoginTecnico = () => {
       toast.error("Error al iniciar sesión");
       dispatch(limpiarError());
     } else {
-      toast("Login exitoso");
+      navigate("/serviciostecnico");
+      toast("Login exitoso"); 
     }
     
     document.getElementById("modalButton").click();

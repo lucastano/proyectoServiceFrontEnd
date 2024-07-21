@@ -6,10 +6,8 @@ import { ModalLoginAdmin } from './ModalLoginAdmin/ModalLoginAdmin';
 const ContenedorOpcionesLogin = () => {
     return (
         <div className="flex flex-col space-y-4 border rounded-lg shadow-md p-11">
-            <div>
                 <h1>Login</h1>
                 <h2>Seleccione una opción de acceso</h2>
-            </div>
             <div className="flex space-x-4">
                 <ModalLoginCliente />
                 <ModalLoginAdmin />

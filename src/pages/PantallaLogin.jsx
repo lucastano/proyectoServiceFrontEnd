@@ -12,9 +12,9 @@ const PantallaLogin = () => {
     }
     
   return (
-    <div className="flex">
-      <ComponenteNavbar className="w-1/3" />
-      <ContenedorOpcionesLogin className="w-2/3" />
+    <div className="flex ">
+      <ComponenteNavbar  />
+      <ContenedorOpcionesLogin />
     </div>
   );
 }

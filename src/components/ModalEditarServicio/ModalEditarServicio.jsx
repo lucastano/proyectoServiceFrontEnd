@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Modal, ModalAction, ModalBody, ModalClose, ModalFooter, ModalHeader, Label, Input, Textarea, Button, ModalContent, DatePicker, Popover, PopoverContent, PopoverTrigger } from "keep-react";
-import { useServicioPorId, useRolSesion, useEmailSesion, useError } from "../../store/selectors";
+import { useServicioPorId, /*useRolSesion, useEmailSesion, */useError } from "../../store/selectors";
 import { format } from "date-fns";
 import { Calendar } from "phosphor-react";
 import { limpiarError } from "../../store/actions";
@@ -9,13 +9,15 @@ import { putServicio } from "../../store/effects";
 
 const ModalEditarServicio = (idServicio) => {
   const dispatch = useDispatch();
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
+  //const rolSesion = useRolSesion();
+  //const emailSesion = useEmailSesion();
   const servicioPorId = useServicioPorId(idServicio);
 
+  /*
   if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
     return null;
   }
+  */
 
   const [fechaPromesaPresupuesto, setFechaPromesaPresupuesto] = useState(servicioPorId.fechaPromesaPresupuesto);
   const [numeroSerie, setNumeroSerie] = useState(servicioPorId.numeroSerie);

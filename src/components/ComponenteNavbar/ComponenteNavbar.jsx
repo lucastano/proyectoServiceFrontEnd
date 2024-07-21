@@ -17,14 +17,14 @@ const ComponenteNavbar = () => {
   const rolSesion = useRolSesion();
   const emailSesion = useEmailSesion();
 
-  const sinLoguear = rolSesion === null || emailSesion === null;
+  const sinLoguear = emailSesion === undefined;
+
   const esAdmin = rolSesion === "Administrador";
   const esCliente = rolSesion === "Cliente";
   const esTecnico = rolSesion === "Tecnico";
 
   return (
-    <>
-      <Sidebar>
+      <Sidebar className="h-screen">
         <SidebarBody>
           <SidebarList>
           <SidebarItem><ThemeSwitcher /></SidebarItem>
@@ -89,7 +89,6 @@ const ComponenteNavbar = () => {
           </SidebarList>
         </SidebarBody>
       </Sidebar>
-    </>
   );
 };
 

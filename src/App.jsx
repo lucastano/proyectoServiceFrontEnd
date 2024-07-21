@@ -1,32 +1,29 @@
 // App.jsx
 import "./App.css";
 import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import PantallaAltaServicio from "./pages/PantallaAltaServicio";
 import PantallaAltaTecnico from "./pages/PantallaAltaTecnico";
 import PantallaLandingCliente from "./pages/PantallaLandingCliente";
 import PantallaLandingTecnico from "./pages/PantallaLandingTecnico";
 import PantallaLogin from "./pages/PantallaLogin";
-//import PantallaMetricas from "./pages/PantallaMetricas";
+import PantallaLandingAdmin from "./pages/PantallaLandingAdmin";
 import PantallaVisualizacionDatosTecnico from "./pages/PantallaVisualizacionDatosTecnico";
 import { useRolSesion } from "./store/selectors";
 
-
-const ProtectedRoute = ({ role, children }) => {
-  const navigate = useNavigate();
+const ProtectedRoute = ({ roles, children }) => {
   const rolSesion = useRolSesion();
 
-  if (rolSesion !== role) {
+  if (!roles.includes(rolSesion)) {
     if (rolSesion === "Cliente") {
-      navigate("/servicios");
+      return <Navigate to="/servicios" />;
     } else if (rolSesion === "Tecnico") {
-      navigate("/serviciostecnico");
-    } /*else if (rolSesion === "Administrador") {
-      navigate("/metricas");
-    } */else {
-      navigate("/");
+      return <Navigate to="/serviciostecnico" />;
+    } else if (rolSesion === "Administrador") {
+      return <Navigate to="/metricas" />;
+    } else {
+      return <Navigate to="/" />;
     }
-    return null;
   }
 
   return children;
@@ -40,7 +37,7 @@ function App() {
         <Route
           path="/nuevoservicio"
           element={
-            <ProtectedRoute rol={"Tecnico" || "Administrador"}>
+            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
               <PantallaAltaServicio />
             </ProtectedRoute>
           }
@@ -48,24 +45,24 @@ function App() {
         <Route
           path="/serviciostecnico"
           element={
-            <ProtectedRoute rol={"Tecnico" || "Administrador"}>
+            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
               <PantallaLandingTecnico />
             </ProtectedRoute>
           }
         />
-        {/*<Route
+        <Route
           path="/metricas"
           element={
-            <ProtectedRoute rol={"Administrador"}>
-              <PantallaMetricas />
+            <ProtectedRoute roles={["Administrador"]}>
+              <PantallaLandingAdmin />
             </ProtectedRoute>
           }
-        />*/}
+        />
         
         <Route
           path="/servicios"
           element={
-            <ProtectedRoute rol={"Cliente"}>
+            <ProtectedRoute roles={["Cliente"]}>
               <PantallaLandingCliente />
             </ProtectedRoute>
           }
@@ -73,7 +70,7 @@ function App() {
         <Route
           path="/nuevotecnico"
           element={
-            <ProtectedRoute rol={"Administrador"}>
+            <ProtectedRoute roles={["Administrador"]}>
               <PantallaAltaTecnico />
             </ProtectedRoute>
           }
@@ -81,7 +78,7 @@ function App() {
         <Route
           path="/tecnico/:idTecnico"
           element={
-            <ProtectedRoute rol={"Administrador"}>
+            <ProtectedRoute roles={["Administrador"]}>
               <PantallaVisualizacionDatosTecnico/>
             </ProtectedRoute>
           }
@@ -90,16 +87,5 @@ function App() {
     </div>
   );
 }
-//<Route path='/usuario/:userId' element={<PantallaUsuario />} />
-
-/*
-"/Login"
-"/NuevoServicio"
-"/ServiciosTecnico"
-"/Metricas"
-"/Servicios"
-"/NuevoTecnico"
-tambien agregar las que no sean por navbar, como landing pages
-*/
 
 export default App;

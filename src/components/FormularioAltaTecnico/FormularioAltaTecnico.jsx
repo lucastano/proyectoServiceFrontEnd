@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Input, Label, Button, toast } from "keep-react";
-import { useRolSesion, useEmailSesion, useError } from "../../store/selectors";
+import { /*useRolSesion, useEmailSesion,*/ useError } from "../../store/selectors";
 import { postTecnico } from "../../store/effects";
 import { limpiarError } from "../../store/actions";
 
 const FormularioAltaTecnico = () => {
   const dispatch = useDispatch();
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
+  //const rolSesion = useRolSesion();
+  //const emailSesion = useEmailSesion();
 
+  /*
   if (!rolSesion || rolSesion !== "Administrador" || !emailSesion) {
     return null;
   }
+  */
 
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
