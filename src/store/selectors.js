@@ -85,3 +85,10 @@ export const useTecnicos = () => {
     const tecnicos = useSelector(getTecnicos); 
     return tecnicos;
 }
+
+const getMensajes = state => state.mensajes;
+
+export const useMensajes = () => {
+    const mensajes = useSelector(getMensajes); 
+    return mensajes;
+}

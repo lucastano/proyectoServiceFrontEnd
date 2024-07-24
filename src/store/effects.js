@@ -34,9 +34,68 @@ import {
   entregarReparacionError,
   cambiarPresupuestoExito,
   cambiarPresupuestoError,
+  cambiarServicioExito,
+  cambiarServicioError,
+  traerMensajesExito,
+  traerMensajesError,
+  postMensajeExito,
+  postMensajeError
 } from "./actions";
 
 const apiUrl = "https://proyectoserviceapirest20240712211208.azurewebsites.net";
+
+async function getMensajes(dispatch, idServicio) {
+  const url = `${apiUrl}/api/Mensajes/Mensajes?id=${idServicio}`;
+  const opciones = {
+    method: "GET",
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+  };
+
+  try {
+    const response = await fetch(url, opciones);
+    if (response.ok) {
+      const datos = await respuesta.json();
+      dispatch(traerMensajesExito(datos));
+    } else {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    }
+  } catch (error) {
+    dispatch(traerMensajesError(respuesta.status));
+  }
+}
+
+
+async function postMensaje(dispatch, mensaje) {
+  const url = `${apiUrl}/api/Mensajes`;
+  const data = JSON.stringify(mensaje);
+  const token = localStorage.getItem("token");
+  const opciones = {
+    method: "POST",
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: data,
+  };
+
+  try {
+    const response = await fetch(url, opciones);
+    if (response.ok) {
+      const datos = await respuesta.json();
+      dispatch(postMensajeExito(datos));
+    } else {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    }
+  } catch (error) {
+    dispatch(postMensajeError(datos));
+  }
+}
+
 
 async function putServicio(dispatch, servicio) {
   const { id, fechaPromesaPresupuesto, numeroSerie, descripcion } = servicio;
@@ -51,14 +110,15 @@ async function putServicio(dispatch, servicio) {
       Authorization: `Bearer ${token}`
     },
   };
-
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(cambiarServicioExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(cambiarServicioExito(datos));
+    }
   } catch (error) {
-    console.error(error);
     dispatch(cambiarServicioError(error));
   }
 }
@@ -78,9 +138,13 @@ const token = localStorage.getItem("token");
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(cambiarPresupuestoExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      console.log(datos);
+      dispatch(cambiarPresupuestoExito(datos));
+    }
   } catch (error) {
     console.error(error);
     dispatch(cambiarPresupuestoError(error));
@@ -89,7 +153,7 @@ const token = localStorage.getItem("token");
 
 //get administradores
 async function getAdministradores(dispatch) {
-  const url = "${apiUrl}/api/Administradores";
+  const url = `${apiUrl}/api/Administradores`;
   const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
@@ -101,9 +165,13 @@ async function getAdministradores(dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(traerAdminsExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      console.log(datos);
+      dispatch(traerAdminsExito(datos));
+    }
   } catch (error) {
     console.error("Error al obtener administradores:", error);
     dispatch(traerAdminsError(error));
@@ -112,7 +180,7 @@ async function getAdministradores(dispatch) {
 
 //get clientes
 async function getClientes(dispatch) {
-  const url = "${apiUrl}/api/Clientes";
+  const url = `${apiUrl}/api/Clientes`;
   const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
@@ -124,9 +192,13 @@ async function getClientes(dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos.clientes);
-    dispatch(traerClientesExito(datos.clientes));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      console.log(datos);
+      dispatch(traerClientesExito(datos));
+    }
   } catch (error) {
     console.error("Error al obtener clientes:", error);
     dispatch(traerClientesError(error));
@@ -147,18 +219,21 @@ async function getClientePorCI(cedula, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(traerClienteExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      console.log(datos);
+      dispatch(traerClienteExito(datos));
+    }
   } catch (error) {
-    console.error("Error al obtener cliente:", error);
     dispatch(traerClienteError(error));
   }
 }
 
 //get reparaciones
 async function getReparaciones(dispatch) {
-  const url = "${apiUrl}/api/Reparaciones/TodasLasReparaciones";
+  const url = `${apiUrl}/api/Reparaciones/TodasLasReparaciones`;
   const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
@@ -170,9 +245,13 @@ async function getReparaciones(dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos.reparaciones);
-    dispatch(traerReparacionesExito(datos.reparaciones));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      console.log(datos.reparaciones);
+      dispatch(traerReparacionesExito(datos.reparaciones));
+    }
   } catch (error) {
     console.error("Error al obtener reparaciones:", error);
     dispatch(traerReparacionesError(error));
@@ -193,9 +272,13 @@ async function getReparacionesPorCI(cedula, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos.reparaciones);
-    dispatch(traerReparacionesExito(datos.reparaciones));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      console.log(datos.reparaciones);
+      dispatch(traerReparacionesExito(datos.reparaciones));
+    }
   } catch (error) {
     console.error("Error al obtener reparaciones:", error);
     dispatch(traerReparacionesError(error));
@@ -205,7 +288,7 @@ async function getReparacionesPorCI(cedula, dispatch) {
 
 //get reparaciones en taller
 async function getReparacionesEnTaller(dispatch) {
-  const url = "${apiUrl}/api/Reparaciones/EnTaller";
+  const url = `${apiUrl}/api/Reparaciones/EnTaller`;
   const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
@@ -217,18 +300,20 @@ async function getReparacionesEnTaller(dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(traerReparacionesTallerExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(traerReparacionesTallerExito(datos));
+    }
   } catch (error) {
-    console.error("Error al obtener reparaciones en taller:", error);
     dispatch(traerReparacionesTallerError(error));
   }
 }
 
 //get reparaciones presupuestadas
 async function getReparacionesPresupuestadas(dispatch) {
-  const url = "${apiUrl}/api/Reparaciones/Presupuestadas";
+  const url = `${apiUrl}/api/Reparaciones/Presupuestadas`;
   const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
@@ -240,18 +325,20 @@ async function getReparacionesPresupuestadas(dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(traerReparacionesPresupuestadasExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(traerReparacionesPresupuestadasExito(datos));
+    }
   } catch (error) {
-    console.error("Error al obtener reparaciones presupuestadas:", error);
     dispatch(traerReparacionesPrespuestadasError(error));
   }
 }
 
 //get tecnicos
 async function getTecnicos(dispatch) {
-  const url = "${apiUrl}/api/Tecnicos";
+  const url = `${apiUrl}/api/Tecnicos`;
   const token = localStorage.getItem("token"); 
   const opciones = {
     method: "GET",
@@ -263,18 +350,21 @@ async function getTecnicos(dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(traerTecnicosExito(datos.tecnicos));
+    if (!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      console.log(datos);
+      dispatch(traerTecnicosExito(datos.tecnicos));
+    }
   } catch (error) {
-    console.error("Error al obtener técnicos:", error);
     dispatch(traerTecnicosError(error));
   }
 }
 
 //post cliente
 async function postCliente(nuevoCliente, dispatch) {
-  const url = "${apiUrl}/api/Clientes";
+  const url = `${apiUrl}/api/Clientes`;
   const data = JSON.stringify(nuevoCliente);
   const token = localStorage.getItem("token"); 
   const opciones = {
@@ -289,18 +379,20 @@ async function postCliente(nuevoCliente, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(altaClienteExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(altaClienteExito(datos));
+    }
   } catch (error) {
-    console.error("Error al crear cliente:", error);
     dispatch(altaClienteError(error));
   }
 }
 
 //post reparacion
 async function postReparacion(nuevaReparacion, dispatch) {
-  const url = "${apiUrl}/api/Reparaciones";
+  const url = `${apiUrl}/api/Reparaciones`;
   const data = JSON.stringify(nuevaReparacion);
   const token = localStorage.getItem("token"); 
   const opciones = {
@@ -315,11 +407,13 @@ async function postReparacion(nuevaReparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(altaServicioExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(altaServicioExito(datos));
+    }
   } catch (error) {
-    console.error("Error al crear reparación:", error);
     dispatch(altaServicioError(error));
   }
 }
@@ -327,7 +421,7 @@ async function postReparacion(nuevaReparacion, dispatch) {
 //post presupuestacion reparacion
 async function postPresupuestacionReparacion(reparacion, dispatch) {
   const { idReparacion, manoObra, descripcion, fechaPromesaEntrega } = reparacion;
-  const url = '${apiUrl}/api/Reparaciones/Presupuestar';
+  const url = `${apiUrl}/api/Reparaciones/Presupuestar`;
   const token = localStorage.getItem("token"); 
   const opciones = {
     method: "POST",
@@ -346,11 +440,13 @@ async function postPresupuestacionReparacion(reparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(presupuestarReparacionExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(presupuestarReparacionExito(datos));
+    }
   } catch (error) {
-    console.error("Error al presupuestar reparación:", error);
     dispatch(presupuestarReparacionError(error));
   }
 }
@@ -369,11 +465,13 @@ async function postTerminarReparacion(terminoReparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(terminarReparacionExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(terminarReparacionExito(datos));
+    }
   } catch (error) {
-    console.error("Error al terminar reparación:", error);
     dispatch(terminarReparacionError(error));
   }
 
@@ -392,9 +490,12 @@ async function postEntregarReparacion(reparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(entregarReparacionExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(entregarReparacionExito(datos));
+    }
   } catch (error) {
     console.error("Error al entregar reparación:", error);
     dispatch(entregarReparacionError(error));
@@ -416,11 +517,13 @@ async function postAceptarPresupuesto(reparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(aceptarPresupuestoExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(aceptarPresupuestoExito(datos));
+    }
   } catch (error) {
-    console.error("Error al aceptar presupuesto:", error);
     dispatch(aceptarPresupuestoError(error));
   }
 }
@@ -440,18 +543,20 @@ async function postRechazarPresupuesto(rechazo, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(rechazarPresupuestoExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(rechazarPresupuestoExito(datos));
+    }
   } catch (error) {
-    console.error("Error al rechazar presupuesto:", error);
     dispatch(rechazarPresupuestoError(error));
   }
 }
 
 //post tecnico
 async function postTecnico(nuevoTecnico, dispatch) {
-  const url = "${apiUrl}/api/Tecnicos";
+  const url = `${apiUrl}/api/Tecnicos`;
   const data = JSON.stringify(nuevoTecnico);
   const token = localStorage.getItem("token"); 
   const opciones = {
@@ -466,18 +571,20 @@ async function postTecnico(nuevoTecnico, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(altaTecnicoExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(altaTecnicoExito(datos));
+    }
   } catch (error) {
-    console.error("Error al crear técnico:", error);
     dispatch(altaTecnicoError(error));
   }
 }
 
 //post administrador
 async function postAdministrador(nuevoAdmin, dispatch) {
-  const url = "${apiUrl}/api/Administradores";
+  const url = `${apiUrl}/api/Administradores`;
   const data = JSON.stringify(nuevoAdmin);
 
   const opciones = {
@@ -492,18 +599,20 @@ async function postAdministrador(nuevoAdmin, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos);
-    dispatch(altaAdminExito(datos));
+    if(!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(altaAdminExito(datos));
+    }
   } catch (error) {
-    console.error("Error al crear administrador:", error);
     dispatch(altaAdminError(error));
   }
 }
 
 //post login
 async function login(user, dispatch) {
-  const url = "${apiUrl}/api/Seguridad";
+  const url = `${apiUrl}/api/Seguridad`;
   const data = JSON.stringify(user);
 
   const opciones = {
@@ -516,16 +625,18 @@ async function login(user, dispatch) {
   };
   try {
     const respuesta = await fetch(url, opciones);
-    const datos = await respuesta.json();
-    console.log(datos); 
-
-    if (datos.token) {
-      localStorage.setItem("token", datos.token);
-    };
-
-    dispatch(loginExito(datos.usuario));
+    if (!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      if (datos.token) {
+        localStorage.setItem("token", datos.token);
+      } else {
+        throw new Error("No se recibio token");
+      }
+      dispatch(loginExito(datos.usuario));
+    }
   } catch (error) {
-    console.error("Error al realizar login:", error);
     dispatch(loginError(error));
   }
 }
@@ -559,4 +670,6 @@ export {
   logout,
   putServicio,
   putPresupuesto,
+  postMensaje,
+  getMensajes
 };

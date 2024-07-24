@@ -50,7 +50,37 @@ export const CAMBIAR_SERVICIO_EXITO = 'CAMBIAR_SERVICIO_EXITO';
 export const CAMBIAR_SERVICIO_ERROR = 'CAMBIAR_SERVICIO_ERROR';
 export const PRESUPUESTAR_SERVICIO_EXITO = 'PRESUPUESTAR_SERVICIO_EXITO';
 export const PRESUPUESTAR_SERVICIO_ERROR = 'PRESUPUESTAR_SERVICIO_ERROR';
+export const POST_MENSAJE_EXITO = 'POST_MENSAJE_EXITO';
+export const POST_MENSAJE_ERROR = 'POST_MENSAJE_ERROR';
+export const TRAER_MENSAJES_EXITO = 'TRAER_MENSAJES_EXITO';
+export const TRAER_MENSAJES_ERROR = 'TRAER_MENSAJES_ERROR';
 
+export const traerMensajesExito = (mensajes) => {
+    return {
+        type: TRAER_MENSAJES_EXITO,
+        payload: mensajes
+    }
+}
+
+export const traerMensajesError = (error) => {
+    return {
+        type: TRAER_MENSAJES_ERROR,
+        payload: error
+    }
+}
+export const postMensajeExito = (mensaje) => {
+    return {
+        type: POST_MENSAJE_EXITO,
+        payload: mensaje
+    }
+}
+
+export const postMensajeError = (error) => {
+    return {
+        type: POST_MENSAJE_ERROR,
+        payload: error
+    }
+}
 export const prespuestarReparacionExito = (servicio) => {
     return {
         type: PRESUPUESTAR_REPARACION_EXITO,

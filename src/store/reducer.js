@@ -39,6 +39,10 @@ import {
   CAMBIAR_SERVICIO_EXITO,
   CAMBIAR_SERVICIO_ERROR,
   LIMPIAR_ERROR,
+  POST_MENSAJE_EXITO,
+  POST_MENSAJE_ERROR,
+  TRAER_MENSAJES_EXITO,
+  TRAER_MENSAJES_ERROR,
 } from "./actions";
 
 const initialState = {
@@ -49,6 +53,7 @@ const initialState = {
   admins: [],
   sesion: null,
   error: null,
+  mensajes: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -292,6 +297,28 @@ const reducer = (state = initialState, action) => {
         error: null,
       };
     case CAMBIAR_SERVICIO_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case POST_MENSAJE_EXITO:
+      return {
+        ...state,
+        mensajes: [...state.mensajes, action.payload],
+        error: null,
+      };
+    case POST_MENSAJE_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case TRAER_MENSAJES_EXITO:
+      return {
+        ...state,
+        mensajes: action.payload,
+        error: null,
+      };
+    case TRAER_MENSAJES_ERROR:
       return {
         ...state,
         error: action.payload,

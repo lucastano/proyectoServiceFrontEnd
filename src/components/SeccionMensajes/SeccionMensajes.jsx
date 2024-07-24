@@ -1,32 +1,36 @@
-import React from "react";
-import { Timeline, TimelineItem, TimelinePoint, TimelineContent } from "keep-react";
-import { useRolSesion, useEmailSesion, useServicioPorId } from "../../store/selectors";
+import React, { useEffect, useState } from "react";
+import {
+  Timeline,
+  TimelineItem,
+  TimelinePoint,
+  TimelineContent,
+} from "keep-react";
 import NuevoMensaje from "../NuevoMensaje/NuevoMensaje";
+import { useDispatch } from "react-redux";
+import { getMensajes } from "../../store/effects";
+import { useMensajes } from "../../store/selectors";
 
+function SeccionMensajes({ idServicio }) {
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+  const mensajes = useMensajes();
 
-function SeccionMensajes(idServicio) {
-  //const rolSesion = useRolSesion();
-  //const emailSesion = useEmailSesion();
-  const servicioPorId = useServicioPorId(idServicio);
+  useEffect(() => {
+    const fetchMensajes = async () => {
+      await getMensajes(dispatch, idServicio);
+      setIsLoading(false);
+    };
 
-  /*
-  if (!rolSesion || !emailSesion) {
-    return null;
-  }
-  */
+    fetchMensajes();
+  }, [dispatch, idServicio]);
 
-  const mensajesServicio = servicioPorId.mensajes;
-  /*
-    suponiendo que mensaje tiene :
-    fecha
-    idUsuario
-    contenido
-    */
-  return (
+  return isLoading ? (
+    <></>
+  ) : (
     <div>
       <Timeline>
-        {mensajesServicio &&
-          mensajesServicio.map((mensaje) => {
+        {mensajes &&
+          mensajes.map((mensaje) => {
             <TimelineItem>
               <TimelinePoint />
               <TimelineContent>
@@ -43,7 +47,7 @@ function SeccionMensajes(idServicio) {
             </TimelineItem>;
           })}
       </Timeline>
-      <NuevoMensaje idServicio={idServicio}/>
+      <NuevoMensaje idServicio={idServicio} />
     </div>
   );
 }
