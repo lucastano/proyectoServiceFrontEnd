@@ -54,7 +54,15 @@ export const POST_MENSAJE_EXITO = 'POST_MENSAJE_EXITO';
 export const POST_MENSAJE_ERROR = 'POST_MENSAJE_ERROR';
 export const TRAER_MENSAJES_EXITO = 'TRAER_MENSAJES_EXITO';
 export const TRAER_MENSAJES_ERROR = 'TRAER_MENSAJES_ERROR';
+export const GENERAR_ORDEN_ERROR = 'GENERAR_ORDEN_ERROR';
 
+export const generarOrdenError = (error) => {
+    return {
+        type: GENERAR_ORDEN_ERROR,
+        payload: error
+    };
+
+}
 export const traerMensajesExito = (mensajes) => {
     return {
         type: TRAER_MENSAJES_EXITO,

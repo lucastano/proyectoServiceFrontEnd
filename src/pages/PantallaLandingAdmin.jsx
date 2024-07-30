@@ -1,6 +1,7 @@
 import React from "react";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
+import MetricasNegocio from "../components/MetricasNegocio/MetricasNegocio";
 
 const PantallaLandingAdmin = () => {
     const rolSesion = useRolSesion();

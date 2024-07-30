@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Button, ModalAction, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalClose } from "keep-react";
 import { useServicioPorId, useMensajes } from "../../store/selectors";
 import SeccionMensajes from "../SeccionMensajes/SeccionMensajes";
+import DescargarOrdenButton from "../DescargarOrdenButton/DescargarOrdenButton";
 
 export const ModalVisualizacionServicio = ({ idServicio }) => {
   const servicio = useServicioPorId(idServicio);
@@ -59,6 +60,7 @@ export const ModalVisualizacionServicio = ({ idServicio }) => {
                     Cerrar
                   </Button>
                 </ModalClose>
+                <DescargarOrdenButton idServicio={idServicio}/>
               </ModalFooter>
             </ModalContent>
           </ModalBody>

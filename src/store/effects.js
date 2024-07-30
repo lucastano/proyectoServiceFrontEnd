@@ -44,6 +44,30 @@ import {
 
 const apiUrl = "https://proyectoserviceapirest20240712211208.azurewebsites.net";
 
+async function getOrden(/*dispatch,*/ idServicio) {
+  const url = `https://localhost:7105/api/Reparaciones/GenerarOrdenDeServicio?id=${idServicio}`;
+  const token = localStorage.getItem("token");
+  const opciones = {
+    method: "GET",
+    headers: {
+      accept: "*/*",
+      Authorization: `Bearer ${token}`
+    },
+  };
+
+  try {
+    const response = await fetch(url, opciones);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    //dispatch(generarOrdenError(error.message));
+    return null;
+  }
+}
 async function getMensajes(dispatch, idServicio) {
   const url = `${apiUrl}/api/Mensajes/Mensajes?id=${idServicio}`;
   const opciones = {
@@ -58,13 +82,13 @@ async function getMensajes(dispatch, idServicio) {
   try {
     const response = await fetch(url, opciones);
     if (response.ok) {
-      const datos = await respuesta.json();
+      const datos = await response.json();
       dispatch(traerMensajesExito(datos));
     } else {
-      throw new Error(`HTTP error! status: ${respuesta.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    dispatch(traerMensajesError(respuesta.status));
+    dispatch(traerMensajesError(response.status));
   }
 }
 
@@ -649,6 +673,7 @@ async function logout(dispatch) {
   dispatch(logoutExito());
 }
 export {
+  getOrden,
   getAdministradores,
   getClientes,
   getClientePorCI,

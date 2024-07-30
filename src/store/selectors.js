@@ -44,6 +44,17 @@ export const useServicios = () => {
     return servicios;
 };
 
+export const useServiciosPorFechas = (fechaInicio, fechaFin) => {
+    const servicios = useSelector(getServicios); 
+    const serviciosFiltrados = servicios.filter(servicio => {
+        const fechaServicio = new Date(servicio.fecha);
+        return fechaServicio >= fechaInicio && fechaServicio <= fechaFin;
+    });
+
+    return serviciosFiltrados;
+}
+
+
 const getClientes = state => state.clientes;
 
 export const useClientes = () => {
@@ -92,3 +103,50 @@ export const useMensajes = () => {
     const mensajes = useSelector(getMensajes); 
     return mensajes;
 }
+
+
+export const useEstadosReparaciones = (arrayServicios) => {
+    const estados = [];
+
+    arrayServicios.forEach(servicio => {
+        estados.push(servicio.estado);
+    })
+    
+    return estados;
+}
+
+export const useTecnicosReparaciones = (arrayServicios) => {
+    const tecnicos = [];
+
+    arrayServicios.forEach(servicio => {
+        if(servicio.idTecnico) {
+            tecnicos.push(servicio.idTecnico);
+        }
+    });
+
+    return tecnicos;
+}
+
+export const useNumeroSerieReparaciones = (arrayServicios) => {
+    const aparatos = [];
+
+    arrayServicios.forEach(servicio => {
+        aparatos.push(servicio.numeroSerie);
+    });
+
+    return aparatos;
+}
+
+export const useCantidadesPorParametro = (array) => {
+    const cantidades = {};
+
+    array.forEach(item => {
+        if(cantidades[item]) {
+            cantidades[item]++;
+        } else {
+            cantidades[item] = 1;
+        }
+    })
+
+    return cantidades;
+} 

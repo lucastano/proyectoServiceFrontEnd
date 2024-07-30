@@ -1,0 +1,40 @@
+import React, { useState } from "react";
+import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
+import HistoriaClinica from "../components/HistoriaClinica/HistoriaClinica";
+import { useRolSesion, useEmailSesion } from "../store/selectors";
+import { Input, Label } from 'keep-react'
+
+export const PantallaHistoriaClinica = () => {
+  const rolSesion = useRolSesion();
+  const emailSesion = useEmailSesion();
+  const [numeroSerie, setNumeroSerie] = useState("");
+  const [tempNumeroSerie, setTempNumeroSerie] = useState("");
+
+  if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
+    return null;
+  }
+
+  const manejarCambioNumeroSerie = (e) => {
+    setTempNumeroSerie(e.target.value);
+  }
+
+  const manejarClickBoton = () => {
+    setNumeroSerie(tempNumeroSerie);
+  }
+
+  return (
+    <div className="flex">
+      <ComponenteNavbar className="w-1/3" />
+      <div className="w-2/3">
+        <fieldset className="max-w-md space-y-1">
+          <Label htmlFor="name">Enter Name</Label>
+          <Input id="name" placeholder="Enter name" type="text" onChange={(e) => manejarCambioNumeroSerie(e)}/>
+          <Button onClick={manejarClickBoton}>Buscar</Button>
+        </fieldset>
+        {numeroSerie == '' ? null : (<HistoriaClinica numeroSerie={numeroSerie} />)}
+      </div>
+    </div>
+  );
+};
+
+export default PantallaHistoriaClinica;

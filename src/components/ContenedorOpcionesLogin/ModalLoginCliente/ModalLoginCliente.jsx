@@ -13,14 +13,14 @@ import {
   ModalFooter,
   ModalContent,
 } from "keep-react";
-import { login } from "../../../store/effects";
-import { useRolSesion, useError } from "../../../store/selectors";
+import { getReparacionesPorCI, login } from "../../../store/effects";
+import { useIdSesion, useError } from "../../../store/selectors";
 import { limpiarError } from "../../../store/actions";
 import { useNavigate } from "react-router-dom";
 
 export const ModalLoginCliente = () => {
   const dispatch = useDispatch();
-  //const rolSesion = useRolSesion();
+  const idSesion = useIdSesion();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -54,12 +54,24 @@ export const ModalLoginCliente = () => {
       toast.error("Error al iniciar sesión");
       dispatch(limpiarError());
     } else {
+      await traerReparaciones();
       navigate("/servicios");
       toast("Login exitoso");
-    }
+    }   
     
     document.getElementById("modalButton").click();
   };
+
+  const traerReparaciones = async () => {
+    await getReparacionesPorCI(idSesion, dispatch);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("No se pudo obtener reparaciones");
+      dispatch(limpiarError());
+    }
+  }
 
   return (
       <Modal>

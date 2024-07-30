@@ -6,11 +6,18 @@ import {
   ListBullets,
   ChartPieSlice,
   UserPlus,
+  FirstAid
 } from "phosphor-react";
-import { Sidebar, SidebarBody, SidebarItem, SidebarList, SidebarFooter } from "keep-react";
+import {
+  Sidebar,
+  SidebarBody,
+  SidebarItem,
+  SidebarList,
+  SidebarFooter,
+} from "keep-react";
 import { useRolSesion, useEmailSesion } from "../../store/selectors";
 import { ModalLogout } from "../ModalLogout/ModalLogout";
-import  DropdownTecnicos  from "../DropdownTecnicos/DropdownTecnicos";
+import DropdownTecnicos from "../DropdownTecnicos/DropdownTecnicos";
 import ThemeSwitcher from "../ThemeSwitcher";
 
 const ComponenteNavbar = () => {
@@ -24,71 +31,79 @@ const ComponenteNavbar = () => {
   const esTecnico = rolSesion === "Tecnico";
 
   return (
-      <Sidebar className="h-screen">
-        <SidebarBody>
-          <SidebarList>
-          <SidebarItem><ThemeSwitcher /></SidebarItem>
-            {sinLoguear && (
-              <Link to="/">
+    <Sidebar className="h-screen">
+      <SidebarBody>
+        <SidebarList>
+          <SidebarItem>
+            <ThemeSwitcher />
+          </SidebarItem>
+          {sinLoguear && (
+            <Link to="/">
+              <SidebarItem>
+                <SignIn size={20} />
+                Login
+              </SidebarItem>
+            </Link>
+          )}
+          {(esTecnico || esAdmin) && (
+            <>
+              <Link to="/nuevoservicio">
                 <SidebarItem>
-                  <SignIn size={20} />
-                  Login
+                  <Wrench size={20} />
+                  Nueva reparación
                 </SidebarItem>
               </Link>
-            )}
-            {(esTecnico || esAdmin) && (
-              <>
-                <Link to="/nuevoservicio">
-                  <SidebarItem>
-                    <Wrench size={20} />
-                    Nueva reparación
-                  </SidebarItem>
-                </Link>
-                <Link to="/serviciostecnico">
-                  <SidebarItem>
-                    <ListBullets size={20} />
-                    Servicios - Tecnico
-                  </SidebarItem>
-                </Link>
-                <Link to="/metricas">
-                  <SidebarItem>
-                    <ChartPieSlice size={20} />
-                    Metricas
-                  </SidebarItem>
-                </Link>
-              </>
-            )}
-            {esCliente && (
-              <Link to="/servicios">
+              <Link to="/serviciostecnico">
                 <SidebarItem>
                   <ListBullets size={20} />
-                  Servicios
+                  Servicios - Tecnico
                 </SidebarItem>
               </Link>
-            )}
-            {esAdmin && (
-              <>
+              <Link to="/metricas">
                 <SidebarItem>
-                  <DropdownTecnicos />
+                  <ChartPieSlice size={20} />
+                  Metricas
                 </SidebarItem>
-                <Link to="/nuevotecnico">
-                  <SidebarItem>
-                    <UserPlus size={20} />
-                    Nuevo Tecnico
-                  </SidebarItem>
-                </Link>
-              </>
-            )}
-            {!sinLoguear && (
-              <SidebarFooter>
+              </Link>
+              <Link to="/historiaClinica">
                 <SidebarItem>
-                  <ModalLogout />
+                  <FirstAid size={20} />
+                  Historia Clinica
                 </SidebarItem>
-              </SidebarFooter>
-            )}
-          </SidebarList>
-        </SidebarBody>
-      </Sidebar>
+              </Link>
+            </>
+          )}
+          {esCliente && (
+            <Link to="/servicios">
+              <SidebarItem>
+                <ListBullets size={20} />
+                Servicios
+              </SidebarItem>
+            </Link>
+          )}
+          {esAdmin && (
+            <>
+              <SidebarItem>
+                <DropdownTecnicos />
+              </SidebarItem>
+              <Link to="/nuevotecnico">
+                <SidebarItem>
+                  <UserPlus size={20} />
+                  Nuevo Tecnico
+                </SidebarItem>
+              </Link>
+            </>
+          )}
+          {!sinLoguear && (
+            <SidebarFooter>
+              <SidebarItem>
+                <ModalLogout />
+              </SidebarItem>
+            </SidebarFooter>
+          )}
+        </SidebarList>
+      </SidebarBody>
+    </Sidebar>
   );
 };
 

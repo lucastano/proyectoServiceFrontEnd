@@ -16,12 +16,16 @@ function SeccionMensajes({ idServicio }) {
   const mensajes = useMensajes();
 
   useEffect(() => {
+
     const fetchMensajes = async () => {
       await getMensajes(dispatch, idServicio);
       setIsLoading(false);
     };
 
     fetchMensajes();
+    const intervalId = setInterval(fetchMensajes, 5 * 60 * 1000);
+
+    return () => clearInterval(intervalId)
   }, [dispatch, idServicio]);
 
   return isLoading ? (

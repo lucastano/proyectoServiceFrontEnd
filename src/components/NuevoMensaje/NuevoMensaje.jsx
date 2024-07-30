@@ -1,21 +1,27 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import { Button, Textarea, toast } from 'keep-react';
 import { useIdSesion } from '../../store/selectors';
 
 function NuevoMensaje ({idServicio}) {
     const idSesion = useIdSesion();
     const [descripcion, setDescripcion] = useState("");
+    const servicio = useServicioPorId(idServicio);
+
+    const destinatario = useMemo(() => {
+        const ciCliente = servicio.clienteCedula;
+        const cliente = useClientePorCi(ciCliente);
+        return idSesion === cliente.id ? servicio.tecnicoId : cliente.id;
+      }, [idSesion, servicio.clienteCedula]);
 
     const manejarCambioDescripcion = (e) => {
         setDescripcion(e.target.value);
     }
 
     const manejarClickEnviar = async () => {
-        //capaz hay que pasar esto a SeccionMensajes y bajarlo a NuevoMensaje como prop
         const nuevoMensaje = {
             reparacionId: idServicio,
             emisorId: idSesion,
-            destinatarioId: 0, //NO ES NECESARIO
+            destinatarioId: destinatario,
             texto: descripcion
         }
 

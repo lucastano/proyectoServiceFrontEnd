@@ -13,23 +13,39 @@ import {
   ModalFooter,
   ModalContent,
 } from "keep-react";
-import { login } from "../../../store/effects";
-import { useRolSesion, useError } from "../../../store/selectors";
+import { login, getReparaciones, getClientes } from "../../../store/effects";
+import { useError } from "../../../store/selectors";
 import { limpiarError } from "../../../store/actions";
 import { useNavigate } from "react-router-dom";
 
+
 export const ModalLoginTecnico = () => {
   const dispatch = useDispatch();
-  //const rolSesion = useRolSesion();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
 
-  /*
-  if (rolSesion) {
-    return;
+  const traerReparaciones = async () => {
+    await getReparaciones(dispatch);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("No se pudo obtener reparaciones");
+      dispatch(limpiarError());
+    }
   }
-  */
+
+  const traerClientes = async () => {
+    await getClientes(dispatch);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("No se pudo obtener clientes");
+      dispatch(limpiarError());
+    }
+  }
 
 
   const manejarCambioEmail = (evento) => {
@@ -55,12 +71,18 @@ export const ModalLoginTecnico = () => {
       toast.error("Error al iniciar sesión");
       dispatch(limpiarError());
     } else {
+      await traerReparaciones();
+      await traerClientes();
       navigate("/serviciostecnico");
       toast("Login exitoso"); 
     }
+
     
     document.getElementById("modalButton").click();
   };
+
+  
+
 
   return (
     <Modal>

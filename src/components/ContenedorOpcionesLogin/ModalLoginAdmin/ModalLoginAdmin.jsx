@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Modal, Button, Label, Input, toast, ModalAction, ModalBody, ModalClose, ModalHeader, ModalFooter, ModalContent } from "keep-react";
-import { login } from "../../../store/effects";
-import { useRolSesion, useError } from "../../../store/selectors";
+import { getClientes, getReparaciones, getTecnicos, login } from "../../../store/effects";
+import { useError } from "../../../store/selectors";
 import { limpiarError } from "../../../store/actions";
 import { useNavigate } from "react-router-dom";
 
@@ -12,12 +12,6 @@ export const ModalLoginAdmin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
-
-  /*
-  if (rolSesion) {
-    return;
-  }
-  */
 
   const manejarCambioEmail = (evento) => {
     setEmail(evento.target.value);
@@ -43,12 +37,48 @@ export const ModalLoginAdmin = () => {
       toast.error("Error al iniciar sesión");
       dispatch(limpiarError());
     } else {
+      await traerReparaciones();
+      await traerClientes();
+      await traerTecnicos();
       navigate("/metricas");
       toast("Login exitoso");
     }
     
     document.getElementById("modalButton").click();
   };
+
+  const traerReparaciones = async () => {
+    await getReparaciones(dispatch);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("No se pudo obtener reparaciones");
+      dispatch(limpiarError());
+    }
+  }
+
+  const traerClientes = async () => {
+    await getClientes(dispatch);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("No se pudo obtener clientes");
+      dispatch(limpiarError());
+    }
+  }
+
+  const traerTecnicos = async () => {
+    await getTecnicos(dispatch);
+
+    const error = useError();
+
+    if (error) {
+      toast.error("No se pudo obtener tecnicos");
+      dispatch(limpiarError());
+    }
+  }
 
   return (
     <Modal>

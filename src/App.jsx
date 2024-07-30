@@ -34,6 +34,11 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<PantallaLogin />} />
+        <Route path="/historiaClinica" element={
+            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
+              <PantallaAltaServicio />
+            </ProtectedRoute>
+          }/>
         <Route
           path="/nuevoservicio"
           element={

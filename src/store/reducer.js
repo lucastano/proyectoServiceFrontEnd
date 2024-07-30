@@ -323,6 +323,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         error: action.payload,
       };
+    case GENERAR_ORDEN_ERROR: 
+      return {
+        ...state,
+        error: action.payload,
+      };
     default:
       return state;
   }
