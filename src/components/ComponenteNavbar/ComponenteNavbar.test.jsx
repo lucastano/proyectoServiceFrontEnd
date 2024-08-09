@@ -20,22 +20,24 @@ const store = mockStore({
   error: null,
 });
 
-describe.skip("ComponenteNavbar", () => {
+describe("ComponenteNavbar", () => {
   it("renders without errors", () => {
     render(
       <Provider store={store}>
-        <ComponenteNavbar />
+        <Router basename="/">
+          <ComponenteNavbar />
+        </Router>
       </Provider>
     );
   });
 
   it("displays login button when not logged in", () => {
     useRolSesion.mockReturnValue(null); // Mock the useRolSesion hook
-    useEmailSesion.mockReturnValue(null); // Mock the useEmailSesion hook
+    useEmailSesion.mockReturnValue(undefined); // Mock the useEmailSesion hook
 
     const { getByText } = render(
       <Provider store={store}>
-        <Router>
+        <Router basename="/">
           <ComponenteNavbar />
         </Router>
       </Provider>
@@ -49,7 +51,7 @@ describe.skip("ComponenteNavbar", () => {
 
     const { getByText } = render(
       <Provider store={store}>
-        <Router>
+        <Router basename="/">
           <ComponenteNavbar />
         </Router>
       </Provider>
@@ -65,7 +67,7 @@ describe.skip("ComponenteNavbar", () => {
 
     const { getByText } = render(
       <Provider store={store}>
-        <Router>
+        <Router basename="/">
           <ComponenteNavbar />
         </Router>
       </Provider>
@@ -79,7 +81,7 @@ describe.skip("ComponenteNavbar", () => {
 
     const { getByText } = render(
       <Provider store={store}>
-        <Router>
+        <Router basename="/">
           <ComponenteNavbar />
         </Router>
       </Provider>
@@ -93,7 +95,7 @@ describe.skip("ComponenteNavbar", () => {
 
     const { getByText } = render(
       <Provider store={store}>
-        <Router>
+        <Router basename="/">
           <ComponenteNavbar />
         </Router>
       </Provider>

@@ -1,9 +1,9 @@
 import React from "react";
-import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
-import ListaVisualizacionServiciosTecnico from "../components/ListaVisualizacionServicios/ListaVisualizacionServiciosTecnico";
+import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
+import AgregarProducto from "../components/AgregarProducto/AgregarProducto";
 
-const PantallaLandingTecnico = () => {
+const PantallaAgregarProducto = () => {
   const rolSesion = useRolSesion();
   const emailSesion = useEmailSesion();
 
@@ -17,10 +17,10 @@ const PantallaLandingTecnico = () => {
         <ComponenteNavbar />
       </div>
       <div className="flex justify-center w-3/4">
-        <ListaVisualizacionServiciosTecnico className="w-2/3" />
+        <AgregarProducto />
       </div>
     </div>
   );
 };
 
-export default PantallaLandingTecnico;
+export default PantallaAgregarProducto;

@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Modal, Button, Label, Input, toast, ModalAction, ModalBody, ModalClose, ModalHeader, ModalFooter, ModalContent } from "keep-react";
-import { getClientes, getReparaciones, getTecnicos, login } from "../../../store/effects";
-import { useError } from "../../../store/selectors";
-import { limpiarError } from "../../../store/actions";
+import { getClientes, getReparaciones, getTecnicos, login, getProductos } from "../../../store/effects";
 import { useNavigate } from "react-router-dom";
 
 export const ModalLoginAdmin = () => {
   const dispatch = useDispatch();
-  //const rolSesion = useRolSesion();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -27,58 +24,57 @@ export const ModalLoginAdmin = () => {
       password: contrasena,
       rol: "Administrador",
     };
-
-
-    await login(usuarioParaLogin, dispatch);
-
-    const error = useError();
-
-    if (error) {
-      toast.error("Error al iniciar sesión");
-      dispatch(limpiarError());
-    } else {
+  
+    try {
+      await login(usuarioParaLogin, dispatch);
+      await traerProductos();
       await traerReparaciones();
       await traerClientes();
       await traerTecnicos();
       navigate("/metricas");
       toast("Login exitoso");
-    }
+    } catch (error) {
+      toast.error("Error al iniciar sesión");
+      //dispatch(limpiarError());
+    }   
     
     document.getElementById("modalButton").click();
   };
-
+  
   const traerReparaciones = async () => {
-    await getReparaciones(dispatch);
-
-    const error = useError();
-
-    if (error) {
+    try {
+      await getReparaciones(dispatch);
+    } catch (error) {
       toast.error("No se pudo obtener reparaciones");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
-  }
+  };
 
+  const traerProductos = async () => {
+    try {
+      await getProductos(dispatch);
+    } catch (error) {
+      toast.error("No se pudo obtener productos");
+  }
+};
+  
   const traerClientes = async () => {
-    await getClientes(dispatch);
-
-    const error = useError();
-
-    if (error) {
+    try {
+      await getClientes(dispatch);
+    } catch (error) {
       toast.error("No se pudo obtener clientes");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
-  }
-
+  };
+  
   const traerTecnicos = async () => {
-    await getTecnicos(dispatch);
-
-    const error = useError();
-
-    if (error) {
+    try {
+      await getTecnicos(dispatch);
+    } catch (error) {
       toast.error("No se pudo obtener tecnicos");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
-  }
+  };
 
   return (
     <Modal>
@@ -90,7 +86,7 @@ export const ModalLoginAdmin = () => {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <h3 className="mb-2 text-body-1 font-medium text-metal-900">
+              <h3 className="mb-2 text-body-1 font-medium">
                 Ingreso de administrador
               </h3>
               <form className="mx-auto max-w-md space-y-2 p-4">

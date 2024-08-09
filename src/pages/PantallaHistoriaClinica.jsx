@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import HistoriaClinica from "../components/HistoriaClinica/HistoriaClinica";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
-import { Input, Label } from 'keep-react'
+import { Input, Label } from "keep-react";
 
 export const PantallaHistoriaClinica = () => {
   const rolSesion = useRolSesion();
@@ -16,22 +16,31 @@ export const PantallaHistoriaClinica = () => {
 
   const manejarCambioNumeroSerie = (e) => {
     setTempNumeroSerie(e.target.value);
-  }
+  };
 
   const manejarClickBoton = () => {
     setNumeroSerie(tempNumeroSerie);
-  }
+  };
 
   return (
     <div className="flex">
-      <ComponenteNavbar className="w-1/3" />
-      <div className="w-2/3">
+      <div className="w-1/4">
+        <ComponenteNavbar />
+      </div>
+      <div className="flex justify-center w-3/4">
         <fieldset className="max-w-md space-y-1">
-          <Label htmlFor="name">Enter Name</Label>
-          <Input id="name" placeholder="Enter name" type="text" onChange={(e) => manejarCambioNumeroSerie(e)}/>
+          <Label htmlFor="name">Ingrese numero de serie</Label>
+          <Input
+            id="name"
+            placeholder="Ingrese numero de serie"
+            type="text"
+            onChange={(e) => manejarCambioNumeroSerie(e)}
+          />
           <Button onClick={manejarClickBoton}>Buscar</Button>
         </fieldset>
-        {numeroSerie == '' ? null : (<HistoriaClinica numeroSerie={numeroSerie} />)}
+        {numeroSerie == "" ? null : (
+          <HistoriaClinica numeroSerie={numeroSerie} />
+        )}
       </div>
     </div>
   );

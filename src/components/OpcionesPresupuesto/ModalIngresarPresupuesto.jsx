@@ -14,9 +14,8 @@ import {
 import { useDispatch } from "react-redux";
 import { format } from "date-fns";
 import { Calendar } from "phosphor-react";
-import { useServicioPorId, useError } from "../../store/selectors";
+import { useServicioPorId } from "../../store/selectors";
 import { postPresupuestacionReparacion } from "../../store/effects";
-import { limpiarError } from "../../store/actions";
 
 const ModalIngresarPresupuesto = (idServicio) => {
   const dispatch = useDispatch();
@@ -46,21 +45,17 @@ const ModalIngresarPresupuesto = (idServicio) => {
       descripcion: descripcion,
       fechaPromesaEntrega: fechaPromesaEntrega,
     };
-
-    await postPresupuestacionReparacion(presupuesto, dispatch);
-
-    const error = useError();
-
-
-    if (!error) {
+  
+    try {
+      await postPresupuestacionReparacion(presupuesto, dispatch);
       toast("Presupuesto ingresado", {
         description: "El presupuesto ha sido ingresado correctamente",
       });
-    } else {
+    } catch (error) {
       toast.error("Ha habido un error al ingresar el presupuesto");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
-
+  
     document.getElementById("buttonModal").click();
   };
 

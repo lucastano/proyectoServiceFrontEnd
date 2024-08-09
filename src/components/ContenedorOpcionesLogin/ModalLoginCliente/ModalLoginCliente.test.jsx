@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { ModalLoginCliente } from "./ModalLoginCliente";
 import { login } from "../../../store/effects";
@@ -15,9 +16,11 @@ jest.mock("../../../store/effects");
 const mockDispatch = jest.fn();
 const mockLogin = login;
 
-describe.skip("ModalLoginCliente", () => {
+describe("ModalLoginCliente", () => {
   it("should render the modal with the correct title", () => {
-    const { getByText } = render(<ModalLoginCliente />);
+    const { getByText } = render(<MemoryRouter>
+      <ModalLoginCliente />
+    </MemoryRouter>);
     const comoClienteButton = getByText("Como cliente");
     fireEvent.click(comoClienteButton);
     const tituloModal = getByText("Ingreso de cliente");
@@ -25,7 +28,9 @@ describe.skip("ModalLoginCliente", () => {
   });
 
   it('should update the "email" state when the input value changes', () => {
-    const { getByPlaceholderText, getByText } = render(<ModalLoginCliente />);
+    const { getByPlaceholderText, getByText } = render(<MemoryRouter>
+      <ModalLoginCliente />
+    </MemoryRouter>);
     const comoClienteButton = getByText("Como cliente");
     fireEvent.click(comoClienteButton);
     const usernameInput = getByPlaceholderText("Email");
@@ -34,7 +39,9 @@ describe.skip("ModalLoginCliente", () => {
   });
 
   it('should update the "contrasena" state when the input value changes', () => {
-    const { getByPlaceholderText, getByText } = render(<ModalLoginCliente />);
+    const { getByPlaceholderText, getByText } = render(<MemoryRouter>
+      <ModalLoginCliente />
+    </MemoryRouter>);
     const comoClienteButton = getByText("Como cliente");
     fireEvent.click(comoClienteButton);
     const contrasenaInput = getByPlaceholderText("Contraseña");
@@ -43,7 +50,9 @@ describe.skip("ModalLoginCliente", () => {
   });
 
   it('should call realizarLoginCliente with correct data when the "Ingresar" button is clicked', async () => {
-    const { getByText, getByPlaceholderText } = render(<ModalLoginCliente />);
+    const { getByText, getByPlaceholderText } = render(<MemoryRouter>
+      <ModalLoginCliente />
+    </MemoryRouter>);
     const comoClienteButton = getByText("Como cliente");
     fireEvent.click(comoClienteButton);
 

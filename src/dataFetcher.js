@@ -1,6 +1,6 @@
+import { config } from '../config';
 
-
-const apiUrl = "https://proyectoserviceapirest20240712211208.azurewebsites.net";
+const {apiUrl} = config;
 
 async function getOrden(idServicio) {
   const url = `${apiUrl}/api/Reparaciones/GenerarOrdenDeServicio?id=${idServicio}`;

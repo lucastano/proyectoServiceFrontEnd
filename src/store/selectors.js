@@ -1,5 +1,12 @@
 import { useSelector } from 'react-redux';
 
+const getProductos = state => state.productos;
+
+export const useProductos = () => {
+    const productos = useSelector(getProductos); 
+    return productos;
+}
+
 export const getSesion = state => state.sesion;
 
 const getCISesion = state => getSesion(state)?.ci;
@@ -23,7 +30,7 @@ export const useRolSesion = () => {
   
 }
 
-const getIdSesion = state => state.sesion.id;
+const getIdSesion = state => getSesion(state)?.id;
 
 export const useIdSesion = () => {
     const id = useSelector(getIdSesion); 
@@ -63,7 +70,7 @@ export const useClientes = () => {
 
 }
 
-const getClientePorCi = (state, ci) => state.clientes.find(cliente => cliente.ci === ci);
+const getClientePorCi = (state, ci) => getClientes(state)?.find(cliente => cliente.ci === ci);
 
 export const useClientePorCi = (ci) => {
     const cliente = useSelector(state => getClientePorCi(state, ci));
@@ -76,17 +83,21 @@ export const useServicioPorId = (id) => {
     return servicio;
 }
 
-const getTecnicoPorId = (state, id) => state.tecnicos.find(tecnico => tecnico.id === id);
+const getTecnicoPorId = (state, id) => {
+    console.log('state.tecnicos en getTecnicoPorId: ', state.tecnicos);
+    console.log('getTecnicoPorId: ', state.tecnicos.find(tecnico => tecnico.id === id));
+    return state.tecnicos.find(tecnico => Number(tecnico.id) === Number(id));
+}
 
 export const useTecnicoPorId = (id) => {
     const tecnico = useSelector(state => getTecnicoPorId(state, id));
     return tecnico;
 }
 
-const getServiciosPorTecnico = (state, idTecnico) => state.servicios.filter(servicio => servicio.idTecnico === idTecnico);
+const getServiciosPorTecnico = (state, tecnicoId) => state.servicios.filter(servicio => servicio.tecnicoId === tecnicoId);
 
-export const useServiciosPorTecnico = (idTecnico) => {
-    const servicios = useSelector(state => getServiciosPorTecnico(state, idTecnico));
+export const useServiciosPorTecnico = (tecnicoId) => {
+    const servicios = useSelector(state => getServiciosPorTecnico(state, tecnicoId));
     return servicios;
 }
 
@@ -105,37 +116,99 @@ export const useMensajes = () => {
 }
 
 
-export const useEstadosReparaciones = (arrayServicios) => {
+export const useEstadosReparaciones = () => {
     const estados = [];
+    const servicios = useSelector(getServicios); 
 
-    arrayServicios.forEach(servicio => {
+    servicios.forEach(servicio => {
         estados.push(servicio.estado);
     })
     
     return estados;
 }
 
-export const useTecnicosReparaciones = (arrayServicios) => {
-    const tecnicos = [];
+export const useEstadosReparacionesPorFechas = (fechaInicio, fechaFin) => {
+    const estados = [];
+    const servicios = useSelector(getServicios); 
 
-    arrayServicios.forEach(servicio => {
-        if(servicio.idTecnico) {
-            tecnicos.push(servicio.idTecnico);
+    servicios.forEach(servicio => {
+        if(servicio.fecha >= fechaInicio && servicio.fecha <= fechaFin) {
+            estados.push(servicio.estado);
+        }
+    });
+
+    return estados;
+}
+
+
+export const useTecnicosReparaciones = () => {
+    const tecnicos = [];
+    const servicios = useSelector(getServicios); 
+
+    servicios !== null && servicios.forEach(servicio => {
+        if(servicio.tecnicoId) {
+            tecnicos.push(servicio.tecnicoId);
         }
     });
 
     return tecnicos;
 }
 
-export const useNumeroSerieReparaciones = (arrayServicios) => {
-    const aparatos = [];
+export const useTecnicosReparacionesPorFechas = (fechaInicio, fechaFin) => {
+    const tecnicos = [];
+    const servicios = useSelector(getServicios); 
 
-    arrayServicios.forEach(servicio => {
+    servicios.forEach(servicio => {
+        if(servicio.fecha >= fechaInicio && servicio.fecha <= fechaFin) {
+            tecnicos.push(servicio.tecnicoId);
+        }
+    });
+
+    return tecnicos;
+}
+
+export const useNumeroSerieReparaciones = () => {
+    const aparatos = [];
+    const servicios = useSelector(getServicios); 
+
+    servicios.forEach(servicio => {
         aparatos.push(servicio.numeroSerie);
     });
 
     return aparatos;
 }
+
+export const useNumeroSerieReparacionesPorFechas = (fechaInicio, fechaFin) => {
+    const aparatos = [];
+    const servicios = useSelector(getServicios); 
+
+    servicios.forEach(servicio => {
+        if(servicio.fecha >= fechaInicio && servicio.fecha <= fechaFin) {
+            aparatos.push(servicio.numeroSerie);
+        }
+    });
+
+    return aparatos;
+}
+
+export const useCantidadReparaciones = () => {
+    const servicios = useSelector(getServicios); 
+    return servicios.length;
+}
+
+export const useCantidadReparacionesPorFechas = (fechaInicio, fechaFin) => {
+    const servicios = useSelector(getServicios);
+    const serviciosFiltrados = [];
+
+    servicios.forEach(servicio => {
+        if(servicio.fecha >= fechaInicio && servicio.fecha <= fechaFin) {
+            serviciosFiltrados.push(servicio);
+        }
+    });
+
+    return serviciosFiltrados.length;
+}
+
 
 export const useCantidadesPorParametro = (array) => {
     const cantidades = {};

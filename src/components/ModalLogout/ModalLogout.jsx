@@ -14,28 +14,23 @@ import {
   ModalFooter,
 } from "keep-react";
 import { logout } from "../../store/effects";
-import { limpiarError } from "../../store/actions";
-import { useError } from "../../store/selectors";
 
 export const ModalLogout = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const manejarLogout = () => {
-    localStorage.removeItem("token");
-    logout(dispatch);
-
-    const error = useError();
-
-    if (error) {
-      toast.error("Error al realizar logout");
-      dispatch(limpiarError());
-    } else {
-      const navigate = useNavigate();
+  const manejarLogout = async () => {
+    console.log('entra a manejarLogout')
+    try {
+      await logout(dispatch);
+      console.log('llega aca');
       navigate("/");
       toast.success("Logout realizado con éxito");
+    } catch (error) {
+      toast.error("Error al realizar logout");
     }
-
-    document.getElementById("buttonModal").click();
+  
+    //document.getElementById("buttonModal").click();
   };
 
   return (
@@ -66,11 +61,9 @@ export const ModalLogout = () => {
                   Cancelar
                 </Button>
               </ModalClose>
-              <ModalClose asChild>
                 <Button onClick={manejarLogout} size="sm" color="primary">
                   Cerrar
                 </Button>
-              </ModalClose>
             </ModalFooter>
           </ModalContent>
         </ModalBody>

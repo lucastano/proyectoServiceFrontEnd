@@ -9,7 +9,10 @@ import PantallaLandingTecnico from "./pages/PantallaLandingTecnico";
 import PantallaLogin from "./pages/PantallaLogin";
 import PantallaLandingAdmin from "./pages/PantallaLandingAdmin";
 import PantallaVisualizacionDatosTecnico from "./pages/PantallaVisualizacionDatosTecnico";
+import PantallaAgregarProducto from "./pages/PantallaAgregarProducto";
 import { useRolSesion } from "./store/selectors";
+import { ThemeProvider } from "./components/theme-provider";
+
 
 const ProtectedRoute = ({ roles, children }) => {
   const rolSesion = useRolSesion();
@@ -37,6 +40,11 @@ function App() {
         <Route path="/historiaClinica" element={
             <ProtectedRoute roles={["Tecnico", "Administrador"]}>
               <PantallaAltaServicio />
+            </ProtectedRoute>
+          }/>
+          <Route path="/agregarProducto" element={
+            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
+              <PantallaAgregarProducto />
             </ProtectedRoute>
           }/>
         <Route

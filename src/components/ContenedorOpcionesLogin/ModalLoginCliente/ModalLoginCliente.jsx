@@ -14,23 +14,17 @@ import {
   ModalContent,
 } from "keep-react";
 import { getReparacionesPorCI, login } from "../../../store/effects";
-import { useIdSesion, useError } from "../../../store/selectors";
+import { useCedulaSesion } from "../../../store/selectors";
 import { limpiarError } from "../../../store/actions";
 import { useNavigate } from "react-router-dom";
 
 export const ModalLoginCliente = () => {
   const dispatch = useDispatch();
-  const idSesion = useIdSesion();
+  const ciSesion = useCedulaSesion();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
 
-  /*
-  if (rolSesion) {
-    return;
-  }
-  */
-  
   const manejarCambioEmail = (evento) => {
     setEmail(evento.target.value);
   };
@@ -46,81 +40,69 @@ export const ModalLoginCliente = () => {
       rol: "Cliente",
     };
 
-    await login(usuarioParaLogin, dispatch);
-
-    const error = useError();
-
-    if (error) {
-      toast.error("Error al iniciar sesión");
-      dispatch(limpiarError());
-    } else {
+    try {
+      await login(usuarioParaLogin, dispatch);
       await traerReparaciones();
       navigate("/servicios");
       toast("Login exitoso");
-    }   
-    
-    document.getElementById("modalButton").click();
+    } catch (error) {
+      toast.error("Error al iniciar sesión");
+      dispatch(limpiarError());
+    }
   };
 
   const traerReparaciones = async () => {
-    await getReparacionesPorCI(idSesion, dispatch);
-
-    const error = useError();
-
-    if (error) {
+    try {
+      await getReparacionesPorCI(ciSesion, dispatch); //EP no existe. traer todas las reparaciones, y meter un selector
+    } catch (error) {
       toast.error("No se pudo obtener reparaciones");
-      dispatch(limpiarError());
     }
-  }
+  };
 
   return (
-      <Modal>
-        <ModalAction asChild>
-          <Button id="modalButton">Como cliente</Button>
-        </ModalAction>
-        <ModalBody className="space-y-3">
-          <ModalContent>
-            <ModalClose className="absolute right-4 top-4" />
-            <ModalHeader>
-              <div className="!mb-6">
-                <h3 className="mb-2 text-body-1 font-medium text-metal-900">
-                  Ingreso de cliente
-                </h3>
-                <form className="mx-auto max-w-md space-y-2 p-4">
-                  <fieldset className="space-y-1">
-                    <Label htmlFor="email">Email: </Label>
-                    <Input
-                      placeholder="Email"
-                      onChange={(e) => manejarCambioEmail(e)}
-                    />
-                  </fieldset>
-                  <fieldset className="space-y-1">
-                    <Label htmlFor="contrasena">Contraseña: </Label>
-                    <Input
-                      placeholder="Contraseña"
-                      type="password"
-                      onChange={(e) => manejarCambioContrasena(e)}
-                    />
-                  </fieldset>
-                </form>
-              </div>
-            </ModalHeader>
-            <ModalFooter>
-              <ModalClose asChild>
-                <Button
-                  variant="outline"
-                  color="secondary"
-                  size="sm"
-                >
-                  Cerrar
-                </Button>
-              </ModalClose>
-                <Button onClick={realizarLoginCliente} size="sm">
-                  Ingresar
-                </Button>
-            </ModalFooter>
-          </ModalContent>
-        </ModalBody>
-      </Modal>
+    <Modal>
+      <ModalAction asChild>
+        <Button id="modalButton">Como cliente</Button>
+      </ModalAction>
+      <ModalBody className="space-y-3">
+        <ModalContent>
+          <ModalClose className="absolute right-4 top-4" />
+          <ModalHeader>
+            <div className="!mb-6">
+              <h3 className="mb-2 text-body-1 font-medium">
+                Ingreso de cliente
+              </h3>
+              <form className="mx-auto max-w-md space-y-2 p-4">
+                <fieldset className="space-y-1">
+                  <Label htmlFor="email">Email: </Label>
+                  <Input
+                    placeholder="Email"
+                    onChange={(e) => manejarCambioEmail(e)}
+                  />
+                </fieldset>
+                <fieldset className="space-y-1">
+                  <Label htmlFor="contrasena">Contraseña: </Label>
+                  <Input
+                    placeholder="Contraseña"
+                    type="password"
+                    onChange={(e) => manejarCambioContrasena(e)}
+                  />
+                </fieldset>
+              </form>
+            </div>
+          </ModalHeader>
+          <ModalFooter>
+            <ModalClose asChild>
+              <Button variant="outline" color="secondary" size="sm">
+                Cerrar
+              </Button>
+            </ModalClose>
+            <Button onClick={realizarLoginCliente} size="sm">
+              Ingresar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </ModalBody>
+    </Modal>
   );
 };

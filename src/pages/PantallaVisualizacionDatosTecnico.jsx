@@ -10,15 +10,19 @@ const PantallaVisualizacionDatosTecnico = () => {
   const emailSesion = useEmailSesion();
 
   if (!rolSesion || rolSesion != "Administrador" || !emailSesion) {
-      return null;
+    return null;
   }
 
   return (
     <div className="flex">
-      <ComponenteNavbar className="w-1/3" />
-      <VisualizacionDatosTecnico className="w-2/3" idTecnico={idTecnico}/>
+      <div className="w-1/4">
+        <ComponenteNavbar />
+      </div>
+      <div className="flex justify-center w-3/4">
+        <VisualizacionDatosTecnico idTecnico={idTecnico} className="w-2/3" />
+      </div>
     </div>
   );
-}
+};
 
 export default PantallaVisualizacionDatosTecnico;

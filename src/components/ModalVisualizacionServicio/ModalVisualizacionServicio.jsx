@@ -17,7 +17,7 @@ export const ModalVisualizacionServicio = ({ idServicio }) => {
     clienteEmail,
     clienteTelefono,
     clienteDireccion,
-    producto,
+    producto ,
     descripcionPresupuesto,
     costo,
     numeroSerie,
@@ -46,7 +46,9 @@ export const ModalVisualizacionServicio = ({ idServicio }) => {
                   <p>Email: {clienteEmail}</p>
                   <p>Teléfono: {clienteTelefono}</p>
                   <p>Dirección: {clienteDireccion}</p>
-                  <p>Producto: {producto}</p>
+                  <p>Marca: {producto.marca}</p>
+                  <p>Modelo: {producto.modelo}</p>
+                  <p>Versión: {producto.version}</p>
                   <p>Descripcion: {descripcion}</p>
                   <p>Estado: {estado}</p>
                   <p>Descripcion de presupuesto: {descripcionPresupuesto}</p>

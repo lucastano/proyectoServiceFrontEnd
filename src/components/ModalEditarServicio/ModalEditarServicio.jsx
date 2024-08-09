@@ -4,7 +4,6 @@ import { Modal, ModalAction, ModalBody, ModalClose, ModalFooter, ModalHeader, La
 import { useServicioPorId, /*useRolSesion, useEmailSesion, */useError } from "../../store/selectors";
 import { format } from "date-fns";
 import { Calendar } from "phosphor-react";
-import { limpiarError } from "../../store/actions";
 import { putServicio } from "../../store/effects";
 
 const ModalEditarServicio = (idServicio) => {
@@ -33,25 +32,22 @@ const ModalEditarServicio = (idServicio) => {
 
   const editarServicio = async () => {
     const servicioEditado = {
-        id: idServicio,
-        fechaPromesaPresupuesto: fechaPromesaPresupuesto,
-        numeroSerie: numeroSerie,
-        descripcion: descripcion,
-    }
-
-    await putServicio(dispatch, servicioEditado);
-
-    const error = useError();
-
-    if (error) {
-      toast.error("Error al modificar servicio");
-      dispatch(limpiarError());
-    } else {
+      id: idServicio,
+      fechaPromesaPresupuesto: fechaPromesaPresupuesto,
+      numeroSerie: numeroSerie,
+      descripcion: descripcion,
+    };
+  
+    try {
+      await putServicio(dispatch, servicioEditado);
       toast("Edicion de servicio realizada correctamente");
+    } catch (error) {
+      toast.error("Error al modificar servicio");
+      //dispatch(limpiarError());
     }
-
+  
     document.getElementById("modalButton").click();
-  }
+  };
 
   return (
     <Modal>

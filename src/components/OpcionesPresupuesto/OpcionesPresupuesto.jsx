@@ -1,29 +1,24 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Button, ButtonGroup, toast } from "keep-react";
-import { useServicioPorId, useError } from "../../store/selectors";
+import { useServicioPorId } from "../../store/selectors";
 import ModalIngresarPresupuesto from "./ModalIngresarPresupuesto";
 import ModalRechazarPresupuesto from "./ModalRechazarPresupuesto";
 import { postAceptarPresupuesto } from "../../store/effects";
-import { limpiarError } from "../../store/actions";
 
 const OpcionesPresupuesto = (idServicio) => {
   const dispatch = useDispatch();
   const servicioPorId = useServicioPorId(idServicio);
 
   const manejarClickAceptarPresupuesto = async () => {
-    await postAceptarPresupuesto(servicioPorId, dispatch);
-
-
-    const error = useError();
-
-    if (!error) {
+    try {
+      await postAceptarPresupuesto(servicioPorId, dispatch);
       toast("Presupuesto aceptado", {
         description: "El presupuesto ha sido aceptado correctamente",
       });
-    } else {
+    } catch (error) {
       toast.error("Ha habido un error al aceptar el presupuesto");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
   };
 

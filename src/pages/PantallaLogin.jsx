@@ -4,19 +4,23 @@ import ContenedorOpcionesLogin from "../components/ContenedorOpcionesLogin/Conte
 import { useRolSesion, useEmailSesion } from "../store/selectors";
 
 const PantallaLogin = () => {
-    const rolSesion = useRolSesion();
-    const emailSesion = useEmailSesion();
+  const rolSesion = useRolSesion();
+  const emailSesion = useEmailSesion();
 
-    if (rolSesion || emailSesion) {
-        return null;
-    }
-    
+  if (rolSesion || emailSesion) {
+    return null;
+  }
+
   return (
     <div className="flex ">
-      <ComponenteNavbar  />
-      <ContenedorOpcionesLogin />
+      <div className="w-1/4">
+      <ComponenteNavbar />
+      </div>
+      <div className="flex justify-center w-3/4">
+        <ContenedorOpcionesLogin />
+      </div>
     </div>
   );
-}
+};
 
 export default PantallaLogin;

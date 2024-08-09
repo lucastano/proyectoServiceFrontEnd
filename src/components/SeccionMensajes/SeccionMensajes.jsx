@@ -4,6 +4,7 @@ import {
   TimelineItem,
   TimelinePoint,
   TimelineContent,
+  Spinner
 } from "keep-react";
 import NuevoMensaje from "../NuevoMensaje/NuevoMensaje";
 import { useDispatch } from "react-redux";
@@ -16,7 +17,6 @@ function SeccionMensajes({ idServicio }) {
   const mensajes = useMensajes();
 
   useEffect(() => {
-
     const fetchMensajes = async () => {
       await getMensajes(dispatch, idServicio);
       setIsLoading(false);
@@ -29,7 +29,7 @@ function SeccionMensajes({ idServicio }) {
   }, [dispatch, idServicio]);
 
   return isLoading ? (
-    <></>
+    <><Spinner color="info" size="xl" /></>
   ) : (
     <div>
       <Timeline>

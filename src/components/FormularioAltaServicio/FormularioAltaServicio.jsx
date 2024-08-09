@@ -1,41 +1,41 @@
 import React, { useState } from "react";
-import { Input, Label, Button, Textarea, Divider, toast, Popover, PopoverContent, PopoverTrigger, DatePicker } from "keep-react";
 import {
-  //useRolSesion,
-  //useEmailSesion,
+  Input,
+  Label,
+  Button,
+  Textarea,
+  Divider,
+  toast,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  DatePicker,
+} from "keep-react";
+import {
   useIdSesion,
   useClientePorCi,
-  useError,
+  useProductos,
 } from "../../store/selectors";
 import { useDispatch } from "react-redux";
 import { postCliente, postReparacion } from "../../store/effects";
 import { format } from "date-fns";
-import { Calendar } from 'phosphor-react'
-import { limpiarError } from "../../store/actions"; 
+import { Calendar } from "phosphor-react";
+import AgregarProducto from "../AgregarProducto/AgregarProducto";
 
 const FormularioAltaServicio = () => {
   const dispatch = useDispatch();
-  //const rolSesion = useRolSesion();
-  //const emailSesion = useEmailSesion();
   const idSesion = useIdSesion();
-
-  /*
-  if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
-    return null;
-  }
-  */
+  const productos = useProductos();
 
   const [cedulaUsuario, setCedulaUsuario] = useState("");
+  const clientePorCi = useClientePorCi(cedulaUsuario);
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [apellidoUsuario, setApellidoUsuario] = useState("");
   const [emailUsuario, setEmailUsuario] = useState("");
   const [telefonoUsuario, setTelefonoUsuario] = useState("");
   const [direccionUsuario, setDireccionUsuario] = useState("");
   const [numeroSerie, setNumeroSerie] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [marca, setMarca] = useState("");
-  const [modelo, setModelo] = useState("");
-  const [color, setColor] = useState("");
+  const [producto, setProducto] = useState(null);
   const [descripcion, setDescripcion] = useState("");
   const [fechaPromesaPresupuesto, setFechaPromesaPresupuesto] = useState("");
   const [usuarioEncontrado, setUsuarioEncontrado] = useState(false);
@@ -69,24 +69,15 @@ const FormularioAltaServicio = () => {
     setNumeroSerie(event.target.value);
   };
 
-  const manejarCambioNombre = (event) => {
-    setNombre(event.target.value);
-  };
-
-  const manejarCambioMarca = (event) => {
-    setMarca(event.target.value);
-  };
-
-  const manejarCambioModelo = (event) => {
-    setModelo(event.target.value);
-  };
-
-  const manejarCambioColor = (event) => {
-    setColor(event.target.value);
-  };
-
   const manejarCambioDescripcion = (event) => {
     setDescripcion(event.target.value);
+  };
+  let productoSeleccionado;
+
+  const manejarCambioSelect = (event) => {
+    const idProductoSeleccionado = event.target.value;
+    productoSeleccionado = productos.find(producto => producto.id === parseInt(idProductoSeleccionado));
+    setProducto(productoSeleccionado);
   };
 
   const validarCedulaUsuario = (valor) => {
@@ -115,39 +106,16 @@ const FormularioAltaServicio = () => {
     return regex.test(valor);
   };
 
-  const validarNombre = (valor) => {
-    const regex = /^[a-zA-Z0-9\s]+$/;
-    return regex.test(valor);
-  };
-
   const validarNumeroSerie = (valor) => {
     const regex = /^[0-9]+$/;
     return valor !== "" && regex.test(valor);
   };
 
-  const validarMarca = (valor) => {
-    const regex = /^[a-zA-Z0-9\s]+$/;
-    return regex.test(valor);
-  };
-
-  const validarModelo = (valor) => {
-    const regex = /^[a-zA-Z0-9\s]+$/;
-    return regex.test(valor);
-  };
-
-  const validarColor = (valor) => {
-    const regex = /^[a-zA-Z\s]+$/;
-    return regex.test(valor);
-  };
-
   const validarDescripcion = (valor) => {
-    const regex = /^[a-zA-Z0-9\s]+$/;
-    return regex.test(valor);
+    return valor !== "";
   };
 
   const buscarUsuario = () => {
-    const clientePorCi = useClientePorCi(cedulaUsuario);
-
     if (clientePorCi == undefined) {
       setUsuarioEncontrado(false);
     } else {
@@ -159,7 +127,7 @@ const FormularioAltaServicio = () => {
       setTelefonoUsuario(telefono);
       setDireccionUsuario(direccion);
     }
-  };
+};
 
   const manejarPerdidaFocoCedulaUsuario = () => {
     buscarUsuario();
@@ -167,14 +135,10 @@ const FormularioAltaServicio = () => {
   };
 
   const validarFormulario = () => {
-    return (
-      validarNumeroSerie(numeroSerie) &&
-      validarNombre(nombre) &&
-      validarMarca(marca) &&
-      validarModelo(modelo) &&
-      validarColor(color) &&
-      validarDescripcion(descripcion)
-    );
+    console.log("validarNumeroSerie: ", validarNumeroSerie(numeroSerie));
+    console.log("validarDescripcion: ", validarDescripcion(descripcion));
+    console.log("producto: ", producto);
+    return validarNumeroSerie(numeroSerie) && validarDescripcion(descripcion) && producto != null;
   };
 
   const validarNuevoUsuario = () => {
@@ -198,15 +162,13 @@ const FormularioAltaServicio = () => {
       direccion: direccionUsuario,
     };
 
-    await postCliente(nuevoUsuario, dispatch);
-
-    const error = useError();
-
-    if (error) {
-      toast.error("Error al dar de alta el cliente");
-      dispatch(limpiarError());
-    } else {
+    console.log('nuevoUsuario: ', nuevoUsuario);
+    try {
+      await postCliente(nuevoUsuario, dispatch);
       toast("Cliente dado de alta correctamente");
+    } catch (error) {
+      toast.error("Error al dar de alta el cliente");
+      //dispatch(limpiarError());
     }
   };
 
@@ -214,34 +176,31 @@ const FormularioAltaServicio = () => {
     evento.preventDefault();
 
     if (validarFormulario()) {
-      const clientePorCi = useClientePorCi(cedulaUsuario);
+      console.log("validarFormulario es true");
       if (
         clientePorCi == undefined &&
         seBuscoUsuario &&
         !usuarioEncontrado &&
-        validarNuevoUsuario
+        validarNuevoUsuario()
       ) {
+        console.log('entra aca a dar de alta el cliente');
         await altaClienteServicio();
       }
 
       const nuevaReparacion = {
         ciCliente: cedulaUsuario,
         idTecnico: idSesion,
-        producto: nombre,
+        producto: producto,
         numeroSerie: numeroSerie,
         descripcion: descripcion,
         fechaPromesaPresupuesto: fechaPromesaPresupuesto,
       };
 
-      await postReparacion(nuevaReparacion, dispatch);
-
-      const error = useError();
-
-      if (error) {
-        toast.error("Error al dar de alta la reparacion");
-        dispatch(limpiarError);
-      } else {
+      try {
+        await postReparacion(nuevaReparacion, dispatch);
         toast("Reparacion dada de alta correctamente");
+      } catch (error) {
+        toast.error("Error al dar de alta la reparacion");
       }
     } else {
       toast.error("Error: Datos invalidos");
@@ -334,40 +293,18 @@ const FormularioAltaServicio = () => {
           />
         </div>
         <div className="mb-4 space-y-2">
-          <Label htmlFor="name">Nombre: </Label>
-          <Input
-            id="name"
-            placeholder="Nombre"
-            className="ps-4"
-            onChange={(e) => manejarCambioNombre(e)}
-          />
-        </div>
-        <div className="mb-4 space-y-2">
-          <Label htmlFor="marca">Marca: </Label>
-          <Input
-            id="marca"
-            placeholder="Marca"
-            className="ps-4"
-            onChange={(e) => manejarCambioMarca(e)}
-          />
-        </div>
-        <div className="mb-4 space-y-2">
-          <Label htmlFor="modelo">Modelo: </Label>
-          <Input
-            id="modelo"
-            placeholder="Modelo"
-            className="ps-4"
-            onChange={(e) => manejarCambioModelo(e)}
-          />
-        </div>
-        <div className="mb-4 space-y-2">
-          <Label htmlFor="color">Color: </Label>
-          <Input
-            id="color"
-            placeholder="Color"
-            className="ps-4"
-            onChange={(e) => manejarCambioColor(e)}
-          />
+          <Label htmlFor="producto">Producto: </Label>
+          <select
+            value={productoSeleccionado !== null ? productoSeleccionado?.id : ""}
+            onChange={manejarCambioSelect}
+          >
+            {productos.map((producto) => (
+              <option key={producto.id} value={producto.id}>
+                {producto.marca} - {producto.modelo} ({producto.version})
+              </option>
+            ))}
+          </select>
+          <div><AgregarProducto /></div>
         </div>
         <div className="mb-4 space-y-2">
           <Label htmlFor="descripcion">Descripción: </Label>
@@ -379,7 +316,7 @@ const FormularioAltaServicio = () => {
           />
         </div>
         <div className="mb-4 space-y-2">
-          <Label htmlFor="fechaPromesa">Fecha promesa de presupueto:</Label>
+          <Label htmlFor="fechaPromesa">Fecha promesa de presupuesto:</Label>
           <Popover showArrow={false} placement="bottom-start">
             <PopoverTrigger asChild>
               <Button

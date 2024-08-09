@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Textarea, toast, ModalClose, ModalAction, ModalBody, ModalContent, ModalFooter, Label, Input } from "keep-react";
 import { useDispatch } from "react-redux";
-import {/* useServicioPorId,*/ useError } from "../../store/selectors";
 import { postRechazarPresupuesto } from "../../store/effects";
-import { limpiarError } from "../../store/actions";
 
 const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
   const dispatch = useDispatch();
@@ -29,20 +27,17 @@ const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
       costo: costo,
       razon: razon,
     };
-
-    await postRechazarPresupuesto(rechazoPresupuesto, dispatch);
-
-    const error = useError();
-
-    if (!error) {
+  
+    try {
+      await postRechazarPresupuesto(rechazoPresupuesto, dispatch);
       toast("Presupuesto rechazado", {
         description: "El presupuesto ha sido rechazado correctamente",
       });
-    } else {
+    } catch (error) {
       toast.error("Ha habido un error al rechazar el presupuesto");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
-
+  
     document.getElementById("buttonModal").click();
   };
 

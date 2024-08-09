@@ -17,9 +17,7 @@ import {
   useServicioPorId,
   //useRolSesion,
   //useEmailSesion,
-  useError,
 } from "../../store/selectors";
-import { limpiarError } from "../../store/actions";
 
 const ModalEditarPresupuestoServicio = (idServicio) => {
   const dispatch = useDispatch();
@@ -56,18 +54,15 @@ const ModalEditarPresupuestoServicio = (idServicio) => {
       costo: costo,
       descripcion: descripcionPresupuesto,
     };
-
-    await putPresupuesto(dispatch, reparacionEditada);
-
-    const error = useError();
-
-    if (error) {
-      toast.error("Error al modificar presupuesto");
-      dispatch(limpiarError());
-    } else {
+  
+    try {
+      await putPresupuesto(dispatch, reparacionEditada);
       toast("Edicion de presupuesto realizada correctamente");
+    } catch (error) {
+      toast.error("Error al modificar presupuesto");
+      //dispatch(limpiarError());
     }
-
+  
     document.getElementById("modalButton").click();
   };
 

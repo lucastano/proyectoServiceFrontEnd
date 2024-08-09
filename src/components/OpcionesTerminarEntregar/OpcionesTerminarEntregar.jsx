@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Button, toast } from "keep-react";
-import { useError, useServicioPorId } from "../../store/selectors";
+import { useServicioPorId } from "../../store/selectors";
 import { postEntregarReparacion } from "../../store/effects";
 import  ModalTerminarServicio  from "./ModalTerminarServicio";
-import { limpiarError } from "../../store/actions";
 
 
 const OpcionesTerminarEntregar = (idServicio) => {
@@ -12,19 +11,16 @@ const OpcionesTerminarEntregar = (idServicio) => {
     const servicioPorId = useServicioPorId(idServicio);
     
     const manejarClickEntregar = async () => {
-        await postEntregarReparacion(servicioPorId, dispatch);
-        
-        const error = useError();
-        if (!error) {
-            toast('Entrega realizada', {
-                description: 'El servicio ha sido entregado al cliente',
-              });
-        } else {
-            toast.error('Ha habido un error al realizar la entrega');
-            dispatch(limpiarError());
+        try {
+          await postEntregarReparacion(servicioPorId, dispatch);
+          toast('Entrega realizada', {
+            description: 'El servicio ha sido entregado al cliente',
+          });
+        } catch (error) {
+          toast.error('Ha habido un error al realizar la entrega');
+          //dispatch(limpiarError());
         }
-        
-    }
+      };
 
     return (
         <div className="max-w-[250px]">

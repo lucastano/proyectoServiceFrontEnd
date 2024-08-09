@@ -3,7 +3,6 @@ import { Modal, Button, toast, ModalAction, ModalBody, ModalContent, ModalFooter
 import { useDispatch } from "react-redux";
 import { useServicioPorId } from "../../store/selectors";
 import { postTerminarReparacion } from "../../store/effects";
-import { limpiarError } from "../../store/actions";
 
 const ModalTerminarServicio = (idServicio) => {
   const dispatch = useDispatch();
@@ -16,12 +15,9 @@ const ModalTerminarServicio = (idServicio) => {
       idReparacion: idServicio,
       fueReparada: reparado,
     };
-
-    await postTerminarReparacion(terminoReparacion, dispatch);
-
-    const error = useError();
-
-    if(!error) {
+  
+    try {
+      await postTerminarReparacion(terminoReparacion, dispatch);
       const descripcionToast =
         servicioPorId.reparada == true
           ? "Servicio fue reparado"
@@ -29,11 +25,11 @@ const ModalTerminarServicio = (idServicio) => {
       toast("Servicio finalizado", {
         description: descripcionToast,
       });
-    } else {
+    } catch (error) {
       toast.error("Ha habido un error al finalizar el servicio");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
-
+  
     document.getElementById("modalButton").click();
   };
 

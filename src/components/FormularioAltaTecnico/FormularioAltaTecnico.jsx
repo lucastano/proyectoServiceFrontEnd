@@ -1,25 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Input, Label, Button, toast } from "keep-react";
-import { /*useRolSesion, useEmailSesion,*/ useError } from "../../store/selectors";
 import { postTecnico } from "../../store/effects";
 import { limpiarError } from "../../store/actions";
 
 const FormularioAltaTecnico = () => {
   const dispatch = useDispatch();
-  //const rolSesion = useRolSesion();
-  //const emailSesion = useEmailSesion();
-
-  /*
-  if (!rolSesion || rolSesion !== "Administrador" || !emailSesion) {
-    return null;
-  }
-  */
-
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
+  const [confirmarContrasena, setConfirmacionContrasena] = useState("");
 
   const validarNombreApellido = (valor) => {
     const regex = /^[a-zA-Z]+$/;
@@ -33,37 +24,37 @@ const FormularioAltaTecnico = () => {
   };
 
   const validarContrasena = (contrasena) => {
-    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+    const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?!.*[\s!@#$%^&*()\-_=+{};:,<.>]).{9,}$/;
     return regex.test(contrasena);
   };
 
+  const validarConfirmarContrasena = (contrasena, confirmarContrasena) => {
+    return contrasena === confirmarContrasena;
+  }
+
   const enviarFormulario = async (evento) => {
     evento.preventDefault();
-
+  
     if (
       validarNombreApellido(nombre) &&
       validarNombreApellido(apellido) &&
       validarEmail(email) &&
-      validarContrasena(contrasena)
+      validarContrasena(contrasena) &&
+      validarConfirmarContrasena(contrasena, confirmarContrasena)
     ) {
-      console.log(
-        `Nombre: ${nombre}, Apellido: ${apellido}, Email: ${email}, Contrasena: ${contrasena}`
-      );
       const nuevoTecnico = {
         nombre: nombre,
         apellido: apellido,
         email: email,
-        contrasena: contrasena,
+        password: contrasena,
       };
-
-      await postTecnico(nuevoTecnico, dispatch);
-      const error = useError();
-
-      if (error) {
+  
+      try {
+        await postTecnico(nuevoTecnico, dispatch);
+        toast("Tecnico dado de alta correctamente");
+      } catch (error) {
         toast.error("Error al dar de alta a tecnico");
         dispatch(limpiarError());
-      } else {
-        toast("Tecnico dado de alta correctamente");
       }
     } else {
       if (!validarNombreApellido(nombre)) {
@@ -77,8 +68,11 @@ const FormularioAltaTecnico = () => {
       }
       if (!validarContrasena(contrasena)) {
         toast.error(
-          "Contraseña inválida. Recuerde que debe ser de al menos 8 caracteres, contener al menos una letra mayúscula, un número y un caracter especial"
+          "Contraseña inválida. Recuerde que debe ser de al menos 9 caracteres, contener al menos una letra mayúscula, cuatro numeros y no debe poseer caracteres especiales ni espacios."
         );
+      }
+      if (!validarConfirmarContrasena(contrasena, confirmarContrasena)) {
+        toast.error("Las contraseñas no coinciden");
       }
     }
   };
@@ -99,10 +93,15 @@ const FormularioAltaTecnico = () => {
     setContrasena(event.target.value);
   };
 
+  const manejarCambioConfirmarContrasena = (event) => {
+    setConfirmacionContrasena(event.target.value);
+  };
+
+
   return (
     <>
       <form
-        className="rounded-lg border p-8 shadow-md text-left w-2/5"
+        className="rounded border p-8 shadow-md text-left ml-16"
         onSubmit={enviarFormulario}
       >
         <div className="mb-4 space-y-2">
@@ -110,7 +109,6 @@ const FormularioAltaTecnico = () => {
           <Input
             id="email"
             placeholder="Email"
-            className="ps-4"
             onChange={(e) => manejarCambioEmail(e)}
           />
         </div>
@@ -119,7 +117,6 @@ const FormularioAltaTecnico = () => {
           <Input
             id="nombre"
             placeholder="Nombre"
-            className="ps-4"
             onChange={(e) => manejarCambioNombre(e)}
           />
         </div>
@@ -128,17 +125,26 @@ const FormularioAltaTecnico = () => {
           <Input
             id="apellido"
             placeholder="Apellido"
-            className="ps-4"
             onChange={(e) => manejarCambioApellido(e)}
           />
         </div>
-        <div className="mb-50 space-y-2">
+        <div className="mb-4 space-y-2">
           <Label htmlFor="contrasena">Contraseña: </Label>
           <Input
             id="contrasena"
             placeholder="Contraseña"
-            className="ps-4"
+            type="password"
             onChange={(e) => manejarCambioContrasena(e)}
+          />
+        </div>
+        <div className="mb-50 space-y-2">
+          <Label htmlFor="confirmarContrasena">Confirmar contraseña: </Label>
+          <Input
+            id="confirmarContrasena"
+            placeholder="Confirmar contraseña"
+            className="w-96"
+            type="password"
+            onChange={(e) => manejarCambioConfirmarContrasena(e)}
           />
         </div>
         <Button size="sm" color="secondary" type="submit" className="mt-8">

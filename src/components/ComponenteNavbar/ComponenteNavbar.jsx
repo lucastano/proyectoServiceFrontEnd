@@ -6,7 +6,8 @@ import {
   ListBullets,
   ChartPieSlice,
   UserPlus,
-  FirstAid
+  FirstAid,
+  Plus,
 } from "phosphor-react";
 import {
   Sidebar,
@@ -35,7 +36,7 @@ const ComponenteNavbar = () => {
       <SidebarBody>
         <SidebarList>
           <SidebarItem>
-            <ThemeSwitcher />
+           <ThemeSwitcher />
           </SidebarItem>
           {sinLoguear && (
             <Link to="/">
@@ -51,6 +52,12 @@ const ComponenteNavbar = () => {
                 <SidebarItem>
                   <Wrench size={20} />
                   Nueva reparación
+                </SidebarItem>
+              </Link>
+              <Link to="/agregarProducto">
+                <SidebarItem>
+                  <Plus size={20} />
+                  Agregar Producto
                 </SidebarItem>
               </Link>
               <Link to="/serviciostecnico">

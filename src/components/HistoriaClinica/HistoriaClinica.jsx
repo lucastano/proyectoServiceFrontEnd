@@ -4,23 +4,26 @@ import {
   TimelineItem,
   TimelinePoint,
   TimelineContent,
+  Spinner
 } from "keep-react";
 import { getHistoriaClinica } from "../../dataFetcher";
 
 function HistoriaClinica({ numeroSerie }) {
   const [historiaClinica, setHistoriaClinica] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getHistoriaClinica(numeroSerie);
       setHistoriaClinica(data);
+      setIsLoading(false);
     };
 
     fetchData();
   }, [numeroSerie]);
 
-  if (!historiaClinica) {
-    return <div>Cargando...</div>;
+  if (isLoading) {
+    return <Spinner color="info" size="xl" />;
   }
 
   const {

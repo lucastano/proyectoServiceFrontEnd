@@ -13,15 +13,16 @@ import {
   ResponsiveContainer,
   CustomTooltip,
   Divider,
+  Label,
 } from "keep-react";
 import {
   useCantidadesPorParametro,
   useEstadosReparaciones,
   useEstadosReparacionesPorFechas,
-  useNumeroSerieReparaciones,
-  useNumerosSerieReparacionesPorFechas,
   useTecnicosReparaciones,
   useTecnicosReparacionesPorFechas,
+  useCantidadReparaciones,
+  useCantidadReparacionesPorFechas,
 } from "../../store/selectors";
 
 function MetricasNegocio() {
@@ -41,17 +42,6 @@ function MetricasNegocio() {
     return conRangoFechas ? convertirAFechaISO(selected.to) : null;
   };
 
-  const arrayNumerosSerie = conRangoFechas
-    ? useNumerosSerieReparacionesPorFechas(fechaInicioISO, fechaFinISO)
-    : useNumeroSerieReparaciones();
-  const objetoNumerosSerie = useCantidadesPorParametro(arrayNumerosSerie);
-  const dataNumerosSerie = Object.entries(objetoNumerosSerie).map(
-    ([name, value]) => ({
-      name,
-      value,
-    })
-  );
-
   const arrayTecnicos = conRangoFechas
     ? useTecnicosReparacionesPorFechas(fechaInicioISO, fechaFinISO)
     : useTecnicosReparaciones();
@@ -60,7 +50,8 @@ function MetricasNegocio() {
     name,
     value,
   }));
-
+  console.log(fechaInicioISO());
+  console.log(fechaFinISO());
   const arrayEstados = conRangoFechas
     ? useEstadosReparacionesPorFechas(fechaInicioISO, fechaFinISO)
     : useEstadosReparaciones();
@@ -70,10 +61,12 @@ function MetricasNegocio() {
     value,
   }));
 
+  const cantidadReparaciones = conRangoFechas ? useCantidadReparacionesPorFechas(fechaInicioISO, fechaFinISO) : useCantidadReparaciones();
+
   return (
-    <div>
+    <div >
       <p>Metricas Negocio</p>
-      <div>
+      <div className="my-8">
         <Popover showArrow={false} placement="bottom-start">
           <PopoverTrigger asChild>
             <Button
@@ -84,11 +77,11 @@ function MetricasNegocio() {
               <Calendar size={20} className="text-metal-400 dark:text-white" />
               {selected ? (
                 <>
-                  {format(selected?.from ?? new Date(), "LLL dd, y")} -{" "}
-                  {format(selected?.to ?? new Date(), "LLL dd, y")}
+                  {format(selected?.from ?? new Date(), "dd/MM/yyyy")} -{" "}
+                  {format(selected?.to ?? new Date(), "dd/MM/yyyy")}
                 </>
               ) : (
-                <span>Select Your Date</span>
+                <span>Selecciona un rango de fechas</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -108,27 +101,14 @@ function MetricasNegocio() {
           Entre {fechaInicioISO} y {fechaFinISO}
         </p>
       )}
-      <div className="flex justify-between">
-        <div id="ChartNumerosSerie">
-          <p>Aparatos Ingresados</p>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                data={dataNumerosSerie}
-                dataKey="value"
-                nameKey="name"
-                fill="#1C222B"
-              ></Pie>
-              <ChartTooltip content={<CustomTooltip />} />
-            </PieChart>
-          </ResponsiveContainer>
+      <div className="flex flex-col">
+        <div id="ChartNumerosSerie" className="my-8 flex items-center">
+        <Label htmlFor="reparacionesRealizadas">Reparaciones realizadas:</Label>
+        <p className="ml-4">{cantidadReparaciones}</p>
         </div>
         <Divider />
-        <div id="ChartEstados">
-          <p>Desglose por Estado</p>
+        <div id="ChartEstados" className="my-8 text-left">
+        <Label htmlFor="reparacionesPorEstado">Reparaciones por estado:</Label>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -145,8 +125,8 @@ function MetricasNegocio() {
           </ResponsiveContainer>
         </div>
         <Divider />
-        <div id="ChartTecnicos">
-          <p>Reparaciones por Técnico</p>
+        <div id="ChartTecnicos" className="my-8 text-left">
+        <Label htmlFor="reparacionesPorTecnico">Reparaciones por técnico:</Label>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie

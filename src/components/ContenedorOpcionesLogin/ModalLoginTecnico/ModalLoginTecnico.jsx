@@ -13,9 +13,8 @@ import {
   ModalFooter,
   ModalContent,
 } from "keep-react";
-import { login, getReparaciones, getClientes } from "../../../store/effects";
-import { useError } from "../../../store/selectors";
-import { limpiarError } from "../../../store/actions";
+import { login, getReparaciones, getClientes, getProductos } from "../../../store/effects";
+//import { limpiarError } from "../../../store/actions";
 import { useNavigate } from "react-router-dom";
 
 
@@ -26,26 +25,30 @@ export const ModalLoginTecnico = () => {
   const [contrasena, setContrasena] = useState("");
 
   const traerReparaciones = async () => {
-    await getReparaciones(dispatch);
-
-    const error = useError();
-
-    if (error) {
+    try {
+      await getReparaciones(dispatch);
+    } catch (error) {
       toast.error("No se pudo obtener reparaciones");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
-  }
-
+  };
+  
   const traerClientes = async () => {
-    await getClientes(dispatch);
-
-    const error = useError();
-
-    if (error) {
+    try {
+      await getClientes(dispatch);
+    } catch (error) {
       toast.error("No se pudo obtener clientes");
-      dispatch(limpiarError());
+      //dispatch(limpiarError());
     }
+  };
+
+  const traerProductos = async () => {
+    try {
+      await getProductos(dispatch);
+    } catch (error) {
+      toast.error("No se pudo obtener productos");
   }
+};
 
 
   const manejarCambioEmail = (evento) => {
@@ -62,21 +65,18 @@ export const ModalLoginTecnico = () => {
       password: contrasena,
       rol: "Tecnico",
     };
-
-    await login(usuarioParaLogin, dispatch);
-
-    const error = useError();
-
-    if (error) {
-      toast.error("Error al iniciar sesión");
-      dispatch(limpiarError());
-    } else {
+  
+    try {
+      await login(usuarioParaLogin, dispatch);
       await traerReparaciones();
       await traerClientes();
+      await traerProductos();
       navigate("/serviciostecnico");
-      toast("Login exitoso"); 
-    }
-
+      toast("Login exitoso");
+    } catch (error) {
+      toast.error("Error al iniciar sesión");
+      //dispatch(limpiarError());
+    }   
     
     document.getElementById("modalButton").click();
   };
@@ -94,7 +94,7 @@ export const ModalLoginTecnico = () => {
           <ModalClose className="absolute right-4 top-4"/>
           <ModalHeader>
             <div className="!mb-6">
-              <h3 className="mb-2 text-body-1 font-medium text-metal-900">
+              <h3 className="mb-2 text-body-1 font-medium">
                 Ingreso de tecnico
               </h3>
               <form className="mx-auto max-w-md space-y-2 p-4">

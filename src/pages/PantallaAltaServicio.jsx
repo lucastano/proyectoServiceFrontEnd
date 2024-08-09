@@ -10,10 +10,16 @@ const PantallaAltaServicio = () => {
     if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
         return null;
     }
+
+
   return (
     <div className="flex">
-      <ComponenteNavbar className="w-1/3" />
-      <FormularioAltaServicio className="w-2/3" />
+      <div className="w-1/4">
+      <ComponenteNavbar />
+      </div>
+      <div className="flex justify-center w-3/4">
+        <FormularioAltaServicio />
+      </div>
     </div>
   );
 }

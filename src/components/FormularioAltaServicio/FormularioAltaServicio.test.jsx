@@ -127,7 +127,7 @@ describe("FormularioAltaServicio", () => {
       "Lorem ipsum dolor sit amet"
     );
   });
-/*
+
   it.only("submits correctly when form is submitted with valid data", async () => {
     const mockLocalStorage = {
       getItem: jest.fn(() => 'mockToken'),
@@ -237,5 +237,4 @@ describe("FormularioAltaServicio", () => {
     // Assert that confirmation modal is not displayed
     expect(screen.queryByText("Confirmación de alta de servicio")).toBeNull();
   });
-  */
 });

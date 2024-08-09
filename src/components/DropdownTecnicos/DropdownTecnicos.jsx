@@ -8,17 +8,8 @@ import {
 } from "../../store/selectors";
 
 const DropdownTecnicos = () => {
-  /*
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
-  
-  if (!rolSesion || rolSesion !== "Administrador" || !emailSesion) {
-    return null;
-  }
-  */
-
   const tecnicos = useTecnicos();
-
+  console.log('tecnicos en DropdownTecnicos: ', tecnicos);
   return (
     <>
       <Dropdown>

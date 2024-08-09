@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { ModalLoginAdmin } from "./ModalLoginAdmin";
 import { useDispatch } from "react-redux";
@@ -16,9 +17,13 @@ jest.mock("../../../store/effects");
 const mockDispatch = jest.fn();
 const mockLogin = login;
 
-describe.skip("ModalLoginAdmin", () => {
+describe("ModalLoginAdmin", () => {
   it("should render the modal with the correct title", () => {
-    const { getByText } = render(<ModalLoginAdmin />);
+    const { getByText } = render(
+      <MemoryRouter>
+        <ModalLoginAdmin />
+      </MemoryRouter>
+    );
     const comoAdminButton = getByText("Como administrador");
     fireEvent.click(comoAdminButton);
     const tituloModal = getByText("Ingreso de administrador");
@@ -26,7 +31,11 @@ describe.skip("ModalLoginAdmin", () => {
   });
 
   it('should update the "email" state when the username input value changes', () => {
-    const { getByPlaceholderText, getByText } = render(<ModalLoginAdmin />);
+    const { getByPlaceholderText, getByText } = render(
+      <MemoryRouter>
+        <ModalLoginAdmin />
+      </MemoryRouter>
+    );
     const comoAdminButton = getByText("Como administrador");
     fireEvent.click(comoAdminButton);
     const usernameInput = getByPlaceholderText("Email");
@@ -35,7 +44,11 @@ describe.skip("ModalLoginAdmin", () => {
   });
 
   it('should update the "contrasena" state when the password input value changes', () => {
-    const { getByPlaceholderText, getByText } = render(<ModalLoginAdmin />);
+    const { getByPlaceholderText, getByText } = render(
+      <MemoryRouter>
+        <ModalLoginAdmin />
+      </MemoryRouter>
+    );
     const comoAdminButton = getByText("Como administrador");
     fireEvent.click(comoAdminButton);
     const passwordInput = getByPlaceholderText("Contraseña");
@@ -44,7 +57,11 @@ describe.skip("ModalLoginAdmin", () => {
   });
 
   it('should call realizarLoginAdmin when the "Ingresar" button is clicked', async () => {
-    const { getByText, getByPlaceholderText } = render(<ModalLoginAdmin />);
+    const { getByText, getByPlaceholderText } = render(
+      <MemoryRouter>
+        <ModalLoginAdmin />
+      </MemoryRouter>
+    );
     const comoAdminButton = getByText("Como administrador");
     fireEvent.click(comoAdminButton);
 
@@ -55,14 +72,15 @@ describe.skip("ModalLoginAdmin", () => {
     const ingresarButton = getByText("Ingresar");
     fireEvent.click(ingresarButton);
 
-    await waitFor(() => {expect(mockLogin).toHaveBeenCalledWith(
-      {
-        email: "testuser",
-        password: "testpassword",
-        rol: "Administrador",
-      },
-      expect.any(Function) 
-    );})
-    
+    await waitFor(() => {
+      expect(mockLogin).toHaveBeenCalledWith(
+        {
+          email: "testuser",
+          password: "testpassword",
+          rol: "Administrador",
+        },
+        expect.any(Function)
+      );
+    });
   });
 });

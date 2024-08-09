@@ -17,7 +17,7 @@ function DescargarOrdenButton({idServicio}) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            URL.revokeObjectURL(url); // Liberar el objeto URL
+            URL.revokeObjectURL(url);
         }
     }
 
