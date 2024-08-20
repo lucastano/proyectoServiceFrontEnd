@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { postProducto } from "../../store/effects";
 import {
   Modal,
@@ -13,10 +14,14 @@ import {
   Label,
   ModalFooter,
   toast,
+  ModalTitle
 } from "keep-react";
+import { useProductos } from "../../store/selectors";
 
-function AgregarProducto() {
+function ModalAgregarProducto() {
   const dispatch = useDispatch();
+  const productos = useProductos();
+  const navigate = useNavigate();
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
   const [version, setVersion] = useState("");
@@ -48,10 +53,16 @@ function AgregarProducto() {
       modelo: modelo,
       version: version,
     };
+    
+    const productoExiste = productos.find(producto => producto.marca === nuevoProducto.marca && producto.modelo === nuevoProducto.modelo && producto.version === nuevoProducto.version);
+
+    if (productoExiste) {
+      toast.error("El producto ya existe");
+      return;
+    };
 
     try {
       await postProducto(dispatch, nuevoProducto);
-      navigate("/agregarProducto");
       toast("Producto ingresado", {
         description: "El producto ha sido ingresado correctamente",
       });
@@ -72,9 +83,9 @@ function AgregarProducto() {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <h3 className="mb-2 text-body-1 font-medium text-metal-900">
+              <ModalTitle>
                 Agregar Producto
-              </h3>
+              </ModalTitle>
               <form className="mx-auto max-w-md space-y-2 p-4">
                 <fieldset className="space-y-1">
                   <Label htmlFor="marca">Marca:</Label>
@@ -111,4 +122,4 @@ function AgregarProducto() {
   );
 }
 
-export default AgregarProducto;
+export default ModalAgregarProducto;

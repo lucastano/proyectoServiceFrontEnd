@@ -1,15 +1,17 @@
 import React, { useState, useMemo } from "react";
 import { Button, Textarea, toast } from "keep-react";
-import { useIdSesion } from "../../store/selectors";
+import { useIdSesion, useClientePorCi } from "../../store/selectors";
+import { postMensaje } from "../../store/effects";
+import { useDispatch } from "react-redux";
 
-function NuevoMensaje({ idServicio }) {
+function NuevoMensaje({ servicio }) {
   const idSesion = useIdSesion();
   const [descripcion, setDescripcion] = useState("");
-  const servicio = useServicioPorId(idServicio);
+  const ciCliente = servicio.clienteCedula;
+  const cliente = useClientePorCi(ciCliente);
+  const dispatch = useDispatch();
 
   const destinatario = useMemo(() => {
-    const ciCliente = servicio.clienteCedula;
-    const cliente = useClientePorCi(ciCliente);
     return idSesion === cliente.id ? servicio.tecnicoId : cliente.id;
   }, [idSesion, servicio.clienteCedula]);
 
@@ -19,7 +21,7 @@ function NuevoMensaje({ idServicio }) {
 
   const manejarClickEnviar = async () => {
     const nuevoMensaje = {
-      reparacionId: idServicio,
+      reparacionId: servicio.id,
       emisorId: idSesion,
       destinatarioId: destinatario,
       texto: descripcion,
@@ -30,8 +32,8 @@ function NuevoMensaje({ idServicio }) {
       toast("Mensaje enviado correctamente");
       setDescripcion("");
     } catch (error) {
+      console.log('error en NuevoMensaje: ', error);
       toast.error("Error al enviar mensaje");
-      //dispatch(limpiarError());
     }
   };
 

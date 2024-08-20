@@ -8,18 +8,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  Button
 } from "keep-react";
 import {
   useServiciosPorTecnico,
   useTecnicoPorId,
 } from "../../store/selectors";
-import ModalVisualizacionServicio from "../ModalVisualizacionServicio/ModalVisualizacionServicio";
 
 const VisualizacionDatosTecnico = ({ idTecnico }) => {
-  console.log("idTecnico: ", idTecnico);
   const tecnico = useTecnicoPorId(idTecnico);
   const servicios = useServiciosPorTecnico(idTecnico);
-  console.log("tecnico: ", tecnico);
 
   const cantidadReparaciones = servicios.length;
   const cantidadReparacionesSinReparar = servicios.filter(
@@ -65,19 +63,19 @@ const VisualizacionDatosTecnico = ({ idTecnico }) => {
             <TableHeader>
               <TableRow>
                 <TableHead>
-                  <div className="w-[80px]">Id servicio</div>
+                  <div className="w-[80px] flex justify-center">Id servicio</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[80px]">Producto</div>
+                  <div className="w-[80px] flex justify-center">Id Producto</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[80px]">Nro. serie</div>
+                  <div className="w-[80px] flex justify-center">Nro. serie</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[80px]">Estado</div>
+                  <div className="w-[80px] flex justify-center">Estado</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[80px]">Detalle</div>
+                  <div className="w-[80px] flex justify-center">Detalle</div>
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -85,12 +83,14 @@ const VisualizacionDatosTecnico = ({ idTecnico }) => {
               {servicios.map((servicio) => (
                 <TableRow key={servicio.id}>
                   <TableCell>{servicio.id}</TableCell>
-                  <TableCell>{servicio.producto}</TableCell>
+                  <TableCell>{servicio.producto.id}</TableCell>
                   <TableCell>{servicio.numeroSerie}</TableCell>
                   <TableCell>{servicio.estado}</TableCell>
                   <TableCell>
-                    <ModalVisualizacionServicio idServicio={servicio.id} />
-                  </TableCell>
+                      <Button onClick={() => manejarClickDetalle(servicio.id)}>
+                        Ver
+                      </Button>
+                    </TableCell>
                 </TableRow>
               ))}
             </TableBody>

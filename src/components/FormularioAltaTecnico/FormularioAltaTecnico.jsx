@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Input, Label, Button, toast } from "keep-react";
 import { postTecnico } from "../../store/effects";
-import { limpiarError } from "../../store/actions";
 
 const FormularioAltaTecnico = () => {
   const dispatch = useDispatch();
@@ -54,7 +53,6 @@ const FormularioAltaTecnico = () => {
         toast("Tecnico dado de alta correctamente");
       } catch (error) {
         toast.error("Error al dar de alta a tecnico");
-        dispatch(limpiarError());
       }
     } else {
       if (!validarNombreApellido(nombre)) {
@@ -137,7 +135,7 @@ const FormularioAltaTecnico = () => {
             onChange={(e) => manejarCambioContrasena(e)}
           />
         </div>
-        <div className="mb-50 space-y-2">
+        <div className="mb-4 space-y-2">
           <Label htmlFor="confirmarContrasena">Confirmar contraseña: </Label>
           <Input
             id="confirmarContrasena"

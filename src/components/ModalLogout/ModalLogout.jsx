@@ -12,6 +12,8 @@ import {
   ModalClose,
   ModalHeader,
   ModalFooter,
+  SidebarItem,
+  ModalTitle
 } from "keep-react";
 import { logout } from "../../store/effects";
 
@@ -20,36 +22,32 @@ export const ModalLogout = () => {
   const navigate = useNavigate();
 
   const manejarLogout = async () => {
-    console.log('entra a manejarLogout')
     try {
       await logout(dispatch);
-      console.log('llega aca');
       navigate("/");
       toast.success("Logout realizado con éxito");
     } catch (error) {
       toast.error("Error al realizar logout");
     }
-  
-    //document.getElementById("buttonModal").click();
   };
 
   return (
     <div>
       <Modal>
         <ModalAction asChild>
-          <span id="buttonModal">
+        <SidebarItem>
             <SignOut size={20}/>
             Salir
-          </span>
+          </SidebarItem>
         </ModalAction>
         <ModalBody className="flex flex-col items-center">
           <ModalContent>
             <ModalClose className="absolute right-4 top-4"/>
             <ModalHeader>
               <div className="!mb-6">
-                <h3 className="mb-2 text-body-1 font-medium text-metal-900">
+                <ModalTitle>
                   Cierre de Sesión
-                </h3>
+                </ModalTitle>
                 <p className="text-body-4 font-normal text-metal-600">
                   Esta seguro que desea cerrar la sesión?
                 </p>

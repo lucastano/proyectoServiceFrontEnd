@@ -31,29 +31,47 @@ function MetricasNegocio() {
 
   function convertirAFechaISO(fechaString) {
     const fecha = new Date(fechaString);
+    if (isNaN(fecha.getTime())) {
+      return null;
+    }
     return fecha.toISOString();
   }
 
   const fechaInicioISO = () => {
-    return conRangoFechas ? convertirAFechaISO(selected.from) : null;
+    if (conRangoFechas && selected) {
+      const fromDate = new Date(selected.from);
+      const toDate = new Date(selected.to);
+      if (fromDate > toDate) {
+        return convertirAFechaISO(selected.to);
+      }
+      return convertirAFechaISO(selected.from);
+    }
+    return null;
   };
 
   const fechaFinISO = () => {
-    return conRangoFechas ? convertirAFechaISO(selected.to) : null;
+    if (conRangoFechas && selected) {
+      const fromDate = new Date(selected.from);
+      const toDate = new Date(selected.to);
+      if (fromDate > toDate) {
+        return convertirAFechaISO(selected.from);
+      }
+      return convertirAFechaISO(selected.to);
+    }
+    return null;
   };
 
   const arrayTecnicos = conRangoFechas
-    ? useTecnicosReparacionesPorFechas(fechaInicioISO, fechaFinISO)
+    ? useTecnicosReparacionesPorFechas(fechaInicioISO(), fechaFinISO())
     : useTecnicosReparaciones();
   const objetoTecnicos = useCantidadesPorParametro(arrayTecnicos);
   const dataTecnicos = Object.entries(objetoTecnicos).map(([name, value]) => ({
     name,
     value,
   }));
-  console.log(fechaInicioISO());
-  console.log(fechaFinISO());
+
   const arrayEstados = conRangoFechas
-    ? useEstadosReparacionesPorFechas(fechaInicioISO, fechaFinISO)
+    ? useEstadosReparacionesPorFechas(fechaInicioISO(), fechaFinISO())
     : useEstadosReparaciones();
   const objetoEstados = useCantidadesPorParametro(arrayEstados);
   const dataEstados = Object.entries(objetoEstados).map(([name, value]) => ({
@@ -61,54 +79,66 @@ function MetricasNegocio() {
     value,
   }));
 
-  const cantidadReparaciones = conRangoFechas ? useCantidadReparacionesPorFechas(fechaInicioISO, fechaFinISO) : useCantidadReparaciones();
+  const cantidadReparaciones = conRangoFechas
+    ? useCantidadReparacionesPorFechas(fechaInicioISO(), fechaFinISO())
+    : useCantidadReparaciones();
 
   return (
-    <div >
+    <div>
       <p>Metricas Negocio</p>
       <div className="my-8">
-        <Popover showArrow={false} placement="bottom-start">
-          <PopoverTrigger asChild>
-            <Button
-              className="w-[286px] justify-start gap-2 rounded-xl border border-metal-50 px-4 text-left text-body-4 font-normal text-metal-600 hover:bg-white active:focus:scale-100 dark:border-metal-900 dark:bg-metal-900 dark:text-white dark:hover:bg-metal-800"
-              variant="outline"
-              color="secondary"
-            >
-              <Calendar size={20} className="text-metal-400 dark:text-white" />
-              {selected ? (
-                <>
-                  {format(selected?.from ?? new Date(), "dd/MM/yyyy")} -{" "}
-                  {format(selected?.to ?? new Date(), "dd/MM/yyyy")}
-                </>
-              ) : (
-                <span>Selecciona un rango de fechas</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="z-50 max-w-min">
-            <DatePicker
-              mode="range"
-              selected={selected}
-              onSelect={setSelected}
-              showOutsideDays={true}
-            />
-          </PopoverContent>
-        </Popover>
+        <div>
+          <Popover showArrow={false} placement="bottom-start">
+            <PopoverTrigger asChild>
+              <Button
+                className="w-[286px] justify-start gap-2 rounded-xl border border-metal-50 px-4 text-left text-body-4 font-normal text-metal-600 hover:bg-white active:focus:scale-100 dark:border-metal-900 dark:bg-metal-900 dark:text-white dark:hover:bg-metal-800"
+                variant="outline"
+                color="secondary"
+              >
+                <Calendar
+                  size={20}
+                  className="text-metal-400 dark:text-white"
+                />
+                {selected ? (
+                  <>
+                    {format(selected?.from ?? new Date(), "dd/MM/yyyy")} -{" "}
+                    {format(selected?.to ?? new Date(), "dd/MM/yyyy")}
+                  </>
+                ) : (
+                  <span>Selecciona un rango de fechas</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="z-50 max-w-min">
+              <DatePicker
+                mode="range"
+                selected={selected}
+                onSelect={setSelected}
+                showOutsideDays={true}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
       <Divider />
       {selected && (
         <p>
-          Entre {fechaInicioISO} y {fechaFinISO}
+          Entre {format(selected?.from ?? new Date(), "dd/MM/yyyy")} y{" "}
+          {format(selected?.to ?? new Date(), "dd/MM/yyyy")}
         </p>
       )}
       <div className="flex flex-col">
         <div id="ChartNumerosSerie" className="my-8 flex items-center">
-        <Label htmlFor="reparacionesRealizadas">Reparaciones realizadas:</Label>
-        <p className="ml-4">{cantidadReparaciones}</p>
+          <Label htmlFor="reparacionesRealizadas">
+            Reparaciones realizadas:
+          </Label>
+          <p className="ml-4">{cantidadReparaciones}</p>
         </div>
         <Divider />
         <div id="ChartEstados" className="my-8 text-left">
-        <Label htmlFor="reparacionesPorEstado">Reparaciones por estado:</Label>
+          <Label htmlFor="reparacionesPorEstado">
+            Reparaciones por estado:
+          </Label>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -126,7 +156,9 @@ function MetricasNegocio() {
         </div>
         <Divider />
         <div id="ChartTecnicos" className="my-8 text-left">
-        <Label htmlFor="reparacionesPorTecnico">Reparaciones por técnico:</Label>
+          <Label htmlFor="reparacionesPorTecnico">
+            Reparaciones por técnico:
+          </Label>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie

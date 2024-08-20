@@ -1,52 +1,44 @@
 import React from "react";
-import { Modal, Button, toast, ModalAction, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalClose } from "keep-react";
+import { Modal, Button, toast, ModalAction, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalClose, ModalTitle } from "keep-react";
 import { useDispatch } from "react-redux";
-import { useServicioPorId } from "../../store/selectors";
 import { postTerminarReparacion } from "../../store/effects";
+import { useNavigate } from "react-router-dom";
 
-const ModalTerminarServicio = (idServicio) => {
+const ModalTerminarServicio = ({servicio}) => {
   const dispatch = useDispatch();
-  const servicioPorId = useServicioPorId(idServicio);
+  const navigate = useNavigate();
 
-  const fuePresupuestada = servicioPorId.estado === "PresupuestoAceptado" || servicioPorId.estado === "PresupuestoNoAceptado";
+  const fuePresupuestada = servicio.estado === "PresupuestoAceptado" || servicio.estado === "PresupuestoNoAceptado";
 
   const manejarClickReparado = (reparado) => async () => {
     const terminoReparacion = {
-      idReparacion: idServicio,
+      idReparacion: servicio.id,
       fueReparada: reparado,
     };
   
     try {
       await postTerminarReparacion(terminoReparacion, dispatch);
-      const descripcionToast =
-        servicioPorId.reparada == true
-          ? "Servicio fue reparado"
-          : "Servicio no fue reparado";
-      toast("Servicio finalizado", {
-        description: descripcionToast,
-      });
+      navigate('/serviciostecnico')
+      toast("Servicio finalizado");
     } catch (error) {
       toast.error("Ha habido un error al finalizar el servicio");
-      //dispatch(limpiarError());
     }
-  
-    document.getElementById("modalButton").click();
   };
 
   return (
     <div>
       <Modal>
         <ModalAction asChild>
-          <Button id="modalButton" disabled={!fuePresupuestada}>Terminar</Button>
+          <Button size="xs" id="modalButton" disabled={!fuePresupuestada}>Terminar</Button>
         </ModalAction>
         <ModalBody className="space-y-3">
           <ModalContent>
             <ModalClose className="absolute right-4 top-4"/>
             <ModalHeader>
               <div className="!mb-6">
-                <h3 className="mb-2 text-body-1 font-medium text-metal-900">
+                <ModalTitle>
                   Terminar reparación
-                </h3>
+                </ModalTitle>
                 <p className="text-body-4 font-normal text-metal-600">
                   Selecciona la opción que corresponda.
                 </p>

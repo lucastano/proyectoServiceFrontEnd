@@ -20,13 +20,13 @@ function ListaProductos() {
             <TableHeader>
               <TableRow>
                 <TableHead>
-                  <div className="max-w-[250px]">Marca</div>
+                  <div className="max-w-[250px] flex justify-center">Marca</div>
                 </TableHead>
                 <TableHead>
-                  <div className="max-w-[250px]">Modelo</div>
+                  <div className="max-w-[250px] flex justify-center">Modelo</div>
                 </TableHead>
                 <TableHead>
-                  <div className="max-w-[250px]">Version</div>
+                  <div className="max-w-[250px] flex justify-center">Version</div>
                 </TableHead>
               </TableRow>
             </TableHeader>

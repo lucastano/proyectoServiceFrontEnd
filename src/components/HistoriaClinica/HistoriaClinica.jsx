@@ -4,9 +4,10 @@ import {
   TimelineItem,
   TimelinePoint,
   TimelineContent,
-  Spinner
+  Spinner,
 } from "keep-react";
 import { getHistoriaClinica } from "../../dataFetcher";
+import { format } from "date-fns";
 
 function HistoriaClinica({ numeroSerie }) {
   const [historiaClinica, setHistoriaClinica] = useState(null);
@@ -22,7 +23,7 @@ function HistoriaClinica({ numeroSerie }) {
     fetchData();
   }, [numeroSerie]);
 
-  if (isLoading) {
+  if (isLoading || !historiaClinica) {
     return <Spinner color="info" size="xl" />;
   }
 
@@ -34,38 +35,39 @@ function HistoriaClinica({ numeroSerie }) {
 
   return (
     <div>
-      <h1 className="text-h2 font-bold text-metal-900 dark:text-white">
+      <h2 className="text-h2 font-bold text-metal-900 dark:text-white">
         Historia Clínica - {numeroSerie}{" "}
-      </h1>
-      <div>
+      </h2>
+      {cantidadReparacionesRealizadas > 0 ? (<div>
         <div>
           <p>Cantidad de reparaciones: {cantidadReparacionesRealizadas}</p>
         </div>
         <div>
           <p>Gasto total: {gastoTotalEnReparaciones}</p>
         </div>
-      </div>
+      </div>) : (<div><p>No hay reparaciones realizadas para ese numero de serie</p></div>)}
       <Timeline>
         {reparacionesRealizadas &&
-          reparacionesRealizadas.forEach(() => {
-            <TimelineItem>
+          reparacionesRealizadas.map((reparacion) => (
+            <TimelineItem key={reparacion.id}>
               <TimelinePoint />
               <TimelineContent>
                 <p className="text-body-5 font-normal leading-[1.4] text-metal-400 dark:text-metal-300">
-                  {reparacion.fechaEntregaReparacion}
+                  Fecha de entrega de reparación:{" "}
+                  {format(new Date(reparacion.fechaEntregaReparacion), "dd-MM-yyyy HH:mm:ss")}
                 </p>
                 <h1 className="text-body-3 font-medium text-metal-900 dark:text-white">
-                  {reparacion.costoReparacion}
+                  Costo de reparación: {reparacion.costoReparacion}
                 </h1>
                 <p className="text-body-4 font-normal text-metal-600 dark:text-metal-300">
-                  {reparacion.descripcionProblema}
+                  Descripción de problema: {reparacion.descripcionProblema}
                 </p>
                 <p className="text-body-4 font-normal text-metal-600 dark:text-metal-300">
-                  {reparacion.descripcionSolucion}
+                  Descripción de solución: {reparacion.descripcionSolucion}
                 </p>
               </TimelineContent>
-            </TimelineItem>;
-          })}
+            </TimelineItem>
+          ))}
       </Timeline>
     </div>
   );

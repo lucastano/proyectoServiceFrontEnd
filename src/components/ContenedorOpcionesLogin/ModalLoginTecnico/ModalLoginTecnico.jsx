@@ -12,9 +12,9 @@ import {
   ModalHeader,
   ModalFooter,
   ModalContent,
+  ModalTitle,
 } from "keep-react";
-import { login, getReparaciones, getClientes, getProductos } from "../../../store/effects";
-//import { limpiarError } from "../../../store/actions";
+import { login, getClientes, getProductos } from "../../../store/effects";
 import { useNavigate } from "react-router-dom";
 
 
@@ -23,22 +23,12 @@ export const ModalLoginTecnico = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
-
-  const traerReparaciones = async () => {
-    try {
-      await getReparaciones(dispatch);
-    } catch (error) {
-      toast.error("No se pudo obtener reparaciones");
-      //dispatch(limpiarError());
-    }
-  };
   
   const traerClientes = async () => {
     try {
       await getClientes(dispatch);
     } catch (error) {
       toast.error("No se pudo obtener clientes");
-      //dispatch(limpiarError());
     }
   };
 
@@ -68,21 +58,15 @@ export const ModalLoginTecnico = () => {
   
     try {
       await login(usuarioParaLogin, dispatch);
-      await traerReparaciones();
       await traerClientes();
       await traerProductos();
       navigate("/serviciostecnico");
       toast("Login exitoso");
     } catch (error) {
       toast.error("Error al iniciar sesión");
-      //dispatch(limpiarError());
     }   
-    
-    document.getElementById("modalButton").click();
+
   };
-
-  
-
 
   return (
     <Modal>
@@ -94,9 +78,9 @@ export const ModalLoginTecnico = () => {
           <ModalClose className="absolute right-4 top-4"/>
           <ModalHeader>
             <div className="!mb-6">
-              <h3 className="mb-2 text-body-1 font-medium">
+              <ModalTitle>
                 Ingreso de tecnico
-              </h3>
+              </ModalTitle>
               <form className="mx-auto max-w-md space-y-2 p-4">
                 <fieldset className="space-y-1">
                   <Label htmlFor="email">Email: </Label>

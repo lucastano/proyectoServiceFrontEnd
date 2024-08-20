@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Modal, Button, Label, Input, toast, ModalAction, ModalBody, ModalClose, ModalHeader, ModalFooter, ModalContent } from "keep-react";
-import { getClientes, getReparaciones, getTecnicos, login, getProductos } from "../../../store/effects";
+import { Modal, Button, Label, Input, toast, ModalAction, ModalBody, ModalClose, ModalHeader, ModalFooter, ModalContent, ModalTitle } from "keep-react";
+import { getClientes, login, getProductos } from "../../../store/effects";
 import { useNavigate } from "react-router-dom";
 
 export const ModalLoginAdmin = () => {
@@ -28,26 +28,12 @@ export const ModalLoginAdmin = () => {
     try {
       await login(usuarioParaLogin, dispatch);
       await traerProductos();
-      await traerReparaciones();
       await traerClientes();
-      await traerTecnicos();
       navigate("/metricas");
       toast("Login exitoso");
     } catch (error) {
       toast.error("Error al iniciar sesión");
-      //dispatch(limpiarError());
     }   
-    
-    document.getElementById("modalButton").click();
-  };
-  
-  const traerReparaciones = async () => {
-    try {
-      await getReparaciones(dispatch);
-    } catch (error) {
-      toast.error("No se pudo obtener reparaciones");
-      //dispatch(limpiarError());
-    }
   };
 
   const traerProductos = async () => {
@@ -63,16 +49,6 @@ export const ModalLoginAdmin = () => {
       await getClientes(dispatch);
     } catch (error) {
       toast.error("No se pudo obtener clientes");
-      //dispatch(limpiarError());
-    }
-  };
-  
-  const traerTecnicos = async () => {
-    try {
-      await getTecnicos(dispatch);
-    } catch (error) {
-      toast.error("No se pudo obtener tecnicos");
-      //dispatch(limpiarError());
     }
   };
 
@@ -86,9 +62,9 @@ export const ModalLoginAdmin = () => {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <h3 className="mb-2 text-body-1 font-medium">
+              <ModalTitle>
                 Ingreso de administrador
-              </h3>
+              </ModalTitle>
               <form className="mx-auto max-w-md space-y-2 p-4">
                 <fieldset className="space-y-1">
                   <Label htmlFor="email">Email: </Label>

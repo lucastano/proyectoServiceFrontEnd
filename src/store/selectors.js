@@ -22,6 +22,7 @@ export const useEmailSesion = () => {
     const cedula = useSelector(getEmailSesion); 
     return cedula;
   };
+
 const getRolSesion = state => getSesion(state)?.rol;
 
 export const useRolSesion = () => {
@@ -37,14 +38,9 @@ export const useIdSesion = () => {
     return id;
 }
 
-const getError = state => state.error;
-
-export const useError = () => {
-    const error = useSelector(getError); 
-    return error;
+const getServicios = state => {
+    return state.servicios;
 }
-
-const getServicios = state => state.servicios;
 
 export const useServicios = () => {
     const servicios = useSelector(getServicios); 
@@ -70,13 +66,15 @@ export const useClientes = () => {
 
 }
 
-const getClientePorCi = (state, ci) => getClientes(state)?.find(cliente => cliente.ci === ci);
+const getClientePorCi = (state, ci) => getClientes(state)?.find(cliente => cliente.ci == ci);
 
 export const useClientePorCi = (ci) => {
     const cliente = useSelector(state => getClientePorCi(state, ci));
     return cliente;
 }
-const getServicioPorId = (state, id) => state.servicios.find(servicio => servicio.id === id);
+const getServicioPorId = (state, id) => {
+    return state.servicios.find(servicio => Number(servicio.id) === Number(id));
+}
 
 export const useServicioPorId = (id) => {
     const servicio = useSelector(state => getServicioPorId(state, id));
@@ -84,8 +82,6 @@ export const useServicioPorId = (id) => {
 }
 
 const getTecnicoPorId = (state, id) => {
-    console.log('state.tecnicos en getTecnicoPorId: ', state.tecnicos);
-    console.log('getTecnicoPorId: ', state.tecnicos.find(tecnico => tecnico.id === id));
     return state.tecnicos.find(tecnico => Number(tecnico.id) === Number(id));
 }
 
@@ -94,7 +90,7 @@ export const useTecnicoPorId = (id) => {
     return tecnico;
 }
 
-const getServiciosPorTecnico = (state, tecnicoId) => state.servicios.filter(servicio => servicio.tecnicoId === tecnicoId);
+const getServiciosPorTecnico = (state, tecnicoId) => state.servicios.filter(servicio => Number(servicio.tecnicoId) === Number(tecnicoId));
 
 export const useServiciosPorTecnico = (tecnicoId) => {
     const servicios = useSelector(state => getServiciosPorTecnico(state, tecnicoId));
@@ -106,6 +102,20 @@ const getTecnicos = state => state.tecnicos;
 export const useTecnicos = () => {
     const tecnicos = useSelector(getTecnicos); 
     return tecnicos;
+}
+
+const getFallas = state => state.fallas;
+
+export const useFallas = () => {
+    const fallas = useSelector(getFallas);
+    return fallas;
+}
+
+const getOrdenReparacion = state => state.ordenReparacion;
+
+export const useOrdenReparacion = () => {
+    const orden = useSelector(getOrdenReparacion);
+    return orden;
 }
 
 const getMensajes = state => state.mensajes;

@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import OpcionesPresupuesto from "./OpcionesPresupuesto";
-import ModalIngresarPresupuesto from "./ModalIngresarPresupuesto";
+import FormularioIngresarPresupuesto from "./FormularioIngresarPresupuesto";
 
 describe.skip("OpcionesPresupuesto", () => {
 
@@ -26,13 +26,13 @@ describe.skip("OpcionesPresupuesto", () => {
         expect(mockPostAceptarPresupuesto).toHaveBeenCalled();
     });
 
-    it("opens ModalIngresarPresupuesto when enter button is clicked", () => {
+    it("opens FormularioIngresarPresupuesto when enter button is clicked", () => {
         const { getByText } = render(<OpcionesPresupuesto idServicio={'1234'}/>);
         const enterButton = getByText("Presupuestar");
 
         fireEvent.click(enterButton);
 
-        expect(<ModalIngresarPresupuesto onClose={() => {}} idServicio={'1234'} />).toBeInTheDocument();
+        expect(<FormularioIngresarPresupuesto idServicio={'1234'} />).toBeInTheDocument();
     });
 
     it("opens ModalRechazarPresupuesto when reject button is clicked", () => {

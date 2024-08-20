@@ -11,8 +11,12 @@ import PantallaLandingAdmin from "./pages/PantallaLandingAdmin";
 import PantallaVisualizacionDatosTecnico from "./pages/PantallaVisualizacionDatosTecnico";
 import PantallaAgregarProducto from "./pages/PantallaAgregarProducto";
 import { useRolSesion } from "./store/selectors";
-import { ThemeProvider } from "./components/theme-provider";
-
+import PantallaIngresarPresupuesto from "./pages/PantallaIngresarPresupuesto";
+import PantallaEditarServicio from "./pages/PantallaEditarServicio";
+import PantallaAltaFalla from "./pages/PantallaAltaFalla";
+import PantallaVisualizacionFallas from "./pages/PantallaVisualizacionFallas";
+import PantallaDetalleServicio from "./pages/PantallaDetalleServicio";
+import PantallaHistoriaClinica from "./pages/PantallaHistoriaClinica";
 
 const ProtectedRoute = ({ roles, children }) => {
   const rolSesion = useRolSesion();
@@ -37,20 +41,26 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<PantallaLogin />} />
-        <Route path="/historiaClinica" element={
+        <Route
+          path="/historiaClinica"
+          element={
             <ProtectedRoute roles={["Tecnico", "Administrador"]}>
-              <PantallaAltaServicio />
+              <PantallaHistoriaClinica />
             </ProtectedRoute>
-          }/>
-          <Route path="/agregarProducto" element={
+          }
+        />
+        <Route
+          path="/agregarProducto"
+          element={
             <ProtectedRoute roles={["Tecnico", "Administrador"]}>
               <PantallaAgregarProducto />
             </ProtectedRoute>
-          }/>
+          }
+        />
         <Route
           path="/nuevoservicio"
           element={
-            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
+            <ProtectedRoute roles={["Tecnico"]}>
               <PantallaAltaServicio />
             </ProtectedRoute>
           }
@@ -71,7 +81,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/servicios"
           element={
@@ -92,7 +102,47 @@ function App() {
           path="/tecnico/:idTecnico"
           element={
             <ProtectedRoute roles={["Administrador"]}>
-              <PantallaVisualizacionDatosTecnico/>
+              <PantallaVisualizacionDatosTecnico />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ingresarPresupuesto/:idServicio"
+          element={
+            <ProtectedRoute roles={["Tecnico"]}>
+              <PantallaIngresarPresupuesto />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/editarServicio/:idServicio"
+          element={
+            <ProtectedRoute roles={["Tecnico"]}>
+              <PantallaEditarServicio />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/altaFalla"
+          element={
+            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
+              <PantallaAltaFalla />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/fallas"
+          element={
+            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
+              <PantallaVisualizacionFallas />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/servicios/:idServicio"
+          element={
+            <ProtectedRoute roles={["Cliente", "Administrador", "Tecnico"]}>
+              <PantallaDetalleServicio />
             </ProtectedRoute>
           }
         />

@@ -7,22 +7,15 @@ import {
   traerReparacionesPresupuestadasExito,
   traerTecnicosExito,
   altaClienteExito,
-  altaServicioExito,
   presupuestarReparacionExito,
   altaTecnicoExito,
   loginExito,
   logoutExito,
   aceptarPresupuestoExito,
-  rechazarPresupuestoExito,
-  terminarReparacionExito,
-  entregarReparacionExito,
-  cambiarPresupuestoExito,
-  cambiarServicioExito,
   traerMensajesExito,
-  postMensajeExito,
   traerProductosExito,
   crearProductoExito,
-  lanzarError
+  traerFallasExito,
 } from "./actions";
 import { config } from "../../config";
 
@@ -51,7 +44,7 @@ async function postProducto(dispatch, producto) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -63,24 +56,25 @@ async function getProductos(dispatch) {
     headers: {
       accept: "*/*",
       Authorization: `Bearer ${token}`,
-  }
-}
+    },
+  };
 
-try {
-  const response = await fetch(url, opciones);
-  if (response.ok) {
-    const data = await response.json();
-    dispatch(traerProductosExito(data));
-  } else {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  try {
+    const response = await fetch(url, opciones);
+    if (response.ok) {
+      const data = await response.json();
+      dispatch(traerProductosExito(data));
+    } else {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    return error;
   }
-} catch (error) {
-  dispatch(lanzarError(error));
-}
 }
 
 async function getMensajes(dispatch, idServicio) {
-  const url = `${apiUrl}/api/Mensajes/Mensajes?id=${idServicio}`;
+  const url = `${apiUrl}/api/Mensajes?id=${idServicio}`;
+  const token = localStorage.getItem("token");
   const opciones = {
     method: "GET",
     headers: {
@@ -93,13 +87,17 @@ async function getMensajes(dispatch, idServicio) {
   try {
     const response = await fetch(url, opciones);
     if (response.ok) {
-      const datos = await response.json();
-      dispatch(traerMensajesExito(datos));
+      const contentType = response.headers.get("content-type");
+      let datos = [];
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        datos = await response.json();
+      }
+      dispatch(traerMensajesExito(datos.mensajes));
     } else {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -120,19 +118,18 @@ async function postMensaje(dispatch, mensaje) {
   try {
     const response = await fetch(url, opciones);
     if (response.ok) {
-      const datos = await respuesta.json();
-      dispatch(postMensajeExito(datos));
+      await getMensajes(dispatch, mensaje.reparacionId);
     } else {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     }
   } catch (error) {
-    dispatch(lanzarError(datos));
+    throw error;
   }
 }
 
 async function putServicio(dispatch, servicio) {
   const { id, fechaPromesaPresupuesto, numeroSerie, descripcion } = servicio;
-  const url = `${apiUrl}/api/Reparaciones/ModificarDatosReparacion?id=${id}&fechaPromesaPresupuesto=${fechaPromesaPresupuesto}&numeroSerie=${numeroSerie}&descripcion=${descripcion}`;
+  const url = `${apiUrl}/api/Reparaciones/ModificarDatosReparacion`;
   const token = localStorage.getItem("token");
 
   const opciones = {
@@ -142,22 +139,28 @@ async function putServicio(dispatch, servicio) {
       accept: "*/*",
       Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify({
+      id: id,
+      fechaPromesaPresupuesto: fechaPromesaPresupuesto,
+      numeroSerie: numeroSerie,
+      descripcion: descripcion,
+    }),
+
   };
   try {
     const respuesta = await fetch(url, opciones);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(cambiarServicioExito(datos));
+      await getReparaciones(dispatch);
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
-async function putPresupuesto(dispatch, presupuesto) {
-  const { id, costo, descripcion } = presupuesto;
-  const url = `${apiUrl}/api/Reparaciones/ModificarPresupuestoReparacion?id=${id}&costo=${costo}&descripcion=${descripcion}`;
+async function putPresupuesto(dispatch, reparacionPresupuestada) {
+  const { id, costo, descripcion } = reparacionPresupuestada;
+  const url = `${apiUrl}/api/Reparaciones/ModificarPresupuestoReparacion`;
   const token = localStorage.getItem("token");
 
   const opciones = {
@@ -167,6 +170,11 @@ async function putPresupuesto(dispatch, presupuesto) {
       accept: "*/*",
       Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify({
+      id: id,
+      costo: costo,
+      descripcion: descripcion,
+    }),
   };
 
   try {
@@ -174,12 +182,10 @@ async function putPresupuesto(dispatch, presupuesto) {
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(cambiarPresupuestoExito(datos));
+      await getReparaciones(dispatch);
     }
   } catch (error) {
-    console.error(error);
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -205,7 +211,7 @@ async function getAdministradores(dispatch) {
     }
   } catch (error) {
     console.error("Error al obtener administradores:", error);
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -231,7 +237,7 @@ async function getClientes(dispatch) {
     }
   } catch (error) {
     console.error("Error al obtener clientes:", error);
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -253,10 +259,10 @@ async function getClientePorCI(cedula, dispatch) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const datos = await respuesta.json();
-      dispatch(traerClienteExito(datos));
+      dispatch(traerClienteExito(datos.cliente));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -281,7 +287,7 @@ async function getReparaciones(dispatch) {
       dispatch(traerReparacionesExito(datos.reparaciones));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -302,12 +308,13 @@ async function getReparacionesPorCI(cedula, dispatch) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const datos = await respuesta.json();
-      const reparacionesFiltradas = datos.reparaciones.filter(reparacion => reparacion.clienteCedula === cedula);
-      console.log(reparacionesFiltradas);
+      const reparacionesFiltradas = datos.reparaciones.filter(
+        (reparacion) => reparacion.clienteCedula === cedula
+      );
       dispatch(traerReparacionesExito(reparacionesFiltradas));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -332,7 +339,7 @@ async function getReparacionesPorCI2(cedula, dispatch) {
       dispatch(traerReparacionesExito(datos.reparaciones));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -357,7 +364,7 @@ async function getReparacionesEnTaller(dispatch) {
       dispatch(traerReparacionesTallerExito(datos));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -382,7 +389,7 @@ async function getReparacionesPresupuestadas(dispatch) {
       dispatch(traerReparacionesPresupuestadasExito(datos));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -407,7 +414,7 @@ async function getTecnicos(dispatch) {
       dispatch(traerTecnicosExito(datos.tecnicos));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -435,13 +442,12 @@ async function postCliente(nuevoCliente, dispatch) {
       dispatch(altaClienteExito(datos));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
 //post reparacion
 async function postReparacion(nuevaReparacion, dispatch) {
-  console.log("nuevaReparacion en effect: ", nuevaReparacion);
   const url = `${apiUrl}/api/Reparaciones`;
   const data = JSON.stringify(nuevaReparacion);
   const token = localStorage.getItem("token");
@@ -457,14 +463,40 @@ async function postReparacion(nuevaReparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
+    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(altaServicioExito(datos));
+      const data = await respuesta.json();
+      console.log('data: ', data);
+    if (data.statusCode !== 200) {
+      throw new Error("Error al generar la orden");
+    }
+
+    // Verificar si la respuesta contiene la orden en formato base64
+    if (typeof data.ordenDeServicio !== "string") {
+      throw new Error("Formato de datos inesperado para la orden de servicio");
+    }
+
+    console.log('data: ', data);
+    const cadenaCaracteres = data.ordenDeServicio;
+    // Decodificar la cadena base64 a un ArrayBuffer
+    const binaryString = window.atob(cadenaCaracteres);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    // Paso 2: Crear un Blob con el contenido PDF
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+
+    return blob;
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    console.log('error: ', error);
+    return error;
   }
 }
 
@@ -491,6 +523,7 @@ async function postPresupuestacionReparacion(reparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
+    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
@@ -498,7 +531,7 @@ async function postPresupuestacionReparacion(reparacion, dispatch) {
       dispatch(presupuestarReparacionExito(datos));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -519,11 +552,10 @@ async function postTerminarReparacion(terminoReparacion, dispatch) {
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(terminarReparacionExito(datos));
+      await getReparaciones(dispatch);
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 async function postEntregarReparacion(reparacion, dispatch) {
@@ -540,20 +572,46 @@ async function postEntregarReparacion(reparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
+    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(entregarReparacionExito(datos));
+      const data = await respuesta.json();
+      console.log('data: ', data);
+    if (data.statusCode !== 200) {
+      throw new Error("Error al generar la orden");
+    }
+
+    // Verificar si la respuesta contiene la orden en formato base64
+    if (typeof data.ordenDeServicio !== "string") {
+      throw new Error("Formato de datos inesperado para la orden de servicio");
+    }
+
+    console.log('data: ', data);
+    const cadenaCaracteres = data.ordenDeServicio;
+    // Decodificar la cadena base64 a un ArrayBuffer
+    const binaryString = window.atob(cadenaCaracteres);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    // Paso 2: Crear un Blob con el contenido PDF
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+
+    return blob;
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    console.log('error: ', error);
+    return error;
   }
 }
 
 async function postAceptarPresupuesto(reparacion, dispatch) {
-  const { idReparacion } = reparacion;
-  const url = `${apiUrl}/api/Reparaciones/AceptarPresupuesto?id=${idReparacion}`;
+  const { id } = reparacion;
+  const url = `${apiUrl}/api/Reparaciones/AceptarPresupuesto?id=${id}`;
   const token = localStorage.getItem("token");
   const opciones = {
     method: "POST",
@@ -573,13 +631,71 @@ async function postAceptarPresupuesto(reparacion, dispatch) {
       dispatch(aceptarPresupuestoExito(datos));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    console.log('error: ', error);
+    return error;
+  }
+}
+
+async function postFalla(objetoFalla, dispatch) {
+  console.log('objetoFalla: ', objetoFalla);
+  const { productoId, falla, solucion } = objetoFalla;
+  const url = `${apiUrl}/api/BaseFallas`;
+  const token = localStorage.getItem("token");
+  const opciones = {
+    method: "POST",
+    headers: {
+      accept: "*/*",
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      productoId: productoId,
+      falla: falla,
+      solucion: solucion,
+    }),
+  };
+
+  try {
+    const respuesta = await fetch(url, opciones);
+    if (!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      //const datos = await respuesta.json();
+      await getFallas(dispatch);
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+async function getFallas(dispatch) {
+  const url = `${apiUrl}/api/BaseFallas`;
+  const token = localStorage.getItem("token");
+  const opciones = {
+    method: "GET",
+    headers: {
+      accept: "*/*",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const respuesta = await fetch(url, opciones);
+    console.log('respuesta: ', respuesta);
+    if (!respuesta.ok) {
+      throw new Error(`HTTP error! status: ${respuesta.status}`);
+    } else {
+      const datos = await respuesta.json();
+      dispatch(traerFallasExito(datos));
+    }
+  } catch (error) {
+    return error;
   }
 }
 
 async function postRechazarPresupuesto(rechazo, dispatch) {
   const { id, costo, razon } = rechazo;
-  const url = `${apiUrl}/api/Reparaciones/RechazarPresupuesto?id=${id}&costo=${costo}&razon=${razon}`;
+  const url = `${apiUrl}/api/Reparaciones/NoAceptarPresupuesto?id=${id}&costo=${costo}&razon=${razon}`;
+  const token = localStorage.getItem("token");
   const opciones = {
     method: "POST",
     headers: {
@@ -591,20 +707,21 @@ async function postRechazarPresupuesto(rechazo, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
+    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const datos = await respuesta.json();
-      dispatch(rechazarPresupuestoExito(datos));
+      console.log('datos: ', datos);
+      await getReparaciones(dispatch);
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    throw error;
   }
 }
 
 //post tecnico
 async function postTecnico(nuevoTecnico, dispatch) {
-  console.log(nuevoTecnico);
   const url = `${apiUrl}/api/Tecnicos`;
   const data = JSON.stringify(nuevoTecnico);
   const token = localStorage.getItem("token");
@@ -627,7 +744,7 @@ async function postTecnico(nuevoTecnico, dispatch) {
       dispatch(altaTecnicoExito(datos));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
@@ -655,13 +772,12 @@ async function postAdministrador(nuevoAdmin, dispatch) {
       dispatch(altaAdminExito(datos));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    return error;
   }
 }
 
 //post login
 async function login(user, dispatch) {
-  console.log('user: ', user);
   const url = `${apiUrl}/api/Seguridad`;
   const data = JSON.stringify(user);
 
@@ -687,7 +803,7 @@ async function login(user, dispatch) {
       dispatch(loginExito(datos.usuario));
     }
   } catch (error) {
-    dispatch(lanzarError(error));
+    throw error;
   }
 }
 
@@ -723,4 +839,6 @@ export {
   getMensajes,
   postProducto,
   getProductos,
+  postFalla,
+  getFallas,
 };

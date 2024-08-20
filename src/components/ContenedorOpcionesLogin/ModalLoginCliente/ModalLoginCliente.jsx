@@ -12,15 +12,13 @@ import {
   ModalHeader,
   ModalFooter,
   ModalContent,
+  ModalTitle
 } from "keep-react";
-import { getReparacionesPorCI, login } from "../../../store/effects";
-import { useCedulaSesion } from "../../../store/selectors";
-import { limpiarError } from "../../../store/actions";
+import { login } from "../../../store/effects";
 import { useNavigate } from "react-router-dom";
 
 export const ModalLoginCliente = () => {
   const dispatch = useDispatch();
-  const ciSesion = useCedulaSesion();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -42,20 +40,10 @@ export const ModalLoginCliente = () => {
 
     try {
       await login(usuarioParaLogin, dispatch);
-      await traerReparaciones();
       navigate("/servicios");
       toast("Login exitoso");
     } catch (error) {
       toast.error("Error al iniciar sesión");
-      dispatch(limpiarError());
-    }
-  };
-
-  const traerReparaciones = async () => {
-    try {
-      await getReparacionesPorCI(ciSesion, dispatch); //EP no existe. traer todas las reparaciones, y meter un selector
-    } catch (error) {
-      toast.error("No se pudo obtener reparaciones");
     }
   };
 
@@ -69,9 +57,9 @@ export const ModalLoginCliente = () => {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <h3 className="mb-2 text-body-1 font-medium">
+              <ModalTitle>
                 Ingreso de cliente
-              </h3>
+              </ModalTitle>
               <form className="mx-auto max-w-md space-y-2 p-4">
                 <fieldset className="space-y-1">
                   <Label htmlFor="email">Email: </Label>

@@ -1,41 +1,51 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Button, ButtonGroup, toast } from "keep-react";
-import { useServicioPorId } from "../../store/selectors";
-import ModalIngresarPresupuesto from "./ModalIngresarPresupuesto";
 import ModalRechazarPresupuesto from "./ModalRechazarPresupuesto";
 import { postAceptarPresupuesto } from "../../store/effects";
+import { useNavigate } from "react-router-dom";
 
-const OpcionesPresupuesto = (idServicio) => {
+const OpcionesPresupuesto = ({ servicio }) => {
   const dispatch = useDispatch();
-  const servicioPorId = useServicioPorId(idServicio);
+  const navigate = useNavigate();
 
   const manejarClickAceptarPresupuesto = async () => {
     try {
-      await postAceptarPresupuesto(servicioPorId, dispatch);
+      await postAceptarPresupuesto(servicio, dispatch);
       toast("Presupuesto aceptado", {
         description: "El presupuesto ha sido aceptado correctamente",
       });
     } catch (error) {
       toast.error("Ha habido un error al aceptar el presupuesto");
-      //dispatch(limpiarError());
     }
   };
 
-  const tienePresupuesto = servicioPorId.estado === "Presupuestada";
+  const manejarClickIngresarPresupuesto = () => {
+    navigate(`/ingresarPresupuesto/${servicio.id}`);
+  };
 
+  const tienePresupuesto = servicio.estado === "Presupuestada";
+  const fueRechazado = servicio.estado === "PresupuestoNoAceptado";
+  const fueAceptado = servicio.estado === "PresupuestoAceptado";
+  const tuvoPresupuesto = tienePresupuesto || fueRechazado || fueAceptado;
+  const noTuvoPresupuesto = !tienePresupuesto || fueAceptado || fueRechazado;
+//<Button size="xs" position="end" disabled={!tienePresupuesto} id="buttonModal">
   return (
     <div>
       <ButtonGroup>
-        <ModalIngresarPresupuesto idServicio={idServicio} />
+        <Button size="xs" disabled={tuvoPresupuesto} onClick={manejarClickIngresarPresupuesto}>Presupuestar</Button>
         <Button
+        size="xs"
           position="center"
           onClick={manejarClickAceptarPresupuesto}
-          disabled={!tienePresupuesto}
+          disabled={noTuvoPresupuesto}
         >
           Aceptar
         </Button>
-        <ModalRechazarPresupuesto idServicio={idServicio} tienePresupuesto={tienePresupuesto}/>
+        <ModalRechazarPresupuesto
+          servicio={servicio}
+          noTienePresupuesto={noTuvoPresupuesto}
+        />
       </ButtonGroup>
     </div>
   );

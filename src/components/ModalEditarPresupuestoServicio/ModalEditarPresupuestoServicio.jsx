@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   Modal,
@@ -12,32 +12,21 @@ import {
   Textarea,
   Button,
   ModalContent,
+  toast,
+  ModalTitle
 } from "keep-react";
-import {
-  useServicioPorId,
-  //useRolSesion,
-  //useEmailSesion,
-} from "../../store/selectors";
+import { putPresupuesto } from "../../store/effects";
 
-const ModalEditarPresupuestoServicio = (idServicio) => {
+const ModalEditarPresupuestoServicio = ({servicio, disabled}) => {
   const dispatch = useDispatch();
-  //const rolSesion = useRolSesion();
-  //const emailSesion = useEmailSesion();
-  const servicioPorId = useServicioPorId(idServicio);
 
-  /*
-  if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
-    return null;
-  }
-  */
-
-  const [costo, setCosto] = useState(servicioPorId.costo);
+  const [costo, setCosto] = useState(servicio.costo);
   const [descripcionPresupuesto, setDescripcionPresupuesto] = useState(
-    servicioPorId.descripcionPresupuesto
+    servicio.descripcionPresupuesto
   );
 
   const manejarCambioCosto = (e) => {
-    const esDigitoValido = /^\d$/.test(e.target.value);
+    const esDigitoValido = /^\d+$/.test(e.target.value);
 
     if (esDigitoValido) {
       setCosto(e.target.value);
@@ -50,7 +39,7 @@ const ModalEditarPresupuestoServicio = (idServicio) => {
 
   const editarPresupuesto = async () => {
     const reparacionEditada = {
-      id: idServicio,
+      ...servicio,
       costo: costo,
       descripcion: descripcionPresupuesto,
     };
@@ -60,7 +49,6 @@ const ModalEditarPresupuestoServicio = (idServicio) => {
       toast("Edicion de presupuesto realizada correctamente");
     } catch (error) {
       toast.error("Error al modificar presupuesto");
-      //dispatch(limpiarError());
     }
   
     document.getElementById("modalButton").click();
@@ -69,16 +57,16 @@ const ModalEditarPresupuestoServicio = (idServicio) => {
   return (
     <Modal>
       <ModalAction asChild>
-        <Button id="modalButton">Editar presupuesto</Button>
+        <Button size="xs" id="modalButton" disabled={disabled}>Editar presupuesto</Button>
       </ModalAction>
       <ModalBody className="space-y-3">
         <ModalContent>
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <h3 className="mb-2 text-body-1 font-medium text-metal-900">
+              <ModalTitle>
                 Editar presupuesto
-              </h3>
+              </ModalTitle>
               <div className="mx-auto max-w-md space-y-2 p-4">
                 <div className="space-y-1">
                   <Label htmlFor="costo">Costo: </Label>
@@ -103,8 +91,8 @@ const ModalEditarPresupuestoServicio = (idServicio) => {
             <Button
               onClick={editarPresupuesto}
               disabled={
-                costo == servicioPorId.costo &&
-                descripcionPresupuesto == servicioPorId.descripcionPresupuesto
+                costo == servicio.costo &&
+                descripcionPresupuesto == servicio.descripcionPresupuesto
               }
             >
               Editar

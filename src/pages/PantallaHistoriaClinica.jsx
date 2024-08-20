@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import HistoriaClinica from "../components/HistoriaClinica/HistoriaClinica";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
-import { Input, Label } from "keep-react";
+import { Input, Label, Button } from "keep-react";
 
 export const PantallaHistoriaClinica = () => {
   const rolSesion = useRolSesion();

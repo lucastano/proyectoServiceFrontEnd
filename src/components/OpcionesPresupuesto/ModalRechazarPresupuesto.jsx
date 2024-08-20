@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Modal, Button, Textarea, toast, ModalClose, ModalAction, ModalBody, ModalContent, ModalFooter, Label, Input } from "keep-react";
+import { Modal, Button, Textarea, toast, ModalClose, ModalAction, ModalBody, ModalContent, ModalFooter, ModalTitle, Label, Input, ModalHeader,  } from "keep-react";
 import { useDispatch } from "react-redux";
 import { postRechazarPresupuesto } from "../../store/effects";
 
-const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
+const ModalRechazarPresupuesto = ({servicio, noTienePresupuesto}) => {
   const dispatch = useDispatch();
-  //const servicioPorId = useServicioPorId(idServicio);
   const [costo, setCosto] = useState(0);
   const [razon, setRazon] = useState("");
 
@@ -22,8 +21,9 @@ const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
   };
 
   const manejarClickRechazarPresupuesto = async () => {
+    console.log('entra a manejarClickRechazarPresupuesto');
     const rechazoPresupuesto = {
-      id: idServicio,
+      id: servicio.id,
       costo: costo,
       razon: razon,
     };
@@ -35,16 +35,13 @@ const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
       });
     } catch (error) {
       toast.error("Ha habido un error al rechazar el presupuesto");
-      //dispatch(limpiarError());
     }
-  
-    document.getElementById("buttonModal").click();
   };
 
   return (
     <Modal>
       <ModalAction asChild>
-        <Button position="end" disabled={!tienePresupuesto} id="buttonModal">
+        <Button size="xs" position="end" disabled={noTienePresupuesto} id="buttonModal">
           Rechazar
         </Button>
       </ModalAction>
@@ -53,9 +50,9 @@ const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <h3 className="mb-2 text-body-1 font-medium text-metal-900">
+              <ModalTitle>
                 Rechazar Presupuesto
-              </h3>
+              </ModalTitle>
               <form className="mx-auto max-w-md space-y-2 p-4">
                 <fieldset className="space-y-1">
                   <Label htmlFor="costo">Costo:</Label>
@@ -75,11 +72,9 @@ const ModalRechazarPresupuesto = (idServicio, tienePresupuesto) => {
             </div>
           </ModalHeader>
           <ModalFooter className="justify-center">
-            <ModalClose asChild>
             <Button onClick={manejarClickRechazarPresupuesto} size="md">
               Rechazar Presupuesto
             </Button>
-            </ModalClose>
           </ModalFooter>
         </ModalContent>
       </ModalBody>

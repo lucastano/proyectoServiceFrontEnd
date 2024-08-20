@@ -1,33 +1,63 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
-import { Button, toast } from "keep-react";
-import { useServicioPorId } from "../../store/selectors";
+import { Button, toast, ButtonGroup } from "keep-react";
 import { postEntregarReparacion } from "../../store/effects";
-import  ModalTerminarServicio  from "./ModalTerminarServicio";
+import ModalTerminarServicio from "./ModalTerminarServicio";
 
+const OpcionesTerminarEntregar = ({ servicio }) => {
+  const dispatch = useDispatch();
 
-const OpcionesTerminarEntregar = (idServicio) => {
-    const dispatch = useDispatch();
-    const servicioPorId = useServicioPorId(idServicio);
-    
-    const manejarClickEntregar = async () => {
-        try {
-          await postEntregarReparacion(servicioPorId, dispatch);
-          toast('Entrega realizada', {
-            description: 'El servicio ha sido entregado al cliente',
-          });
-        } catch (error) {
-          toast.error('Ha habido un error al realizar la entrega');
-          //dispatch(limpiarError());
-        }
-      };
+  const generarOrdenReparacion = (blob) => {
+    if (blob == null) return;
 
-    return (
-        <div className="max-w-[250px]">
-            <ModalTerminarServicio idServicio={idServicio} />
-            <Button onClick={manejarClickEntregar} disabled={servicioPorId.estado !== "Terminada"}>Entregar</Button>
-        </div>
-    );
+    if (!blob) {
+      toast.error("Error al generar orden");
+      return;
+    }
+
+    if (!(blob instanceof Blob)) {
+      console.error(
+        "Unexpected data format. Ensure Blob or valid data for PDF generation."
+      );
+      return;
+    }
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `orden_${numeroSerie}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const manejarClickEntregar = async () => {
+    try {
+      const blob = await postEntregarReparacion(servicio, dispatch);
+      generarOrdenReparacion(blob);
+      toast("Entrega realizada", {
+        description: "El servicio ha sido entregado al cliente",
+      });
+    } catch (error) {
+      toast.error("Ha habido un error al realizar la entrega");
+    }
+  };
+
+  return (
+    <div className="max-w-[250px]">
+      <ButtonGroup>
+        <ModalTerminarServicio servicio={servicio} />
+        <Button
+          size="xs"
+          onClick={manejarClickEntregar}
+          disabled={servicio.estado !== "Terminada"}
+        >
+          Entregar
+        </Button>
+      </ButtonGroup>
+    </div>
+  );
 };
 
 export default OpcionesTerminarEntregar;

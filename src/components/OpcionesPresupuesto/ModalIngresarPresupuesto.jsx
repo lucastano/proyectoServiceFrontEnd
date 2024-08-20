@@ -10,21 +10,26 @@ import {
   toast,
   ModalHeader,
   ModalClose,
+  ModalAction,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  Label,
+  Input,
+  ModalTitle
 } from "keep-react";
 import { useDispatch } from "react-redux";
 import { format } from "date-fns";
 import { Calendar } from "phosphor-react";
-import { useServicioPorId } from "../../store/selectors";
 import { postPresupuestacionReparacion } from "../../store/effects";
 
-const ModalIngresarPresupuesto = (idServicio) => {
+const ModalIngresarPresupuesto = ({servicio}) => {
   const dispatch = useDispatch();
-  const servicioPorId = useServicioPorId(idServicio);
-  const fuePresupuestado = servicioPorId.estado !== "EnTaller";
+  const fuePresupuestado = servicio.estado !== "EnTaller";
 
   const [manoDeObra, setManoDeObra] = useState(0);
   const [descripcion, setDescripcion] = useState("");
-  const [fechaPromesaEntrega, setFechaPromesaEntrega] = useState("");
+  const [fechaPromesaEntrega, setFechaPromesaEntrega] = useState(null);
 
   const manejarCambioManoDeObra = (e) => {
     const esDigitoValido = /^\d$/.test(e.target.value);
@@ -40,7 +45,7 @@ const ModalIngresarPresupuesto = (idServicio) => {
 
   const manejarClickIngresoPresupuesto = async () => {
     const presupuesto = {
-      idReparacion: idServicio,
+      idReparacion: servicio.id,
       manoObra: manoDeObra,
       descripcion: descripcion,
       fechaPromesaEntrega: fechaPromesaEntrega,
@@ -53,10 +58,7 @@ const ModalIngresarPresupuesto = (idServicio) => {
       });
     } catch (error) {
       toast.error("Ha habido un error al ingresar el presupuesto");
-      //dispatch(limpiarError());
     }
-  
-    document.getElementById("buttonModal").click();
   };
 
   return (
@@ -75,9 +77,9 @@ const ModalIngresarPresupuesto = (idServicio) => {
             <ModalClose className="absolute right-4 top-4"/>
             <ModalHeader>
               <div className="!mb-6">
-                <h3 className="mb-2 text-body-1 font-medium text-metal-900">
+                <ModalTitle>
                   Ingresar Presupuesto
-                </h3>
+                </ModalTitle>
                 <form className="mx-auto max-w-md space-y-2 p-4">
                   <fieldset className="space-y-1">
                     <Label htmlFor="manoDeObra">Mano de obra:</Label>
@@ -109,7 +111,7 @@ const ModalIngresarPresupuesto = (idServicio) => {
                             className="text-metal-400 dark:text-white"
                           />
                           {fechaPromesaEntrega ? (
-                            format(fechaPromesaEntrega ?? new Date(), "PPP")
+                            format(fechaPromesaEntrega ?? new Date(), "dd/MM/yyyy")
                           ) : (
                             <span>Seleccionar fecha</span>
                           )}
@@ -130,7 +132,7 @@ const ModalIngresarPresupuesto = (idServicio) => {
             </ModalHeader>
             <ModalFooter className="justify-center">
                 <Button onClick={manejarClickIngresoPresupuesto} size="md">
-                  Ingresar Presupuesto
+                  Presupuestar
                 </Button>
             </ModalFooter>
           </ModalContent>

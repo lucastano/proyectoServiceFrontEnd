@@ -22,13 +22,15 @@ import {
 import { Calendar } from "phosphor-react";
 import { format } from "date-fns";
 import { useServicios } from "../../store/selectors";
+import { useNavigate } from "react-router-dom";
 
 const ListaVisualizacionServiciosCliente = () => {
   const servicios = useServicios();
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const [tipoFiltro, setTipoFiltro] = useState("");
   const [stringFiltro, setStringFiltro] = useState("");
-
+  console.log("servicios: ", servicios);
   const manejarCambioNumeroOrden = (e) => {
     tipoFiltro == "Numero de orden" && setStringFiltro(e.target.value);
   };
@@ -41,6 +43,10 @@ const ListaVisualizacionServiciosCliente = () => {
 
   const manejarCambioEstado = (estado) => {
     tipoFiltro === "Estado" && setStringFiltro(estado);
+  };
+
+  const manejarClickDetalle = (id) => {
+    navigate(`/servicios/${id}`);
   };
 
   let serviciosFiltrados;
@@ -63,6 +69,7 @@ const ListaVisualizacionServiciosCliente = () => {
         );
       });
     } else if (tipoFiltro == "Estado") {
+      console.log('stringFiltro: ', stringFiltro);
       return servicios.filter((servicio) =>
         servicio.estado.includes(stringFiltro)
       );
@@ -71,8 +78,8 @@ const ListaVisualizacionServiciosCliente = () => {
     }
   };
 
-  filtrarServicios();
-
+  serviciosFiltrados = filtrarServicios();
+  console.log("serviciosFiltrados: ", serviciosFiltrados);
   return (
     <>
       <div className="flex flex-col ml-16">
@@ -97,6 +104,9 @@ const ListaVisualizacionServiciosCliente = () => {
               Estado
             </Button>
           </ButtonGroup>
+          <Button position="end" onClick={() => manejarCambioTipoFiltro("")}>
+            Quitar filtros
+          </Button>
         </div>
         <div>
           <div className="mb-16">
@@ -145,12 +155,12 @@ const ListaVisualizacionServiciosCliente = () => {
                 <DropdownContent>
                   <DropdownList>
                     <DropdownItem
-                      onClick={() => manejarCambioEstado("En Taller")}
+                      onClick={() => manejarCambioEstado("EnTaller")}
                     >
                       En Taller
                     </DropdownItem>
                     <DropdownItem
-                      onClick={() => manejarCambioEstado("En Progreso")}
+                      onClick={() => manejarCambioEstado("EnProgreso")}
                     >
                       En Progreso
                     </DropdownItem>
@@ -180,29 +190,39 @@ const ListaVisualizacionServiciosCliente = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>
-                  <div className="w-[80px]">Numero de orden</div>
+                  <div className="w-[80px] flex justify-center">Numero de orden</div>
                 </TableHead>
                 <TableHead>
-                  <div className="max-w-[250px]">Producto</div>
+                  <div className="max-w-[250px] flex justify-center">Producto</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[80px]">Fecha</div>
+                  <div className="w-[80px] flex justify-center">Fecha</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[80px]">Costo</div>
+                  <div className="w-[80px] flex justify-center">Costo</div>
+                </TableHead>
+                <TableHead>
+                  <div className="w-[80px] flex justify-center">Detalle</div>
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {serviciosFiltrados &&
-                serviciosFiltrados.forEach((servicio) => (
+                serviciosFiltrados.map((servicio) => (
                   <TableRow key={servicio.id}>
                     <TableCell>{servicio.id}</TableCell>
-                    <div className="max-w-[250px] truncate">
-                      {servicio.producto}
-                    </div>
-                    <TableCell>{servicio.fecha}</TableCell>
+                    <TableCell>
+                      <div className="max-w-[250px] truncate">
+                        {`${servicio.producto.marca} ${servicio.producto.modelo}`}
+                      </div>
+                    </TableCell>
+                    <TableCell>{format(new Date(servicio.fecha), "dd-MM-yyyy")}</TableCell>
                     <TableCell>{servicio.costo}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => manejarClickDetalle(servicio.id)}>
+                        Ver
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>

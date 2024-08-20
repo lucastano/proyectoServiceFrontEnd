@@ -17,15 +17,17 @@ import {
   useProductos,
 } from "../../store/selectors";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { postCliente, postReparacion } from "../../store/effects";
 import { format } from "date-fns";
 import { Calendar } from "phosphor-react";
-import AgregarProducto from "../AgregarProducto/AgregarProducto";
+import ModalAgregarProducto from "../ModalAgregarProducto/ModalAgregarProducto";
 
 const FormularioAltaServicio = () => {
   const dispatch = useDispatch();
   const idSesion = useIdSesion();
   const productos = useProductos();
+  const navigate = useNavigate();
 
   const [cedulaUsuario, setCedulaUsuario] = useState("");
   const clientePorCi = useClientePorCi(cedulaUsuario);
@@ -35,12 +37,36 @@ const FormularioAltaServicio = () => {
   const [telefonoUsuario, setTelefonoUsuario] = useState("");
   const [direccionUsuario, setDireccionUsuario] = useState("");
   const [numeroSerie, setNumeroSerie] = useState("");
-  const [producto, setProducto] = useState(null);
+  const [producto, setProducto] = useState(productos.length > 0 ? productos[0].id : null);
   const [descripcion, setDescripcion] = useState("");
-  const [fechaPromesaPresupuesto, setFechaPromesaPresupuesto] = useState("");
+  const [fechaPromesaPresupuesto, setFechaPromesaPresupuesto] = useState(null);
   const [usuarioEncontrado, setUsuarioEncontrado] = useState(false);
   const [seBuscoUsuario, setSeBuscoUsuario] = useState(false);
 
+  const generarOrdenReparacion = (blob) => {
+    if (blob == null) return;
+
+    if (!blob) {
+      toast.error("Error al generar orden");
+      return;
+    }
+
+    if (!(blob instanceof Blob)) {
+      console.error(
+        "Unexpected data format. Ensure Blob or valid data for PDF generation."
+      );
+      return;
+    }
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `orden_${numeroSerie}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
   const manejarCambioCedulaUsuario = (event) => {
     setCedulaUsuario(event.target.value);
   };
@@ -76,8 +102,7 @@ const FormularioAltaServicio = () => {
 
   const manejarCambioSelect = (event) => {
     const idProductoSeleccionado = event.target.value;
-    productoSeleccionado = productos.find(producto => producto.id === parseInt(idProductoSeleccionado));
-    setProducto(productoSeleccionado);
+    setProducto(idProductoSeleccionado);
   };
 
   const validarCedulaUsuario = (valor) => {
@@ -107,7 +132,7 @@ const FormularioAltaServicio = () => {
   };
 
   const validarNumeroSerie = (valor) => {
-    const regex = /^[0-9]+$/;
+    const regex = /^[A-Za-z0-9]+$/;
     return valor !== "" && regex.test(valor);
   };
 
@@ -127,7 +152,7 @@ const FormularioAltaServicio = () => {
       setTelefonoUsuario(telefono);
       setDireccionUsuario(direccion);
     }
-};
+  };
 
   const manejarPerdidaFocoCedulaUsuario = () => {
     buscarUsuario();
@@ -135,10 +160,11 @@ const FormularioAltaServicio = () => {
   };
 
   const validarFormulario = () => {
-    console.log("validarNumeroSerie: ", validarNumeroSerie(numeroSerie));
-    console.log("validarDescripcion: ", validarDescripcion(descripcion));
-    console.log("producto: ", producto);
-    return validarNumeroSerie(numeroSerie) && validarDescripcion(descripcion) && producto != null;
+    return (
+      validarNumeroSerie(numeroSerie) &&
+      validarDescripcion(descripcion) &&
+      producto != null
+    );
   };
 
   const validarNuevoUsuario = () => {
@@ -162,13 +188,11 @@ const FormularioAltaServicio = () => {
       direccion: direccionUsuario,
     };
 
-    console.log('nuevoUsuario: ', nuevoUsuario);
     try {
       await postCliente(nuevoUsuario, dispatch);
       toast("Cliente dado de alta correctamente");
     } catch (error) {
       toast.error("Error al dar de alta el cliente");
-      //dispatch(limpiarError());
     }
   };
 
@@ -176,30 +200,31 @@ const FormularioAltaServicio = () => {
     evento.preventDefault();
 
     if (validarFormulario()) {
-      console.log("validarFormulario es true");
       if (
         clientePorCi == undefined &&
         seBuscoUsuario &&
         !usuarioEncontrado &&
         validarNuevoUsuario()
       ) {
-        console.log('entra aca a dar de alta el cliente');
         await altaClienteServicio();
       }
 
       const nuevaReparacion = {
         ciCliente: cedulaUsuario,
         idTecnico: idSesion,
-        producto: producto,
+        idProducto: Number(producto),
         numeroSerie: numeroSerie,
         descripcion: descripcion,
         fechaPromesaPresupuesto: fechaPromesaPresupuesto,
       };
 
       try {
-        await postReparacion(nuevaReparacion, dispatch);
+        const blob = await postReparacion(nuevaReparacion, dispatch);
+        generarOrdenReparacion(blob);
+        navigate("/serviciostecnico");
         toast("Reparacion dada de alta correctamente");
       } catch (error) {
+        console.log('error: ', error);
         toast.error("Error al dar de alta la reparacion");
       }
     } else {
@@ -209,10 +234,8 @@ const FormularioAltaServicio = () => {
 
   return (
     <>
-      <form
-        className="rounded-lg border p-8 shadow-md text-left w-2/5"
-        onSubmit={enviarFormulario}
-      >
+      <div className="rounded-lg border p-8 shadow-md text-left w-full">
+        <h3>Alta de servicio: </h3>
         <div className="mb-4 space-y-2">
           <Label htmlFor="cedulaUsuario">
             Cedula de identidad (sin guión):
@@ -295,7 +318,9 @@ const FormularioAltaServicio = () => {
         <div className="mb-4 space-y-2">
           <Label htmlFor="producto">Producto: </Label>
           <select
-            value={productoSeleccionado !== null ? productoSeleccionado?.id : ""}
+            value={
+              productoSeleccionado !== null ? productoSeleccionado?.id : ""
+            }
             onChange={manejarCambioSelect}
           >
             {productos.map((producto) => (
@@ -304,7 +329,9 @@ const FormularioAltaServicio = () => {
               </option>
             ))}
           </select>
-          <div><AgregarProducto /></div>
+          <div>
+            <ModalAgregarProducto />
+          </div>
         </div>
         <div className="mb-4 space-y-2">
           <Label htmlFor="descripcion">Descripción: </Label>
@@ -329,7 +356,7 @@ const FormularioAltaServicio = () => {
                   className="text-metal-400 dark:text-white"
                 />
                 {fechaPromesaPresupuesto ? (
-                  format(fechaPromesaPresupuesto ?? new Date(), "PPP")
+                  format(fechaPromesaPresupuesto ?? new Date(), "dd/MM/yyyy")
                 ) : (
                   <span>Seleccionar fecha</span>
                 )}
@@ -345,10 +372,15 @@ const FormularioAltaServicio = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <Button size="sm" color="secondary" type="submit">
+        <Button
+          size="sm"
+          color="secondary"
+          type="submit"
+          onClick={enviarFormulario}
+        >
           Registrar Servicio
         </Button>
-      </form>
+      </div>
     </>
   );
 };

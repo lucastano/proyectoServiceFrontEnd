@@ -25,9 +25,11 @@ import { useServicios } from "../../store/selectors";
 import OpcionesPresupuesto from "../OpcionesPresupuesto/OpcionesPresupuesto";
 import OpcionesTerminarEntregar from "../OpcionesTerminarEntregar/OpcionesTerminarEntregar";
 import ModalEditarPresupuestoServicio from "../ModalEditarPresupuestoServicio/ModalEditarPresupuestoServicio";
+import { useNavigate } from "react-router-dom";
 
 const ListaVisualizacionServiciosTecnico = () => {
   const servicios = useServicios();
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const [tipoFiltro, setTipoFiltro] = useState("");
   const [stringFiltro, setStringFiltro] = useState("");
@@ -44,6 +46,14 @@ const ListaVisualizacionServiciosTecnico = () => {
 
   const manejarCambioEstado = (estado) => {
     tipoFiltro === "Estado" && setStringFiltro(estado);
+  };
+
+  const manejarClickEditarServicio = (servicio) => {
+    navigate(`/editarServicio/${servicio.id}`);
+  };
+
+  const manejarClickDetalle = (id) => {
+    navigate(`/servicios/${id}`);
   };
 
   let serviciosFiltrados;
@@ -74,7 +84,7 @@ const ListaVisualizacionServiciosTecnico = () => {
     }
   };
 
-  filtrarServicios();
+  serviciosFiltrados = filtrarServicios();
 
   return (
     <>
@@ -94,12 +104,22 @@ const ListaVisualizacionServiciosTecnico = () => {
               Fecha
             </Button>
             <Button
+              position="center"
+              onClick={() => manejarCambioTipoFiltro("Fecha")}
+            >
+              Fecha
+            </Button>
+            <Button
               position="end"
               onClick={() => manejarCambioTipoFiltro("Estado")}
             >
               Estado
             </Button>
           </ButtonGroup>
+
+          <Button position="end" onClick={() => manejarCambioTipoFiltro("")}>
+            Quitar filtros
+          </Button>
         </div>
         <div>
           {tipoFiltro === "Numero de orden" && (
@@ -181,53 +201,73 @@ const ListaVisualizacionServiciosTecnico = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>
-                  <div className="w-[80px]">Numero de orden</div>
+                  <div className="w-[80px] flex justify-center">Numero de orden</div>
                 </TableHead>
                 <TableHead>
-                  <div className="max-w-[250px]">Producto</div>
+                  <div className="max-w-[250px] flex justify-center">Producto</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[80px]">Fecha</div>
+                  <div className="w-[80px] flex justify-center">Fecha</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[80px]">Costo</div>
+                  <div className="w-[80px] flex justify-center">Costo</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[250px]">Presupuesto</div>
+                  <div className="w-[250px] flex justify-center">Estado</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[250px]">Modificar</div>
+                  <div className="w-[250px] flex justify-center">Presupuesto</div>
                 </TableHead>
                 <TableHead>
-                  <div className="max-w-[250px]">Otros</div>
+                  <div className="w-[250px] flex justify-center">Modificar</div>
+                </TableHead>
+                <TableHead>
+                  <div className="w-[250px] flex justify-center">Otros</div>
+                </TableHead>
+                <TableHead>
+                  <div className="w-[80px] flex justify-center">Detalle</div>
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {serviciosFiltrados &&
-                serviciosFiltrados.forEach((servicio) => (
+                serviciosFiltrados.map((servicio) => (
                   <TableRow key={servicio.id}>
                     <TableCell>{servicio.id}</TableCell>
                     <TableCell>
                       <div className="max-w-[250px] truncate">
-                        {servicio.producto}
+                        {servicio.producto.id}
                       </div>
                     </TableCell>
-                    <TableCell>{servicio.fecha}</TableCell>
-                    <TableCell>{servicio.costo}</TableCell>
                     <TableCell>
-                      <OpcionesPresupuesto idServicio={servicio.id} />
+                      {format(new Date(servicio.fecha), "dd-MM-yyyy")}
+                    </TableCell>
+                    <TableCell>{servicio.costo}</TableCell>
+                    <TableCell>{servicio.estado}</TableCell>
+                    <TableCell>
+                      <OpcionesPresupuesto servicio={servicio} />
                     </TableCell>
                     <TableCell>
                       <ButtonGroup>
-                        <ModalEditarPresupuestoServicio
-                          idServicio={servicio.id}
-                        />
-                        <ModalEditarServicio idServicio={servicio.id} />
+                        <ModalEditarPresupuestoServicio disabled={servicio.estado !== "Presupuestada"} servicio={servicio}  />
+                        <Button
+                          size="xs"
+                          disabled={servicio.estado !== "EnTaller" && servicio.estado !== "Presupuestada"}
+                          onClick={() =>
+                            manejarClickEditarServicio(servicio)
+                          }
+                        >
+                          Servicio
+                        </Button>
                       </ButtonGroup>
                     </TableCell>
                     <TableCell>
-                      <OpcionesTerminarEntregar idServicio={servicio.id} />
+                      <OpcionesTerminarEntregar servicio={servicio} />
+                    </TableCell>
+                    <TableCell>
+                      <Button onClick={() => manejarClickDetalle(servicio.id)}>
+                        Ver
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -1,31 +1,38 @@
-import React from 'react';
-import { Button, toast } from 'keep-react';
-import { getOrden } from '../../dataFetcher';
+import React from "react";
+import { Button, toast } from "keep-react";
+import { getOrden } from "../../dataFetcher";
 
-function DescargarOrdenButton({idServicio}) {
-    const manejarGenerarOrden = async () => {
-        const ordenGenerada = await getOrden(idServicio);
+function DescargarOrdenButton({ servicio }) {
+  const manejarGenerarOrden = async () => {
+    const blob = await getOrden(servicio.id);
 
-        if(ordenGenerada === null) {
-            toast.error("Error al generar orden");
-        } else {
-            const link = document.createElement('a');
-            const blob = new Blob([atob(ordenGenerada)], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            link.href = url;
-            link.download = `${idServicio}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
+    if (!blob) {
+      toast.error("Error al generar orden");
+      return;
     }
 
-    return (
-        <div>
-            <Button onClick={manejarGenerarOrden}>Generar Orden</Button>
-        </div>
-    );
+    if (!(blob instanceof Blob)) {
+      console.error(
+        "Unexpected data format. Ensure Blob or valid data for PDF generation."
+      );
+      return;
+    }
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `orden_${servicio.numeroSerie}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div>
+      <Button onClick={manejarGenerarOrden}>Generar Orden</Button>
+    </div>
+  );
 }
 
 export default DescargarOrdenButton;
