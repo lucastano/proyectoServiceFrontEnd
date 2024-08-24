@@ -2,6 +2,7 @@ import React from "react";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import FormularioAgregarProducto from "../components/FormularioAgregarProducto/FormularioAgregarProducto";
+import ListaProductos from "../components/ListaProductos/ListaProductos";
 
 const PantallaAgregarProducto = () => {
   const rolSesion = useRolSesion();
@@ -16,8 +17,9 @@ const PantallaAgregarProducto = () => {
       <div className="w-1/4">
         <ComponenteNavbar />
       </div>
-      <div className="flex justify-center w-3/4">
+      <div className="w-3/4">
         <FormularioAgregarProducto />
+        <ListaProductos />
       </div>
     </div>
   );

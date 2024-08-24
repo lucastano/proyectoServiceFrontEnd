@@ -67,7 +67,7 @@ function FormularioAgregarProducto() {
   };
 
   return (
-    <div className="rounded-lg border p-8 shadow-md text-left w-full">
+    <div className="rounded-lg p-8 shadow-md text-left w-full">
       <h1 className="mb-4">Agregar Producto: </h1>
       <div className="mb-4 space-y-2">
         <Label htmlFor="marca">Marca:</Label>

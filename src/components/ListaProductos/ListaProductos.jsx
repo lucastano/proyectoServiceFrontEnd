@@ -14,7 +14,10 @@ function ListaProductos() {
 
   return (
     <>
-      <div>
+      <div className="mt-16">
+        <div>
+        <h1 className="mb-8">Listado de productos: </h1>
+        </div>
         {productos ? (
           <Table>
             <TableHeader>
@@ -55,9 +58,6 @@ function ListaProductos() {
         ) : (
           <p>No hay productos para mostrar</p>
         )}
-      </div>
-      <div>
-        <AgregarProducto />
       </div>
     </>
   );
