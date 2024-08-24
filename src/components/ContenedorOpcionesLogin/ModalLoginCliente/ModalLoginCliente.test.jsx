@@ -1,46 +1,77 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { ModalLoginCliente } from './ModalLoginCliente';
+import React from "react";
+import { MemoryRouter } from "react-router-dom";
+import { render, fireEvent, waitFor } from "@testing-library/react";
+import { ModalLoginCliente } from "./ModalLoginCliente";
+import { login } from "../../../store/effects";
 
-describe('ModalLoginCliente', () => {
-    it('should render the modal with the correct title', () => {
-        const onClose = jest.fn();
-        const { getByText } = render(<ModalLoginCliente onClose={onClose} />);
-        const titleElement = getByText('Ingreso de cliente');
-        expect(titleElement).toBeInTheDocument();
-    });
+//FUNCIONA BIEN CONFIRMADO
+jest.mock("react-redux", () => ({
+  ...jest.requireActual("react-redux"),
+  useDispatch: () => mockDispatch,
+  useSelector: () => null,
+}));
 
-    it('should call onClose when the "Cerrar" button is clicked', () => {
-        const onClose = jest.fn();
-        const { getByText } = render(<ModalLoginCliente onClose={onClose} />);
-        const closeButton = getByText('Cerrar');
-        fireEvent.click(closeButton);
-        expect(onClose).toHaveBeenCalled();
-    });
+jest.mock("../../../store/effects");
 
-    it('should update the "usuario" state when the input value changes', () => {
-        const onClose = jest.fn();
-        const { getByPlaceholderText } = render(<ModalLoginCliente onClose={onClose} />);
-        const usuarioInput = getByPlaceholderText('Usuario');
-        fireEvent.change(usuarioInput, { target: { value: 'testuser' } });
-        expect(usuarioInput.value).toBe('testuser');
-    });
+const mockDispatch = jest.fn();
+const mockLogin = login;
 
-    it('should update the "contrasena" state when the input value changes', () => {
-        const onClose = jest.fn();
-        const { getByPlaceholderText } = render(<ModalLoginCliente onClose={onClose} />);
-        const contrasenaInput = getByPlaceholderText('Contraseña');
-        fireEvent.change(contrasenaInput, { target: { value: 'testpassword' } });
-        expect(contrasenaInput.value).toBe('testpassword');
-    });
+describe("ModalLoginCliente", () => {
+  it("should render the modal with the correct title", () => {
+    const { getByText } = render(<MemoryRouter>
+      <ModalLoginCliente />
+    </MemoryRouter>);
+    const comoClienteButton = getByText("Como cliente");
+    fireEvent.click(comoClienteButton);
+    const tituloModal = getByText("Ingreso de cliente");
+    expect(tituloModal).toBeInTheDocument();
+  });
 
-    //TODO: Cambiar test cuando se haga integracion con API
-    it('should call realizarLoginCliente when the "Ingresar" button is clicked', () => {
-        const onClose = jest.fn();
-        console.log = jest.fn();
-        const { getByText } = render(<ModalLoginCliente onClose={onClose} />);
-        const ingresarButton = getByText('Ingresar');
-        fireEvent.click(ingresarButton);
-        expect(console.log).toHaveBeenCalled();
+  it('should update the "email" state when the input value changes', () => {
+    const { getByPlaceholderText, getByText } = render(<MemoryRouter>
+      <ModalLoginCliente />
+    </MemoryRouter>);
+    const comoClienteButton = getByText("Como cliente");
+    fireEvent.click(comoClienteButton);
+    const usernameInput = getByPlaceholderText("Email");
+    fireEvent.change(usernameInput, { target: { value: "testuser" } });
+    expect(usernameInput.value).toBe("testuser");
+  });
+
+  it('should update the "contrasena" state when the input value changes', () => {
+    const { getByPlaceholderText, getByText } = render(<MemoryRouter>
+      <ModalLoginCliente />
+    </MemoryRouter>);
+    const comoClienteButton = getByText("Como cliente");
+    fireEvent.click(comoClienteButton);
+    const contrasenaInput = getByPlaceholderText("Contraseña");
+    fireEvent.change(contrasenaInput, { target: { value: "testpassword" } });
+    expect(contrasenaInput.value).toBe("testpassword");
+  });
+
+  it('should call realizarLoginCliente with correct data when the "Ingresar" button is clicked', async () => {
+    const { getByText, getByPlaceholderText } = render(<MemoryRouter>
+      <ModalLoginCliente />
+    </MemoryRouter>);
+    const comoClienteButton = getByText("Como cliente");
+    fireEvent.click(comoClienteButton);
+
+    const emailInput = getByPlaceholderText("Email");
+    const passwordInput = getByPlaceholderText("Contraseña");
+    fireEvent.change(emailInput, { target: { value: "testuser" } });
+    fireEvent.change(passwordInput, { target: { value: "testpassword" } });
+    const ingresarButton = getByText("Ingresar");
+    fireEvent.click(ingresarButton);
+
+    await waitFor(() => {
+      expect(mockLogin).toHaveBeenCalledWith(
+        {
+          email: "testuser",
+          password: "testpassword",
+          rol: "Cliente",
+        },
+        expect.any(Function)
+      );
     });
+  });
 });
