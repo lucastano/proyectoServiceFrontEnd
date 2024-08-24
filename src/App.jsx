@@ -17,6 +17,7 @@ import PantallaAltaFalla from "./pages/PantallaAltaFalla";
 import PantallaVisualizacionFallas from "./pages/PantallaVisualizacionFallas";
 import PantallaDetalleServicio from "./pages/PantallaDetalleServicio";
 import PantallaHistoriaClinica from "./pages/PantallaHistoriaClinica";
+import PantallaRecuperarContrasena from "./pages/PantallaRecuperarContrasena";
 
 const ProtectedRoute = ({ roles, children }) => {
   const rolSesion = useRolSesion();
@@ -143,6 +144,14 @@ function App() {
           element={
             <ProtectedRoute roles={["Cliente", "Administrador", "Tecnico"]}>
               <PantallaDetalleServicio />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cambiarContrasena"
+          element={
+            <ProtectedRoute roles={["Administrador", "Tecnico"]}>
+              <PantallaRecuperarContrasena />
             </ProtectedRoute>
           }
         />

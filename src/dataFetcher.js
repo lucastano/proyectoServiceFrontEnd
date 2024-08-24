@@ -24,13 +24,12 @@ async function getOrden(idServicio) {
       throw new Error(`Error al generar la orden: ${data.message}`);
     }
 
-    // Verificar si la respuesta contiene la orden en formato base64
     if (typeof data.ordenDeServicio !== "string") {
       throw new Error("Formato de datos inesperado para la orden de servicio");
     }
 
     const cadenaCaracteres = data.ordenDeServicio;
-    // Decodificar la cadena base64 a un ArrayBuffer
+
     const binaryString = window.atob(cadenaCaracteres);
     const len = binaryString.length;
     const bytes = new Uint8Array(len);
@@ -39,17 +38,14 @@ async function getOrden(idServicio) {
       bytes[i] = binaryString.charCodeAt(i);
     }
 
-    // Paso 2: Crear un Blob con el contenido PDF
+
     const blob = new Blob([bytes], { type: 'application/pdf' });
 
     return blob;
 
   } catch (error) {
-    console.error("Error al obtener la orden:", error);
-    // Puedes mostrar un mensaje de error al usuario o realizar otra acción
-    throw new Error(
-      "Error al obtener la orden. Por favor, inténtalo de nuevo más tarde."
-    );
+
+    return error;
   }
 }
 
@@ -65,6 +61,7 @@ async function getHistoriaClinica(numeroSerie) {
   };
   try {
     const response = await fetch(url, opciones);
+
     if (response.ok) {
       const data = response.headers.get('content-type').includes('application/json') 
         ? await response.json() 
@@ -74,7 +71,7 @@ async function getHistoriaClinica(numeroSerie) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    console.error(error);
+
     return error;
   }
 }

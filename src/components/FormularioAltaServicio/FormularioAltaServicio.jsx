@@ -219,12 +219,11 @@ const FormularioAltaServicio = () => {
       };
 
       try {
-        const blob = await postReparacion(nuevaReparacion, dispatch);
+        const blob = await postReparacion(nuevaReparacion);
         generarOrdenReparacion(blob);
         navigate("/serviciostecnico");
         toast("Reparacion dada de alta correctamente");
       } catch (error) {
-        console.log('error: ', error);
         toast.error("Error al dar de alta la reparacion");
       }
     } else {
@@ -235,7 +234,7 @@ const FormularioAltaServicio = () => {
   return (
     <>
       <div className="rounded-lg border p-8 shadow-md text-left w-full">
-        <h3>Alta de servicio: </h3>
+        <h1 className="mb-4">Alta de servicio: </h1>
         <div className="mb-4 space-y-2">
           <Label htmlFor="cedulaUsuario">
             Cedula de identidad (sin guión):

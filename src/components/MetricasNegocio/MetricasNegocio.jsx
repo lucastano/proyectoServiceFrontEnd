@@ -29,6 +29,9 @@ function MetricasNegocio() {
   const [selected, setSelected] = useState(null);
   const conRangoFechas = selected !== null;
 
+  const limpiarFechas = () => {
+    setSelected(null);
+  };
   function convertirAFechaISO(fechaString) {
     const fecha = new Date(fechaString);
     if (isNaN(fecha.getTime())) {
@@ -86,7 +89,7 @@ function MetricasNegocio() {
   return (
     <div>
       <p>Metricas Negocio</p>
-      <div className="my-8">
+      <div className="my-8 flex justify-center">
         <div>
           <Popover showArrow={false} placement="bottom-start">
             <PopoverTrigger asChild>
@@ -118,6 +121,11 @@ function MetricasNegocio() {
               />
             </PopoverContent>
           </Popover>
+        </div>
+        <div>
+          <Button size="sm" onClick={limpiarFechas} disabled={selected == null}>
+            Limpiar Filtro
+          </Button>
         </div>
       </div>
       <Divider />

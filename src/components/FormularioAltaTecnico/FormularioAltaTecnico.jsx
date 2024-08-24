@@ -23,17 +23,18 @@ const FormularioAltaTecnico = () => {
   };
 
   const validarContrasena = (contrasena) => {
-    const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?!.*[\s!@#$%^&*()\-_=+{};:,<.>]).{9,}$/;
+    const regex =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?!.*[\s!@#$%^&*()\-_=+{};:,<.>]).{9,}$/;
     return regex.test(contrasena);
   };
 
   const validarConfirmarContrasena = (contrasena, confirmarContrasena) => {
     return contrasena === confirmarContrasena;
-  }
+  };
 
   const enviarFormulario = async (evento) => {
     evento.preventDefault();
-  
+
     if (
       validarNombreApellido(nombre) &&
       validarNombreApellido(apellido) &&
@@ -47,7 +48,7 @@ const FormularioAltaTecnico = () => {
         email: email,
         password: contrasena,
       };
-  
+
       try {
         await postTecnico(nuevoTecnico, dispatch);
         toast("Tecnico dado de alta correctamente");
@@ -95,13 +96,12 @@ const FormularioAltaTecnico = () => {
     setConfirmacionContrasena(event.target.value);
   };
 
-
   return (
     <>
-      <form
-        className="rounded border p-8 shadow-md text-left ml-16"
-        onSubmit={enviarFormulario}
-      >
+      <div className="rounded border p-8 shadow-md text-left ml-16">
+        <h2 className="mb-8 text-body-1 font-medium flex justify-center">
+          Alta Técnico
+        </h2>
         <div className="mb-4 space-y-2">
           <Label htmlFor="email">Email: </Label>
           <Input
@@ -145,10 +145,18 @@ const FormularioAltaTecnico = () => {
             onChange={(e) => manejarCambioConfirmarContrasena(e)}
           />
         </div>
-        <Button size="sm" color="secondary" type="submit" className="mt-8">
-          Registrar tecnico
-        </Button>
-      </form>
+        <div className="flex justify-center">
+          <Button
+            size="sm"
+            color="secondary"
+            type="submit"
+            className="mt-8"
+            onClick={enviarFormulario}
+          >
+            Registrar tecnico
+          </Button>
+        </div>
+      </div>
     </>
   );
 };

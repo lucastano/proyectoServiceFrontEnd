@@ -38,12 +38,12 @@ function HistoriaClinica({ numeroSerie }) {
       <h2 className="text-h2 font-bold text-metal-900 dark:text-white">
         Historia Clínica - {numeroSerie}{" "}
       </h2>
-      {cantidadReparacionesRealizadas > 0 ? (<div>
+      {cantidadReparacionesRealizadas > 0 ? (<div className="mb-8 space-y-2 ">
         <div>
           <p>Cantidad de reparaciones: {cantidadReparacionesRealizadas}</p>
         </div>
         <div>
-          <p>Gasto total: {gastoTotalEnReparaciones}</p>
+          <p>Gasto total: ${gastoTotalEnReparaciones}</p>
         </div>
       </div>) : (<div><p>No hay reparaciones realizadas para ese numero de serie</p></div>)}
       <Timeline>
@@ -57,7 +57,7 @@ function HistoriaClinica({ numeroSerie }) {
                   {format(new Date(reparacion.fechaEntregaReparacion), "dd-MM-yyyy HH:mm:ss")}
                 </p>
                 <h1 className="text-body-3 font-medium text-metal-900 dark:text-white">
-                  Costo de reparación: {reparacion.costoReparacion}
+                  Costo de reparación: ${reparacion.costoReparacion}
                 </h1>
                 <p className="text-body-4 font-normal text-metal-600 dark:text-metal-300">
                   Descripción de problema: {reparacion.descripcionProblema}

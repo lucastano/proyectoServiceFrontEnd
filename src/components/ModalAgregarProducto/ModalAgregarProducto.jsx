@@ -16,12 +16,13 @@ import {
   toast,
   ModalTitle
 } from "keep-react";
-import { useProductos } from "../../store/selectors";
+import { useProductos, useRolSesion } from "../../store/selectors";
 
 function ModalAgregarProducto() {
   const dispatch = useDispatch();
   const productos = useProductos();
   const navigate = useNavigate();
+  const rolSesion = useRolSesion();
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
   const [version, setVersion] = useState("");
@@ -63,6 +64,7 @@ function ModalAgregarProducto() {
 
     try {
       await postProducto(dispatch, nuevoProducto);
+      rolSesion === "Tecnico" ? navigate("/productos") : navigate("/metricas");
       toast("Producto ingresado", {
         description: "El producto ha sido ingresado correctamente",
       });

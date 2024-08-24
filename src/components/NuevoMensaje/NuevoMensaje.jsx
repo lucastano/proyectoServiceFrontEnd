@@ -32,7 +32,7 @@ function NuevoMensaje({ servicio }) {
       toast("Mensaje enviado correctamente");
       setDescripcion("");
     } catch (error) {
-      console.log('error en NuevoMensaje: ', error);
+
       toast.error("Error al enviar mensaje");
     }
   };
@@ -44,7 +44,9 @@ function NuevoMensaje({ servicio }) {
         rows={8}
         onChange={(e) => manejarCambioDescripcion(e)}
       />
+      <div className="mt-4">
       <Button onClick={manejarClickEnviar}>Enviar</Button>
+      </div>
     </div>
   );
 }

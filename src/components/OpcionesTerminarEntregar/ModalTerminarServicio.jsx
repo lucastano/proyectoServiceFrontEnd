@@ -18,6 +18,7 @@ const ModalTerminarServicio = ({servicio}) => {
   
     try {
       await postTerminarReparacion(terminoReparacion, dispatch);
+      console.log('llega aca');
       navigate('/serviciostecnico')
       toast("Servicio finalizado");
     } catch (error) {
@@ -46,14 +47,14 @@ const ModalTerminarServicio = ({servicio}) => {
             </ModalHeader>
             <ModalFooter>
                 <Button
-                  onClick={manejarClickReparado(true)}
+                  onClick={() => manejarClickReparado(true)}
                   color="primary"
                   size="sm"
                 >
                   Reparado
                 </Button>
                 <Button
-                  onClick={manejarClickReparado(false)}
+                  onClick={ () => manejarClickReparado(false)}
                   color="error"
                   size="sm"
                 >

@@ -30,7 +30,7 @@ function DescargarOrdenButton({ servicio }) {
 
   return (
     <div>
-      <Button onClick={manejarGenerarOrden}>Generar Orden</Button>
+      <Button color="success" onClick={manejarGenerarOrden}>Generar Orden</Button>
     </div>
   );
 }

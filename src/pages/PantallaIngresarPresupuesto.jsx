@@ -9,10 +9,6 @@ const PantallaIngresarPresupuesto = () => {
   const rolSesion = useRolSesion();
   const emailSesion = useEmailSesion();
   const servicio = useServicioPorId(idServicio);
-
-  console.log('rolSesion: ', rolSesion);
-  console.log('emailSesion: ', emailSesion);
-  console.log('servicio: ', servicio);
   
   if (
     !rolSesion ||

@@ -1,6 +1,5 @@
 import React from "react";
 import DropdownTecnicos from "../DropdownTecnicos/DropdownTecnicos";
-import ThemeSwitcher from "../ThemeSwitcher";
 import { ModalLogout } from "../ModalLogout/ModalLogout";
 import { Link } from "react-router-dom";
 import {
@@ -12,6 +11,7 @@ import {
   FirstAid,
   Plus,
   ListDashes,
+  Password,
 } from "phosphor-react";
 import {
   Sidebar,
@@ -32,10 +32,6 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
     <Sidebar className="h-screen">
       <SidebarBody>
         <SidebarList>
-          {/*          <SidebarItem>
-            <ThemeSwitcher />
-          </SidebarItem>*/}
-
           <img
             src="../../../Empresa-nobg.png"
             alt="logo"
@@ -60,6 +56,12 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
           )}
           {(esTecnico || esAdmin) && (
             <>
+              <Link to="/cambiarContrasena">
+                <SidebarItem>
+                  <Password size={20} />
+                  Cambiar Contraseña
+                </SidebarItem>
+              </Link>
               <Link to="/agregarProducto">
                 <SidebarItem>
                   <Plus size={20} />
@@ -70,12 +72,6 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
                 <SidebarItem>
                   <ListBullets size={20} />
                   Servicios - Tecnico
-                </SidebarItem>
-              </Link>
-              <Link to="/metricas">
-                <SidebarItem>
-                  <ChartPieSlice size={20} />
-                  Metricas
                 </SidebarItem>
               </Link>
               <Link to="/historiaClinica">
@@ -113,6 +109,12 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
                 <SidebarItem>
                   <UserPlus size={20} />
                   Nuevo Tecnico
+                </SidebarItem>
+              </Link>
+              <Link to="/metricas">
+                <SidebarItem>
+                  <ChartPieSlice size={20} />
+                  Metricas
                 </SidebarItem>
               </Link>
             </>

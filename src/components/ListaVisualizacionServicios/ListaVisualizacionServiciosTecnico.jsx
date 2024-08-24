@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -18,8 +18,9 @@ import {
   DropdownContent,
   DropdownItem,
   DropdownList,
+  toast
 } from "keep-react";
-import { Calendar } from "phosphor-react";
+import { Calendar, WarningCircle } from "phosphor-react";
 import { format } from "date-fns";
 import { useServicios } from "../../store/selectors";
 import OpcionesPresupuesto from "../OpcionesPresupuesto/OpcionesPresupuesto";
@@ -34,8 +35,45 @@ const ListaVisualizacionServiciosTecnico = () => {
   const [tipoFiltro, setTipoFiltro] = useState("");
   const [stringFiltro, setStringFiltro] = useState("");
 
+  /*
+  useEffect(() => {
+    const fetchReparaciones = async () => {
+      try {
+        await getReparaciones(dispatch);
+      } catch (error) {
+        toast.error("No se pudo obtener reparaciones");
+      }
+    };
+    
+    fetchReparaciones();
+  }, [servicios]);
+  */
+
+  const fuePresupuestado = (servicio) => {
+    const fechaCreacion = new Date(servicio.fecha);
+    const fechaPromesaEntrega = new Date(servicio.fechaPromesaEntrega);
+
+    return fechaCreacion < fechaPromesaEntrega;
+  };
+
+  const agregarWarning = (servicio) => {
+    if(servicio.estado != "Entregada") {
+      if (fuePresupuestado(servicio)) {
+        return new Date(servicio.fechaPromesaEntrega) < new Date();
+      } else {
+        return new Date(servicio.fechaPromesaPresupuesto) < new Date();
+      }
+    }
+
+    return false;
+  };
+
   const manejarCambioNumeroOrden = (e) => {
     tipoFiltro == "Numero de orden" && setStringFiltro(e.target.value);
+  };
+
+  const manejarCambioCedulaCliente = (e) => {
+    tipoFiltro == "CICliente" && setStringFiltro(e.target.value);
   };
 
   const manejarCambioTipoFiltro = (tipo) => {
@@ -60,7 +98,9 @@ const ListaVisualizacionServiciosTecnico = () => {
 
   const filtrarServicios = () => {
     if (tipoFiltro == "Numero de orden") {
-      return servicios.filter((servicio) => servicio.id.includes(stringFiltro));
+      return servicios.filter((servicio) =>
+        servicio.id.toString().includes(stringFiltro)
+      );
     } else if (tipoFiltro == "Fecha") {
       if (selected == null || selected.from == null || selected.to == null)
         return servicios;
@@ -79,6 +119,10 @@ const ListaVisualizacionServiciosTecnico = () => {
       return servicios.filter((servicio) =>
         servicio.estado.includes(stringFiltro)
       );
+    } else if (tipoFiltro == "CICliente") {
+      return servicios.filter((servicio) =>
+        servicio.clienteCedula.includes(stringFiltro)
+      );
     } else {
       return servicios;
     }
@@ -88,45 +132,54 @@ const ListaVisualizacionServiciosTecnico = () => {
 
   return (
     <>
-      <div className="flex flex-col ml-16">
-        <div>
-          <ButtonGroup>
-            <Button
-              position="start"
-              onClick={() => manejarCambioTipoFiltro("Numero de orden")}
-            >
-              Numero de orden
-            </Button>
-            <Button
-              position="center"
-              onClick={() => manejarCambioTipoFiltro("Fecha")}
-            >
-              Fecha
-            </Button>
-            <Button
-              position="center"
-              onClick={() => manejarCambioTipoFiltro("Fecha")}
-            >
-              Fecha
-            </Button>
-            <Button
-              position="end"
-              onClick={() => manejarCambioTipoFiltro("Estado")}
-            >
-              Estado
-            </Button>
-          </ButtonGroup>
-
+      <div className="flex flex-col ml-12">
+        <h1 className="mb-8">Listado de servicios</h1>
+        <div className="mb-8">
+          <div className="mb-4">
+            <ButtonGroup>
+              <Button
+                position="start"
+                onClick={() => manejarCambioTipoFiltro("Numero de orden")}
+              >
+                Numero de orden
+              </Button>
+              <Button
+                position="center"
+                onClick={() => manejarCambioTipoFiltro("Fecha")}
+              >
+                Fecha
+              </Button>
+              <Button
+                position="center"
+                onClick={() => manejarCambioTipoFiltro("CICliente")}
+              >
+                Cliente
+              </Button>
+              <Button
+                position="end"
+                onClick={() => manejarCambioTipoFiltro("Estado")}
+              >
+                Estado
+              </Button>
+            </ButtonGroup>
+          </div>
           <Button position="end" onClick={() => manejarCambioTipoFiltro("")}>
             Quitar filtros
           </Button>
         </div>
-        <div>
+        <div className="mb-8">
           {tipoFiltro === "Numero de orden" && (
             <Input
               placeholder="Escriba numero de orden"
               type="text"
               onChange={(e) => manejarCambioNumeroOrden(e)}
+            />
+          )}
+          {tipoFiltro === "CICliente" && (
+            <Input
+              placeholder="Escriba cedula de cliente"
+              type="text"
+              onChange={(e) => manejarCambioCedulaCliente(e)}
             />
           )}
           {tipoFiltro === "Fecha" && (
@@ -166,45 +219,54 @@ const ListaVisualizacionServiciosTecnico = () => {
               <DropdownAction>Seleccione estado</DropdownAction>
               <DropdownContent>
                 <DropdownList>
-                  <DropdownItem
-                    onClick={() => manejarCambioEstado("En Taller")}
-                  >
+                  <DropdownItem onClick={() => manejarCambioEstado("EnTaller")}>
                     En Taller
                   </DropdownItem>
+
                   <DropdownItem
-                    onClick={() => manejarCambioEstado("En Progreso")}
+                    onClick={() => manejarCambioEstado("Presupuestada")}
                   >
-                    En Progreso
+                    Presupuestada
                   </DropdownItem>
                   <DropdownItem
-                    onClick={() => manejarCambioEstado("Presupuestado")}
+                    onClick={() => manejarCambioEstado("PresupuestoAceptado")}
                   >
-                    Presupuestado
+                    Aceptada
                   </DropdownItem>
                   <DropdownItem
-                    onClick={() => manejarCambioEstado("Finalizado")}
+                    onClick={() => manejarCambioEstado("PresupuestoNoAceptado")}
                   >
-                    Finalizado
+                    No aceptada
                   </DropdownItem>
                   <DropdownItem
-                    onClick={() => manejarCambioEstado("Entregado")}
+                    onClick={() => manejarCambioEstado("Terminada")}
                   >
-                    Entregado
+                    Terminada
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={() => manejarCambioEstado("Entregada")}
+                  >
+                    Entregada
                   </DropdownItem>
                 </DropdownList>
               </DropdownContent>
             </Dropdown>
           )}
         </div>
-        <div>
+        <div className="mr-16">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>
-                  <div className="w-[80px] flex justify-center">Numero de orden</div>
+                  <div className="w-[80px] flex justify-center"> </div>
                 </TableHead>
                 <TableHead>
-                  <div className="max-w-[250px] flex justify-center">Producto</div>
+                  <div className="w-[80px] flex justify-center">
+                    Numero de orden
+                  </div>
+                </TableHead>
+                <TableHead>
+                  <div className="w-[80px] flex justify-center">Producto</div>
                 </TableHead>
                 <TableHead>
                   <div className="w-[80px] flex justify-center">Fecha</div>
@@ -213,10 +275,12 @@ const ListaVisualizacionServiciosTecnico = () => {
                   <div className="w-[80px] flex justify-center">Costo</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[250px] flex justify-center">Estado</div>
+                  <div className="w-[80px] flex justify-center">Estado</div>
                 </TableHead>
                 <TableHead>
-                  <div className="w-[250px] flex justify-center">Presupuesto</div>
+                  <div className="w-[250px] flex justify-center">
+                    Presupuesto
+                  </div>
                 </TableHead>
                 <TableHead>
                   <div className="w-[250px] flex justify-center">Modificar</div>
@@ -233,9 +297,12 @@ const ListaVisualizacionServiciosTecnico = () => {
               {serviciosFiltrados &&
                 serviciosFiltrados.map((servicio) => (
                   <TableRow key={servicio.id}>
+                    <TableCell>
+                      {agregarWarning(servicio) ? <WarningCircle color="#e82c2c" size={20} /> : <></>}
+                    </TableCell>
                     <TableCell>{servicio.id}</TableCell>
                     <TableCell>
-                      <div className="max-w-[250px] truncate">
+                      <div className="w-[80px] truncate">
                         {servicio.producto.id}
                       </div>
                     </TableCell>
@@ -249,13 +316,17 @@ const ListaVisualizacionServiciosTecnico = () => {
                     </TableCell>
                     <TableCell>
                       <ButtonGroup>
-                        <ModalEditarPresupuestoServicio disabled={servicio.estado !== "Presupuestada"} servicio={servicio}  />
+                        <ModalEditarPresupuestoServicio
+                          disabled={servicio.estado !== "Presupuestada"}
+                          servicio={servicio}
+                        />
                         <Button
                           size="xs"
-                          disabled={servicio.estado !== "EnTaller" && servicio.estado !== "Presupuestada"}
-                          onClick={() =>
-                            manejarClickEditarServicio(servicio)
+                          disabled={
+                            servicio.estado !== "EnTaller" &&
+                            servicio.estado !== "Presupuestada"
                           }
+                          onClick={() => manejarClickEditarServicio(servicio)}
                         >
                           Servicio
                         </Button>

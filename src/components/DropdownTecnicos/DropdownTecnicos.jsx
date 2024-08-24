@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import { useTecnicos } from "../../store/selectors";
 import { CaretDown, UserGear } from "phosphor-react";
 import { SidebarItem, SidebarDropdown, SidebarCollapse, SidebarDropdownList } from "keep-react";

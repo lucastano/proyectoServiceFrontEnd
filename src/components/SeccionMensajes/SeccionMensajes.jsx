@@ -33,7 +33,11 @@ function SeccionMensajes({ servicio }) {
       <Spinner color="info" size="xl" />
     </>
   ) : (
-    <>
+    <div className="mt-4">
+      <h2 className="text-h2 font-bold text-metal-900 dark:text-white">
+        Mensajes
+      </h2>
+      <div className="mt-4">
       <Timeline>
         {mensajes &&
           mensajes.map((mensaje) => (
@@ -53,8 +57,11 @@ function SeccionMensajes({ servicio }) {
             </TimelineItem>
           ))}
       </Timeline>
-      <NuevoMensaje servicio={servicio} />
-    </>
+      </div>
+      <div className="mt-4">
+        <NuevoMensaje servicio={servicio} />
+      </div>
+    </div>
   );
 }
 

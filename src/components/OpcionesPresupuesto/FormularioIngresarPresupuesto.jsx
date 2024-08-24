@@ -35,7 +35,15 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
     setDescripcion(e.target.value);
   };
 
+  const validarPresupuesto = () => {
+    return manoDeObra > 0 && descripcion.length > 0 && fechaPromesaEntrega;
+  }
+
   const manejarClickIngresoPresupuesto = async () => {
+    if (!validarPresupuesto()) {
+      toast.error("Por favor complete todos los campos");
+      return;
+    }
     const presupuesto = {
       idReparacion: servicio.id,
       manoObra: manoDeObra,
@@ -43,7 +51,6 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
       fechaPromesaEntrega: fechaPromesaEntrega,
     };
 
-    console.log('presupuesto en manejarClickIngresoPresupuesto: ', presupuesto);
     try {
       await postPresupuestacionReparacion(presupuesto, dispatch);
       navigate("/serviciostecnico");
@@ -57,12 +64,8 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
 
   return (
     <>
-      <h3 className="mb-2 text-body-1 font-medium text-metal-900">
-        Ingresar Presupuesto
-      </h3>
-      <div
-        className="rounded-lg border p-8 shadow-md text-left"
-      >
+      <div className="rounded-lg border p-8 shadow-md text-left">
+        <h2 className="mb-2 text-body-1 font-medium">Ingresar Presupuesto</h2>
         <div className="mb-4 space-y-2">
           <fieldset className="space-y-1">
             <Label htmlFor="manoObra">Mano de obra:</Label>
@@ -113,7 +116,12 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
             </Popover>
           </fieldset>
         </div>
-        <Button size="sm" color="secondary" type="submit" onClick={manejarClickIngresoPresupuesto}>
+        <Button
+          size="sm"
+          color="secondary"
+          type="submit"
+          onClick={manejarClickIngresoPresupuesto}
+        >
           Ingresar presupuesto
         </Button>
       </div>

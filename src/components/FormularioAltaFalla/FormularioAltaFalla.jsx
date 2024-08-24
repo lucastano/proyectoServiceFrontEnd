@@ -40,7 +40,6 @@ const FormularioAltaFalla = () => {
         solucion: solucion,
       };
 
-      console.log('llega aca');
       try {
         await postFalla(nuevaFalla, dispatch);
         toast("Falla dada de alta correctamente");

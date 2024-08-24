@@ -12,6 +12,7 @@ const OpcionesPresupuesto = ({ servicio }) => {
   const manejarClickAceptarPresupuesto = async () => {
     try {
       await postAceptarPresupuesto(servicio, dispatch);
+      navigate('/serviciostecnico');
       toast("Presupuesto aceptado", {
         description: "El presupuesto ha sido aceptado correctamente",
       });
@@ -29,7 +30,7 @@ const OpcionesPresupuesto = ({ servicio }) => {
   const fueAceptado = servicio.estado === "PresupuestoAceptado";
   const tuvoPresupuesto = tienePresupuesto || fueRechazado || fueAceptado;
   const noTuvoPresupuesto = !tienePresupuesto || fueAceptado || fueRechazado;
-//<Button size="xs" position="end" disabled={!tienePresupuesto} id="buttonModal">
+  
   return (
     <div>
       <ButtonGroup>

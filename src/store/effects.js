@@ -21,6 +21,92 @@ import { config } from "../../config";
 
 const { apiUrl } = config;
 
+async function cambiarPasswordAdmin(mail, nuevaPassword) {
+  const url = `${apiUrl}/api/Administradores/CambiarPassword?email=${mail}&password=${nuevaPassword}`;
+  const token = localStorage.getItem("token"); 
+  const opciones = {
+    method: "PUT",
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await fetch(url, opciones);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+async function cambiarPasswordTecnico(mail, nuevaPassword) {
+  const url = `${apiUrl}/api/Tecnicos/CambiarPassword?email=${mail}&nuevoPassword=${nuevaPassword}`;
+  const token = localStorage.getItem("token"); 
+  const opciones = {
+    method: "PUT",
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await fetch(url, opciones);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+async function recuperarPasswordAdmin(email) {
+  const url = `${apiUrl}/api/Administradores/RecuperarPassword?email=${email}`;
+  const token = localStorage.getItem("token"); 
+  const opciones = {
+    method: "PUT",
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const response = await fetch(url, opciones);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+async function recuperarPasswordTecnico(email) {
+  const url = `${apiUrl}/api/Tecnicos/RecuperarPasswordTecnico?email=${email}`;
+  const token = localStorage.getItem("token"); 
+  const opciones = {
+    method: "PUT",
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const response = await fetch(url, opciones);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
 async function postProducto(dispatch, producto) {
   const url = `${apiUrl}/api/Productos`;
   const data = JSON.stringify(producto);
@@ -145,7 +231,6 @@ async function putServicio(dispatch, servicio) {
       numeroSerie: numeroSerie,
       descripcion: descripcion,
     }),
-
   };
   try {
     const respuesta = await fetch(url, opciones);
@@ -292,12 +377,12 @@ async function getReparaciones(dispatch) {
 }
 
 async function getReparacionesPorCI(cedula, dispatch) {
-  const url = `${apiUrl}/api/Reparaciones/TodasLasReparaciones`;
+  const url = `${apiUrl}/api/Reparaciones/ReparacionesDeClienteCedula?cedula=${cedula}`;
   const token = localStorage.getItem("token");
   const opciones = {
     method: "GET",
     headers: {
-      accept: "application/json",
+      accept: "*/*",
       Authorization: `Bearer ${token}`,
     },
   };
@@ -308,35 +393,7 @@ async function getReparacionesPorCI(cedula, dispatch) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const datos = await respuesta.json();
-      const reparacionesFiltradas = datos.reparaciones.filter(
-        (reparacion) => reparacion.clienteCedula === cedula
-      );
-      dispatch(traerReparacionesExito(reparacionesFiltradas));
-    }
-  } catch (error) {
-    return error;
-  }
-}
-
-//get reparaciones por ci
-async function getReparacionesPorCI2(cedula, dispatch) {
-  const url = `${apiUrl}/api/Reparaciones/ObtenerReparacionesPorCi?ci=${cedula}`;
-  const token = localStorage.getItem("token");
-  const opciones = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  try {
-    const respuesta = await fetch(url, opciones);
-    if (!respuesta.ok) {
-      throw new Error(`HTTP error! status: ${respuesta.status}`);
-    } else {
-      const datos = await respuesta.json();
-      dispatch(traerReparacionesExito(datos.reparaciones));
+      dispatch(traerReparacionesExito(datos));
     }
   } catch (error) {
     return error;
@@ -447,8 +504,9 @@ async function postCliente(nuevoCliente, dispatch) {
 }
 
 //post reparacion
-async function postReparacion(nuevaReparacion, dispatch) {
+async function postReparacion(nuevaReparacion) {
   const url = `${apiUrl}/api/Reparaciones`;
+
   const data = JSON.stringify(nuevaReparacion);
   const token = localStorage.getItem("token");
   const opciones = {
@@ -463,39 +521,39 @@ async function postReparacion(nuevaReparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    console.log('respuesta: ', respuesta);
+
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const data = await respuesta.json();
-      console.log('data: ', data);
-    if (data.statusCode !== 200) {
-      throw new Error("Error al generar la orden");
-    }
 
-    // Verificar si la respuesta contiene la orden en formato base64
-    if (typeof data.ordenDeServicio !== "string") {
-      throw new Error("Formato de datos inesperado para la orden de servicio");
-    }
+      if (data.statusCode !== 200) {
+        throw new Error("Error al generar la orden");
+      }
 
-    console.log('data: ', data);
-    const cadenaCaracteres = data.ordenDeServicio;
-    // Decodificar la cadena base64 a un ArrayBuffer
-    const binaryString = window.atob(cadenaCaracteres);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
+      // Verificar si la respuesta contiene la orden en formato base64
+      if (typeof data.ordenDeServicio !== "string") {
+        throw new Error(
+          "Formato de datos inesperado para la orden de servicio"
+        );
+      }
 
-    // Paso 2: Crear un Blob con el contenido PDF
-    const blob = new Blob([bytes], { type: 'application/pdf' });
+      const cadenaCaracteres = data.ordenDeServicio;
+      // Decodificar la cadena base64 a un ArrayBuffer
+      const binaryString = window.atob(cadenaCaracteres);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
 
-    return blob;
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      // Paso 2: Crear un Blob con el contenido PDF
+      const blob = new Blob([bytes], { type: "application/pdf" });
+
+      return blob;
     }
   } catch (error) {
-    console.log('error: ', error);
     return error;
   }
 }
@@ -523,7 +581,6 @@ async function postPresupuestacionReparacion(reparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
@@ -558,9 +615,9 @@ async function postTerminarReparacion(terminoReparacion, dispatch) {
     return error;
   }
 }
-async function postEntregarReparacion(reparacion, dispatch) {
-  const { idReparacion } = reparacion;
-  const url = `${apiUrl}/api/Reparaciones/EntregarReparacion?id=${idReparacion}`;
+async function postEntregarReparacion(reparacion) {
+  const { id } = reparacion;
+  const url = `${apiUrl}/api/Reparaciones/EntregarReparacion?id=${id}`;
   const token = localStorage.getItem("token");
   const opciones = {
     method: "POST",
@@ -572,39 +629,37 @@ async function postEntregarReparacion(reparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const data = await respuesta.json();
-      console.log('data: ', data);
-    if (data.statusCode !== 200) {
-      throw new Error("Error al generar la orden");
-    }
+      if (data.statusCode !== 200) {
+        throw new Error("Error al generar la orden");
+      }
 
-    // Verificar si la respuesta contiene la orden en formato base64
-    if (typeof data.ordenDeServicio !== "string") {
-      throw new Error("Formato de datos inesperado para la orden de servicio");
-    }
+      // Verificar si la respuesta contiene la orden en formato base64
+      if (typeof data.ordenDeServicio !== "string") {
+        throw new Error(
+          "Formato de datos inesperado para la orden de servicio"
+        );
+      }
 
-    console.log('data: ', data);
-    const cadenaCaracteres = data.ordenDeServicio;
-    // Decodificar la cadena base64 a un ArrayBuffer
-    const binaryString = window.atob(cadenaCaracteres);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
+      const cadenaCaracteres = data.ordenDeServicio;
+      // Decodificar la cadena base64 a un ArrayBuffer
+      const binaryString = window.atob(cadenaCaracteres);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
 
-    // Paso 2: Crear un Blob con el contenido PDF
-    const blob = new Blob([bytes], { type: 'application/pdf' });
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
 
-    return blob;
+      // Paso 2: Crear un Blob con el contenido PDF
+      const blob = new Blob([bytes], { type: "application/pdf" });
+
+      return blob;
     }
   } catch (error) {
-    console.log('error: ', error);
     return error;
   }
 }
@@ -627,17 +682,14 @@ async function postAceptarPresupuesto(reparacion, dispatch) {
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(aceptarPresupuestoExito(datos));
+      await getReparaciones(dispatch);
     }
   } catch (error) {
-    console.log('error: ', error);
     return error;
   }
 }
 
 async function postFalla(objetoFalla, dispatch) {
-  console.log('objetoFalla: ', objetoFalla);
   const { productoId, falla, solucion } = objetoFalla;
   const url = `${apiUrl}/api/BaseFallas`;
   const token = localStorage.getItem("token");
@@ -645,7 +697,7 @@ async function postFalla(objetoFalla, dispatch) {
     method: "POST",
     headers: {
       accept: "*/*",
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
@@ -680,7 +732,7 @@ async function getFallas(dispatch) {
   };
   try {
     const respuesta = await fetch(url, opciones);
-    console.log('respuesta: ', respuesta);
+
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
@@ -695,6 +747,7 @@ async function getFallas(dispatch) {
 async function postRechazarPresupuesto(rechazo, dispatch) {
   const { id, costo, razon } = rechazo;
   const url = `${apiUrl}/api/Reparaciones/NoAceptarPresupuesto?id=${id}&costo=${costo}&razon=${razon}`;
+
   const token = localStorage.getItem("token");
   const opciones = {
     method: "POST",
@@ -702,17 +755,14 @@ async function postRechazarPresupuesto(rechazo, dispatch) {
       accept: "*/*",
       Authorization: `Bearer ${token}`,
     },
-    body: "",
   };
 
   try {
     const respuesta = await fetch(url, opciones);
-    console.log('respuesta: ', respuesta);
+
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      console.log('datos: ', datos);
       await getReparaciones(dispatch);
     }
   } catch (error) {
@@ -841,4 +891,8 @@ export {
   getProductos,
   postFalla,
   getFallas,
+  recuperarPasswordAdmin,
+  recuperarPasswordTecnico,
+  cambiarPasswordAdmin,
+  cambiarPasswordTecnico,
 };

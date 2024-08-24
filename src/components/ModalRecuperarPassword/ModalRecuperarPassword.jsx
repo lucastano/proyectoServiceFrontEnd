@@ -1,17 +1,29 @@
 import React, { useState } from "react";
-import { Modal, ModalAction, ModalBody, ModalClose, ModalFooter, ModalHeader, ModalTitle, ModalDescription, Label, Input, Button, ModalContent } from "keep-react";
+import { toast, Modal, ModalAction, ModalBody, ModalClose, ModalFooter, ModalHeader, ModalTitle, ModalDescription, Label, Input, Button, ModalContent } from "keep-react";
+import { useNavigate } from "react-router-dom";
+import { recuperarPasswordAdmin, recuperarPasswordTecnico } from "../../store/effects";
 
 const ModalRecuperarPassword = () => {
   const [mail, setMail] = useState("");
+  const navigate = useNavigate();
 
   const manejarCambioEmail = (e) => {
     setMail(e.target.value);
   };
-
-  const solicitarContrasena = () => {
+  const solicitarContrasena = async (rol) => {
     //logica para solicitar contrasena. falta endpoint aca.
+    try {
+      if (rol == "Tecnico") { 
+        await recuperarPasswordTecnico(mail);
+      } else if (rol == "Administrador") {
+        await recuperarPasswordAdmin(mail);
+      }
+      navigate('/');
+      toast('Solicitud enviada. Si no aparece email, revise casilla de spam');
+    } catch (error) {
+      toast.error("Error al solicitar contraseña");
+    } 
   };
-
 
   return (
     <Modal>
@@ -24,11 +36,13 @@ const ModalRecuperarPassword = () => {
           <ModalHeader>
             <div className="!mb-6">
               <ModalTitle>Editar presupuesto</ModalTitle>
+              <div className="mt-4">
               <ModalDescription>
                 Recuerde que si es cliente, su contraseña es su documento de
                 identidad. De lo contrario, complete con su mail y le será
                 enviada una nueva contraseña.
               </ModalDescription>
+              </div>
               <div className="mx-auto max-w-md space-y-2 p-4">
                 <div className="space-y-1">
                   <Label htmlFor="email">Email: </Label>
@@ -41,7 +55,8 @@ const ModalRecuperarPassword = () => {
             </div>
           </ModalHeader>
           <ModalFooter>
-            <Button onClick={solicitarContrasena}>Solicitar contraseña</Button>
+            <Button onClick={() => solicitarContrasena("Administrador")}>Como administrador</Button>
+            <Button onClick={() => solicitarContrasena("Tecnico")}>Como técnico</Button>
           </ModalFooter>
         </ModalContent>
       </ModalBody>

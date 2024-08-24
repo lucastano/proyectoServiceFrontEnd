@@ -1,12 +1,22 @@
-import React from 'react';
-import { Modal, ModalAction, ModalBody, ModalContent, ModalClose, ModalFooter, ModalHeader, Button, Label, ModalTitle } from 'keep-react';
+import React from "react";
+import {
+  Modal,
+  ModalAction,
+  ModalBody,
+  ModalContent,
+  ModalClose,
+  ModalFooter,
+  ModalHeader,
+  Button,
+  Label,
+  ModalTitle,
+} from "keep-react";
 
+const ModalDetalleFalla = ({ item }) => {
+  const { id, falla, solucion, producto } = item;
 
-const ModalDetalleFalla = ({item}) => {
-    const { id, falla, solucion, producto} = item;
-    
-    return (
-        <Modal>
+  return (
+    <Modal>
       <ModalAction asChild>
         <Button color="secondary" size="sm">
           Ver detalle
@@ -17,19 +27,19 @@ const ModalDetalleFalla = ({item}) => {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <ModalTitle>
-                Falla No {id}
-              </ModalTitle>
+              <ModalTitle>Falla No {id}</ModalTitle>
               <div className="mx-auto max-w-md space-y-2 p-4">
                 <div className="space-y-1">
                   <Label htmlFor="numeroSerie">Producto: </Label>
-                  <p>{producto.marca} - {producto.modelo} - {producto.version} </p>
+                  <p>
+                    {producto.marca} - {producto.modelo} - {producto.version}{" "}
+                  </p>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 mt-4">
                   <Label htmlFor="falla">Falla: </Label>
                   <p>{falla}</p>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 mt-4">
                   <Label htmlFor="solucion">Solución: </Label>
                   <p>{solucion}</p>
                 </div>
@@ -46,7 +56,7 @@ const ModalDetalleFalla = ({item}) => {
         </ModalContent>
       </ModalBody>
     </Modal>
-    );
+  );
 };
 
 export default ModalDetalleFalla;

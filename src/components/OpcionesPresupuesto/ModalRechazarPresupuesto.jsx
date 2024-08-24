@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Modal, Button, Textarea, toast, ModalClose, ModalAction, ModalBody, ModalContent, ModalFooter, ModalTitle, Label, Input, ModalHeader,  } from "keep-react";
 import { useDispatch } from "react-redux";
 import { postRechazarPresupuesto } from "../../store/effects";
+import { useNavigate } from "react-router-dom";
 
 const ModalRechazarPresupuesto = ({servicio, noTienePresupuesto}) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [costo, setCosto] = useState(0);
   const [razon, setRazon] = useState("");
 
@@ -21,7 +23,7 @@ const ModalRechazarPresupuesto = ({servicio, noTienePresupuesto}) => {
   };
 
   const manejarClickRechazarPresupuesto = async () => {
-    console.log('entra a manejarClickRechazarPresupuesto');
+
     const rechazoPresupuesto = {
       id: servicio.id,
       costo: costo,
@@ -30,10 +32,12 @@ const ModalRechazarPresupuesto = ({servicio, noTienePresupuesto}) => {
   
     try {
       await postRechazarPresupuesto(rechazoPresupuesto, dispatch);
+      navigate('/');
       toast("Presupuesto rechazado", {
         description: "El presupuesto ha sido rechazado correctamente",
       });
     } catch (error) {
+      console.log('error: ', error);
       toast.error("Ha habido un error al rechazar el presupuesto");
     }
   };
@@ -41,13 +45,13 @@ const ModalRechazarPresupuesto = ({servicio, noTienePresupuesto}) => {
   return (
     <Modal>
       <ModalAction asChild>
-        <Button size="xs" position="end" disabled={noTienePresupuesto} id="buttonModal">
+        <Button size="xs" position="end" disabled={noTienePresupuesto} >
           Rechazar
         </Button>
       </ModalAction>
       <ModalBody className="space-y-3">
         <ModalContent>
-          <ModalClose className="absolute right-4 top-4" />
+          <ModalClose className="absolute right-4 top-4"/>
           <ModalHeader>
             <div className="!mb-6">
               <ModalTitle>

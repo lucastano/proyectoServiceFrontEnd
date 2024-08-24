@@ -5,8 +5,9 @@ import App from "./App.jsx";
 import "./index.css";
 import { ToastWrapper } from "keep-react";
 import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "./components/theme-provider";
 import store from "./store/store";
+import { ThemeProvider } from "../src/components/Theme-provider";
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
