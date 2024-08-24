@@ -11,7 +11,6 @@ const ModalRecuperarPassword = () => {
     setMail(e.target.value);
   };
   const solicitarContrasena = async (rol) => {
-    //logica para solicitar contrasena. falta endpoint aca.
     try {
       if (rol == "Tecnico") { 
         await recuperarPasswordTecnico(mail);
@@ -40,7 +39,8 @@ const ModalRecuperarPassword = () => {
               <ModalDescription>
                 Recuerde que si es cliente, su contraseña es su documento de
                 identidad. De lo contrario, complete con su mail y le será
-                enviada una nueva contraseña.
+                enviada una nueva contraseña. En caso de no recibir el email, 
+                revise su carpeta de spam o correo no deseado.
               </ModalDescription>
               </div>
               <div className="mx-auto max-w-md space-y-2 p-4">
