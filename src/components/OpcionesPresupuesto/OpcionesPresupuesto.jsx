@@ -28,13 +28,12 @@ const OpcionesPresupuesto = ({ servicio }) => {
   const tienePresupuesto = servicio.estado === "Presupuestada";
   const fueRechazado = servicio.estado === "PresupuestoNoAceptado";
   const fueAceptado = servicio.estado === "PresupuestoAceptado";
-  const tuvoPresupuesto = tienePresupuesto || fueRechazado || fueAceptado;
   const noTuvoPresupuesto = !tienePresupuesto || fueAceptado || fueRechazado;
   
   return (
     <div>
       <ButtonGroup>
-        <Button size="xs" disabled={tuvoPresupuesto} onClick={manejarClickIngresarPresupuesto}>Presupuestar</Button>
+        <Button size="xs" disabled={servicio.estado != "EnTaller"} onClick={manejarClickIngresarPresupuesto}>Presupuestar</Button>
         <Button
         size="xs"
           position="center"

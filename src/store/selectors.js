@@ -150,31 +150,35 @@ export const useEstadosReparacionesPorFechas = (fechaInicio, fechaFin) => {
     return estados;
 }
 
-
 export const useTecnicosReparaciones = () => {
-    const tecnicos = [];
+    const arrayTecnicos = [];
     const servicios = useSelector(getServicios); 
+    const tecnicos = useSelector(getTecnicos);
 
     servicios !== null && servicios.forEach(servicio => {
         if(servicio.tecnicoId) {
-            tecnicos.push(servicio.tecnicoId);
+            let tecnicoTemp = tecnicos.find(tecnico => Number(tecnico.id) === Number(servicio.tecnicoId));
+            console.log(tecnicoTemp);
+            arrayTecnicos.push(servicio.tecnicoId + " " + tecnicoTemp.nombre + " " + tecnicoTemp.apellido);
         }
     });
 
-    return tecnicos;
+    return arrayTecnicos;
 }
 
 export const useTecnicosReparacionesPorFechas = (fechaInicio, fechaFin) => {
-    const tecnicos = [];
+    const arrayTecnicos = [];
     const servicios = useSelector(getServicios); 
+    const tecnicos = useSelector(getTecnicos);
 
     servicios.forEach(servicio => {
         if(servicio.fecha >= fechaInicio && servicio.fecha <= fechaFin) {
-            tecnicos.push(servicio.tecnicoId);
+            let tecnicoTemp = tecnicos.find(tecnico => Number(tecnico.id) === Number(servicio.tecnicoId));
+            arrayTecnicos.push(servicio.tecnicoId + " " + tecnicoTemp.nombre + " " + tecnicoTemp.apellido);
         }
     });
 
-    return tecnicos;
+    return arrayTecnicos;
 }
 
 export const useNumeroSerieReparaciones = () => {

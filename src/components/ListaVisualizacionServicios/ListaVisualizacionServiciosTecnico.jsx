@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -18,7 +18,6 @@ import {
   DropdownContent,
   DropdownItem,
   DropdownList,
-  toast
 } from "keep-react";
 import { Calendar, WarningCircle } from "phosphor-react";
 import { format } from "date-fns";
@@ -43,7 +42,7 @@ const ListaVisualizacionServiciosTecnico = () => {
   };
 
   const agregarWarning = (servicio) => {
-    if(servicio.estado != "Entregada") {
+    if (servicio.estado != "Entregada") {
       if (fuePresupuestado(servicio)) {
         return new Date(servicio.fechaPromesaEntrega) < new Date();
       } else {
@@ -118,7 +117,7 @@ const ListaVisualizacionServiciosTecnico = () => {
 
   return (
     <>
-      <div className="flex flex-col ml-12">
+      <div className="flex flex-col">
         <h1 className="mb-8">Listado de servicios</h1>
         <div className="mb-8">
           <div className="mb-4">
@@ -284,12 +283,21 @@ const ListaVisualizacionServiciosTecnico = () => {
                 serviciosFiltrados.map((servicio) => (
                   <TableRow key={servicio.id}>
                     <TableCell>
-                      {agregarWarning(servicio) ? <WarningCircle color="#e82c2c" size={20} /> : <></>}
+                      {agregarWarning(servicio) ? (
+                        <>
+                          <div className="flex flex-col items-center">
+                            <p className="text-red-700">Demorado</p>
+                            <WarningCircle color="#e82c2c" size={20} />
+                          </div>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </TableCell>
                     <TableCell>{servicio.id}</TableCell>
                     <TableCell>
                       <div className="w-[80px] truncate">
-                        {servicio.producto.id}
+                        {servicio.producto.modelo}
                       </div>
                     </TableCell>
                     <TableCell>

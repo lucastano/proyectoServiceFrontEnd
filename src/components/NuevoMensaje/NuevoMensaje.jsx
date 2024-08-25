@@ -29,10 +29,9 @@ function NuevoMensaje({ servicio }) {
 
     try {
       await postMensaje(dispatch, nuevoMensaje);
-      toast("Mensaje enviado correctamente");
       setDescripcion("");
+      toast("Mensaje enviado correctamente");
     } catch (error) {
-
       toast.error("Error al enviar mensaje");
     }
   };
@@ -41,6 +40,7 @@ function NuevoMensaje({ servicio }) {
     <div>
       <Textarea
         placeholder="Escribe tu mensaje aqui..."
+        value={descripcion}
         rows={8}
         onChange={(e) => manejarCambioDescripcion(e)}
       />

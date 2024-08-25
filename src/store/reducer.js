@@ -26,7 +26,6 @@ const initialState = {
   mensajes: [],
   productos: [],
   fallas: [],
-  //ordenReparacion: null,
 };
 
 const reducer = (state = initialState, action) => {

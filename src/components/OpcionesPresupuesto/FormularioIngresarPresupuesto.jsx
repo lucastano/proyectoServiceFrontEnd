@@ -111,6 +111,7 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
                   selected={fechaPromesaEntrega}
                   onSelect={setFechaPromesaEntrega}
                   showOutsideDays={true}
+                  hidden={{ before: new Date() }}
                 />
               </PopoverContent>
             </Popover>

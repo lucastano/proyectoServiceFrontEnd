@@ -21,7 +21,6 @@ import { useNavigate } from "react-router-dom";
 import { postCliente, postReparacion } from "../../store/effects";
 import { format } from "date-fns";
 import { Calendar } from "phosphor-react";
-import ModalAgregarProducto from "../ModalAgregarProducto/ModalAgregarProducto";
 
 const FormularioAltaServicio = () => {
   const dispatch = useDispatch();
@@ -217,19 +216,8 @@ const FormularioAltaServicio = () => {
         descripcion: descripcion,
         fechaPromesaPresupuesto: fechaPromesaPresupuesto,
       };
-      console.log('producto: ', producto);
-      console.log('nuevaReparacion: ', nuevaReparacion);
-
-      /*
-          return (
-      validarNumeroSerie(numeroSerie) &&
-      validarDescripcion(descripcion) &&
-      producto != null
-    );
-      */
 
       try {
-        console.log('entra al try');
         const blob = await postReparacion(nuevaReparacion);
         generarOrdenReparacion(blob);
         navigate("/serviciostecnico");
@@ -339,9 +327,6 @@ const FormularioAltaServicio = () => {
               </option>
             ))}
           </select>
-          <div>
-            <ModalAgregarProducto />
-          </div>
         </div>
         <div className="mb-4 space-y-2">
           <Label htmlFor="descripcion">Descripción: </Label>
@@ -378,6 +363,7 @@ const FormularioAltaServicio = () => {
                 selected={fechaPromesaPresupuesto}
                 onSelect={setFechaPromesaPresupuesto}
                 showOutsideDays={true}
+                hidden={{ before: new Date() }}
               />
             </PopoverContent>
           </Popover>

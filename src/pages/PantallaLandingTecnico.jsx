@@ -4,7 +4,8 @@ import { Spinner, toast } from "keep-react";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
 import ListaVisualizacionServiciosTecnico from "../components/ListaVisualizacionServicios/ListaVisualizacionServiciosTecnico";
-import { getReparaciones } from "../store/effects";
+import { getReparaciones, getTecnicos } from "../store/effects";
+
 
 const PantallaLandingTecnico = () => {
   const rolSesion = useRolSesion();
@@ -26,7 +27,17 @@ const PantallaLandingTecnico = () => {
       }
     };
 
+    const fetchTecnicos = async () => {
+      try {
+        await getTecnicos(dispatch);
+        setLoading(false);
+      } catch (error) {
+        toast.error("No se pudo obtener tecnicos");
+      }
+    };
+
     if (rolSesion && rolSesion !== "Cliente" && emailSesion) {
+      fetchTecnicos();
       fetchReparaciones();
     }
   }, [rolSesion, emailSesion, dispatch]);
@@ -36,7 +47,7 @@ const PantallaLandingTecnico = () => {
       <div className="w-1/4">
         <ComponenteNavbar />
       </div>
-      <div className="w-3/4">
+      <div className="w-4/5">
         {loading ? (<Spinner color="info" size="lg" />) : (<ListaVisualizacionServiciosTecnico />)}
       </div>
     </div>

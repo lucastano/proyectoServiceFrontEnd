@@ -1,6 +1,6 @@
 // App.jsx
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import PantallaAltaServicio from "./pages/PantallaAltaServicio";
 import PantallaAltaTecnico from "./pages/PantallaAltaTecnico";
@@ -18,6 +18,7 @@ import PantallaVisualizacionFallas from "./pages/PantallaVisualizacionFallas";
 import PantallaDetalleServicio from "./pages/PantallaDetalleServicio";
 import PantallaHistoriaClinica from "./pages/PantallaHistoriaClinica";
 import PantallaRecuperarContrasena from "./pages/PantallaRecuperarContrasena";
+import PantallaListadoClientes from "./pages/PantallaListadoClientes";
 
 const ProtectedRoute = ({ roles, children }) => {
   const rolSesion = useRolSesion();
@@ -38,6 +39,10 @@ const ProtectedRoute = ({ roles, children }) => {
 };
 
 function App() {
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+  }, []);
   return (
     <div className="App">
       <Routes>
@@ -152,6 +157,14 @@ function App() {
           element={
             <ProtectedRoute roles={["Administrador", "Tecnico"]}>
               <PantallaRecuperarContrasena />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clientes"
+          element={
+            <ProtectedRoute roles={["Administrador", "Tecnico"]}>
+              <PantallaListadoClientes />
             </ProtectedRoute>
           }
         />

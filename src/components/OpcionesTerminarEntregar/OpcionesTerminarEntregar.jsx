@@ -36,7 +36,7 @@ const OpcionesTerminarEntregar = ({ servicio }) => {
   const manejarClickEntregar = async () => {
     try {
       const blob = await postEntregarReparacion(servicio);
-      navigate("/serviciostecnico");
+      navigate("/");
       generarOrdenReparacion(blob);
       toast("Entrega realizada", {
         description: "El servicio ha sido entregado al cliente",

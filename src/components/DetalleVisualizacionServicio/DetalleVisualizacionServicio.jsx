@@ -3,6 +3,7 @@ import { Divider, Label } from "keep-react";
 import SeccionMensajes from "../SeccionMensajes/SeccionMensajes";
 import DescargarOrdenButton from "../DescargarOrdenButton/DescargarOrdenButton";
 import { format } from "date-fns";
+import { useTecnicoPorId } from "../../store/selectors";
 
 export const DetalleVisualizacionServicio = ({ servicio }) => {
   const {
@@ -20,20 +21,23 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
     numeroSerie,
     descripcion,
     estado,
+    tecnicoId,
   } = servicio;
 
+  const tecnico = useTecnicoPorId(tecnicoId);
+
   const existeFechaPromesaPresupuesto = () => {
-    const fecha = new Date(fecha);
+    const fechaServicio = new Date(fecha);
     const fechaPromesaPresupuesto = new Date(servicio.fechaPromesaPresupuesto);
 
-    return fecha > fechaPromesaPresupuesto;
+    return fechaServicio < fechaPromesaPresupuesto;
   };
 
   const existeFechaPromesaEntrega = () => {
-    const fecha = new Date(fecha);
+    const fechaServicio = new Date(fecha);
     const fechaPromesaEntrega = new Date(servicio.fechaPromesaEntrega);
 
-    return fecha > fechaPromesaEntrega;
+    return fechaServicio < fechaPromesaEntrega;
   };
 
   return (
@@ -46,6 +50,10 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
         <div>
           <Label htmlFor="fecha">Fecha: </Label>
           <p>{format(new Date(fecha), "dd-MM-yyyy HH:mm:ss")}</p>
+        </div>
+        <div>
+          <Label htmlFor="tecnico">Tecnico creador: </Label>
+          <p>{tecnico.nombre} {tecnico.apellido} - {tecnico.id}</p>
         </div>
         <div>
           <Label htmlFor="ciCliente">CI Usuario: </Label>
@@ -99,7 +107,7 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
           </Label>
           <p>{descripcionPresupuesto}</p>
         </div>
-        {existeFechaPromesaPresupuesto && (
+        {existeFechaPromesaPresupuesto() && (
           <div>
             <Label htmlFor="fechaPresupuesto">
               Fecha promesa presupuesto:{" "}
@@ -109,7 +117,7 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
             </p>
           </div>
         )}
-        {existeFechaPromesaEntrega && (
+        {existeFechaPromesaEntrega() && (
           <div>
             <Label htmlFor="fechaEntrega">
               Fecha promesa entrega:{" "}

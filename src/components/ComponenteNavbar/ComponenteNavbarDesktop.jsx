@@ -12,6 +12,7 @@ import {
   Plus,
   ListDashes,
   Password,
+  Users,
 } from "phosphor-react";
 import {
   Sidebar,
@@ -56,6 +57,12 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
           )}
           {(esTecnico || esAdmin) && (
             <>
+              <Link to="/clientes">
+                <SidebarItem>
+                  <Users size={20} />
+                  Clientes
+                </SidebarItem>
+              </Link>
               <Link to="/cambiarContrasena">
                 <SidebarItem>
                   <Password size={20} />
