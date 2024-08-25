@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Input, Label, Button, toast } from "keep-react";
 import { postTecnico } from "../../store/effects";
+import { useNavigate } from "react-router-dom";
 
 const FormularioAltaTecnico = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
@@ -51,6 +53,7 @@ const FormularioAltaTecnico = () => {
 
       try {
         await postTecnico(nuevoTecnico, dispatch);
+        navigate('/');
         toast("Tecnico dado de alta correctamente");
       } catch (error) {
         toast.error("Error al dar de alta a tecnico");

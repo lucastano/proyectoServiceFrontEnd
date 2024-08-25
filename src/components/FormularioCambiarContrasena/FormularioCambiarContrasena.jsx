@@ -56,7 +56,7 @@ const FormularioCambiarContrasena = ({ email, rolSesion }) => {
           Cambiar contraseña
         </h2>
       <div className="mb-4 space-y-2">
-        <Label htmlFor="contrasena">Contraseña: </Label>
+        <Label htmlFor="contrasena">Nueva contraseña: </Label>
         <Input
           id="contrasena"
           placeholder="Contraseña"
@@ -65,7 +65,7 @@ const FormularioCambiarContrasena = ({ email, rolSesion }) => {
         />
       </div>
       <div className="mb-4 space-y-2">
-        <Label htmlFor="confirmarContrasena">Confirmar contraseña: </Label>
+        <Label htmlFor="confirmarContrasena">Confirmar nueva contraseña: </Label>
         <Input
           id="confirmarContrasena"
           placeholder="Confirmar contraseña"

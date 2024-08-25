@@ -22,11 +22,11 @@ const OpcionesTerminarEntregar = ({ servicio }) => {
       );
       return;
     }
-
+    
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `orden_${servicio.numeroSerie}.pdf`;
+    link.download = `orden_${servicio.numeroSerie}_${servicio.clienteNombre}_${clienteApellido}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -35,7 +35,6 @@ const OpcionesTerminarEntregar = ({ servicio }) => {
 
   const manejarClickEntregar = async () => {
     try {
-
       const blob = await postEntregarReparacion(servicio);
       navigate("/serviciostecnico");
       generarOrdenReparacion(blob);
@@ -43,7 +42,6 @@ const OpcionesTerminarEntregar = ({ servicio }) => {
         description: "El servicio ha sido entregado al cliente",
       });
     } catch (error) {
-
       toast.error("Ha habido un error al realizar la entrega");
     }
   };

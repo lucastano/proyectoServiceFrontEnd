@@ -10,7 +10,7 @@ const ModalTerminarServicio = ({servicio}) => {
 
   const fuePresupuestada = servicio.estado === "PresupuestoAceptado" || servicio.estado === "PresupuestoNoAceptado";
 
-  const manejarClickReparado = (reparado) => async () => {
+  const manejarClickReparado = async (reparado) => {
     const terminoReparacion = {
       idReparacion: servicio.id,
       fueReparada: reparado,
@@ -18,8 +18,7 @@ const ModalTerminarServicio = ({servicio}) => {
   
     try {
       await postTerminarReparacion(terminoReparacion, dispatch);
-      console.log('llega aca');
-      navigate('/serviciostecnico')
+      navigate('/');
       toast("Servicio finalizado");
     } catch (error) {
       toast.error("Ha habido un error al finalizar el servicio");

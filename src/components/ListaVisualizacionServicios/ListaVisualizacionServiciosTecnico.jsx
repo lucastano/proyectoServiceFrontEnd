@@ -35,20 +35,6 @@ const ListaVisualizacionServiciosTecnico = () => {
   const [tipoFiltro, setTipoFiltro] = useState("");
   const [stringFiltro, setStringFiltro] = useState("");
 
-  /*
-  useEffect(() => {
-    const fetchReparaciones = async () => {
-      try {
-        await getReparaciones(dispatch);
-      } catch (error) {
-        toast.error("No se pudo obtener reparaciones");
-      }
-    };
-    
-    fetchReparaciones();
-  }, [servicios]);
-  */
-
   const fuePresupuestado = (servicio) => {
     const fechaCreacion = new Date(servicio.fecha);
     const fechaPromesaEntrega = new Date(servicio.fechaPromesaEntrega);

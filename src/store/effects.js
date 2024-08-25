@@ -521,11 +521,12 @@ async function postReparacion(nuevaReparacion) {
 
   try {
     const respuesta = await fetch(url, opciones);
-
+    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const data = await respuesta.json();
+      console.log('llega aca');
 
       if (data.statusCode !== 200) {
         throw new Error("Error al generar la orden");
@@ -606,12 +607,14 @@ async function postTerminarReparacion(terminoReparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
+    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       await getReparaciones(dispatch);
     }
   } catch (error) {
+    console.log('error: ', error);
     return error;
   }
 }

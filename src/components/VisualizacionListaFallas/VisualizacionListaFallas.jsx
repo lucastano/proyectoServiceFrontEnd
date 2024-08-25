@@ -82,6 +82,7 @@ const VisualizacionListaFallas = () => {
             <TableBody>
               {fallasFiltradas &&
                 fallasFiltradas.map((falla) => (
+                  console.log('falla: ', falla),
                   <TableRow key={falla.id}>
                     <TableCell>{falla.id}</TableCell>
                     <TableCell>{falla.producto.id}</TableCell>

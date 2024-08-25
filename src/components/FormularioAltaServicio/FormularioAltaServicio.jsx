@@ -61,7 +61,7 @@ const FormularioAltaServicio = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `orden_${numeroSerie}.pdf`;
+    link.download = `orden_${numeroSerie}_${nombreUsuario}_${apellidoUsuario}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -207,7 +207,7 @@ const FormularioAltaServicio = () => {
         validarNuevoUsuario()
       ) {
         await altaClienteServicio();
-      }
+      } 
 
       const nuevaReparacion = {
         ciCliente: cedulaUsuario,
@@ -217,8 +217,19 @@ const FormularioAltaServicio = () => {
         descripcion: descripcion,
         fechaPromesaPresupuesto: fechaPromesaPresupuesto,
       };
+      console.log('producto: ', producto);
+      console.log('nuevaReparacion: ', nuevaReparacion);
+
+      /*
+          return (
+      validarNumeroSerie(numeroSerie) &&
+      validarDescripcion(descripcion) &&
+      producto != null
+    );
+      */
 
       try {
+        console.log('entra al try');
         const blob = await postReparacion(nuevaReparacion);
         generarOrdenReparacion(blob);
         navigate("/serviciostecnico");
