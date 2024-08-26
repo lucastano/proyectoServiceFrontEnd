@@ -5,7 +5,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { ToastWrapper } from "keep-react";
 import { BrowserRouter } from "react-router-dom";
-import store from "./store/store";
+import { store } from "./store/store";
 import { ThemeProvider } from "../src/components/theme-provider";
 
 

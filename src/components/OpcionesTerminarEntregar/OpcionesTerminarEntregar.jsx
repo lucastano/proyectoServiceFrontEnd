@@ -1,5 +1,4 @@
 import React from "react";
-//import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button, toast, ButtonGroup } from "keep-react";
 import { postEntregarReparacion } from "../../store/effects";
@@ -26,7 +25,7 @@ const OpcionesTerminarEntregar = ({ servicio }) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `orden_${servicio.numeroSerie}_${servicio.clienteNombre}_${clienteApellido}.pdf`;
+    link.download = `orden_${servicio.numeroSerie}_${servicio.clienteNombre}_${servicio.clienteApellido}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -42,6 +41,7 @@ const OpcionesTerminarEntregar = ({ servicio }) => {
         description: "El servicio ha sido entregado al cliente",
       });
     } catch (error) {
+      console.log('error: ', error);
       toast.error("Ha habido un error al realizar la entrega");
     }
   };

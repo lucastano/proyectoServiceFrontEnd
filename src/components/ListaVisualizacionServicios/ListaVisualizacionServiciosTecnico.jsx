@@ -148,7 +148,7 @@ const ListaVisualizacionServiciosTecnico = () => {
               </Button>
             </ButtonGroup>
           </div>
-          <Button position="end" onClick={() => manejarCambioTipoFiltro("")}>
+          <Button position="end" onClick={() => manejarCambioTipoFiltro("")} variant="outline">
             Quitar filtros
           </Button>
         </div>
@@ -238,7 +238,7 @@ const ListaVisualizacionServiciosTecnico = () => {
             </Dropdown>
           )}
         </div>
-        <div className="mr-16">
+        <div className="mr-16 overflow-y-auto h-[500px]">
           <Table>
             <TableHeader>
               <TableRow>

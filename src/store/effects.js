@@ -521,7 +521,7 @@ async function postReparacion(nuevaReparacion) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    console.log('respuesta: ', respuesta);
+
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
@@ -632,15 +632,17 @@ async function postEntregarReparacion(reparacion) {
 
   try {
     const respuesta = await fetch(url, opciones);
+    console.log('respuesta: ', respuesta);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const data = await respuesta.json();
+      console.log('data: ', data);
       if (data.statusCode !== 200) {
         throw new Error("Error al generar la orden");
       }
 
-      // Verificar si la respuesta contiene la orden en formato base64
+  
       if (typeof data.ordenDeServicio !== "string") {
         throw new Error(
           "Formato de datos inesperado para la orden de servicio"
@@ -648,7 +650,6 @@ async function postEntregarReparacion(reparacion) {
       }
 
       const cadenaCaracteres = data.ordenDeServicio;
-      // Decodificar la cadena base64 a un ArrayBuffer
       const binaryString = window.atob(cadenaCaracteres);
       const len = binaryString.length;
       const bytes = new Uint8Array(len);
@@ -657,12 +658,12 @@ async function postEntregarReparacion(reparacion) {
         bytes[i] = binaryString.charCodeAt(i);
       }
 
-      // Paso 2: Crear un Blob con el contenido PDF
       const blob = new Blob([bytes], { type: "application/pdf" });
 
       return blob;
     }
   } catch (error) {
+    console.log('error: ', error);
     return error;
   }
 }

@@ -108,7 +108,7 @@ const ListaVisualizacionServiciosCliente = () => {
               </Button>
             </ButtonGroup>
           </div>
-          <Button position="end" onClick={() => manejarCambioTipoFiltro("")}>
+          <Button position="end" onClick={() => manejarCambioTipoFiltro("")} variant="outline">
             Quitar filtros
           </Button>
         </div>
@@ -196,7 +196,7 @@ const ListaVisualizacionServiciosCliente = () => {
             )}
           </div>
         </div>
-        <div>
+        <div className="overflow-y-auto h-[400px]">
           <Table>
             <TableHeader>
               <TableRow>

@@ -53,7 +53,9 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
         </div>
         <div>
           <Label htmlFor="tecnico">Tecnico creador: </Label>
-          <p>{tecnico.nombre} {tecnico.apellido} - {tecnico.id}</p>
+          <p>
+            {tecnico.nombre} {tecnico.apellido} - {tecnico.id}
+          </p>
         </div>
         <div>
           <Label htmlFor="ciCliente">CI Usuario: </Label>
@@ -119,9 +121,7 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
         )}
         {existeFechaPromesaEntrega() && (
           <div>
-            <Label htmlFor="fechaEntrega">
-              Fecha promesa entrega:{" "}
-            </Label>
+            <Label htmlFor="fechaEntrega">Fecha promesa entrega: </Label>
             <p>
               {format(new Date(servicio.fechaPromesaEntrega), "dd-MM-yyyy")}
             </p>
@@ -133,9 +133,13 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
         </div>
       </div>
       <Divider />
-      <div>
-        <SeccionMensajes servicio={servicio} />
-      </div>
+      {servicio.estado != "Terminada" ? (
+        <div>
+          <SeccionMensajes servicio={servicio} />
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="mt-8">
         <DescargarOrdenButton servicio={servicio} />
       </div>
