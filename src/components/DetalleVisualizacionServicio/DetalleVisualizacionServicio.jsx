@@ -133,7 +133,7 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
         </div>
       </div>
       <Divider />
-      {servicio.estado != "Terminada" ? (
+      {servicio.estado != "Entregada" ? (
         <div>
           <SeccionMensajes servicio={servicio} />
         </div>
