@@ -63,7 +63,7 @@ const VisualizacionListaFallas = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>
-                  <div className="w-[80px] flex justify-center">Producto</div>
+                  <div className="w-[120px] flex justify-center">Producto</div>
                 </TableHead>
                 <TableHead>
                   <div className="w-[160px] flex justify-center">Falla</div>
@@ -79,11 +79,23 @@ const VisualizacionListaFallas = () => {
             <TableBody>
               {fallasFiltradas &&
                 fallasFiltradas.map((falla) => (
-                  console.log('falla: ', falla),
                   <TableRow key={falla.id}>
-                    <TableCell>{falla.producto.id}</TableCell>
-                    <TableCell><div className="normal-case w-[160px] truncate">{falla.falla}</div></TableCell>
-                    <TableCell><div className="normal-case truncate">{falla.solucion}</div></TableCell>
+                    <TableCell>
+                      <div className="normal-case w-[160px] truncate flex justify-center">
+                        {falla.producto.marca} - {falla.producto.modelo} -{" "}
+                        {falla.producto.version}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="normal-case w-[160px] truncate">
+                        {falla.falla}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="normal-case truncate">
+                        {falla.solucion}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <ModalDetalleFalla item={falla} />
                     </TableCell>

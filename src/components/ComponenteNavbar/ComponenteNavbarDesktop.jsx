@@ -30,7 +30,7 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
   const esTecnico = rolSesion === "Tecnico";
 
   return (
-    <Sidebar className="h-screen overflow-y-auto">
+    <Sidebar className="h-screen overflow-y-auto fixed top-0 left-0">
       <SidebarBody>
         <SidebarList>
           <img

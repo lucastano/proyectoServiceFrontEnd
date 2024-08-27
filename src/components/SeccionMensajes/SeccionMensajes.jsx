@@ -45,10 +45,10 @@ function SeccionMensajes({ servicio }) {
               <TimelinePoint />
               <TimelineContent>
                 <p className="text-body-5 font-normal leading-[1.4] text-metal-400 dark:text-metal-300">
-                  {format(new Date(mensaje.fechaHora), "dd-MM-yyyy HH:mm:ss")}
+                  Fecha: {format(new Date(mensaje.fechaHora), "dd-MM-yyyy HH:mm:ss")}
                 </p>
                 <h1 className="text-body-4 font-normal text-metal-600 dark:text-metal-300">
-                  {mensaje.emisorNombre}
+                  Emisor: {mensaje.emisorNombre}
                 </h1>
                 <p className="text-body-4 font-normal text-metal-600 dark:text-metal-300">
                   {mensaje.texto}

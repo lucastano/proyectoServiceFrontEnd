@@ -206,7 +206,7 @@ async function postMensaje(dispatch, mensaje) {
     if (response.ok) {
       await getMensajes(dispatch, mensaje.reparacionId);
     } else {
-      throw new Error(`HTTP error! status: ${respuesta.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
     throw error;
