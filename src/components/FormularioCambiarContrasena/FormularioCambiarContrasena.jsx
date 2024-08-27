@@ -41,7 +41,7 @@ const FormularioCambiarContrasena = ({ email, rolSesion }) => {
           await cambiarPasswordTecnico(email, contrasena);
         }
         navigate('/');
-        toast("Contraseña modificada correctamente");
+        toast.success("Contraseña modificada correctamente");
       } catch (error) {
         toast.error("Error al modificar contraseña");
       }

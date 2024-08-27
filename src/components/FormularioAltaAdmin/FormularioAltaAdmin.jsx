@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Input, Label, Button, toast } from "keep-react";
-import { postTecnico } from "../../store/effects";
+import { postAdministrador } from "../../store/effects";
 import { useNavigate } from "react-router-dom";
 
-const FormularioAltaTecnico = () => {
+const FormularioAltaAdmin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [nombre, setNombre] = useState("");
@@ -44,7 +44,7 @@ const FormularioAltaTecnico = () => {
       validarContrasena(contrasena) &&
       validarConfirmarContrasena(contrasena, confirmarContrasena)
     ) {
-      const nuevoTecnico = {
+      const nuevoAdmin = {
         nombre: nombre,
         apellido: apellido,
         email: email,
@@ -52,11 +52,12 @@ const FormularioAltaTecnico = () => {
       };
 
       try {
-        await postTecnico(nuevoTecnico, dispatch);
+        await postAdministrador(nuevoAdmin, dispatch);
         navigate('/');
-        toast.success("Tecnico dado de alta correctamente");
+        toast.success("Administrador dado de alta correctamente");
       } catch (error) {
-        toast.error("Error al dar de alta a tecnico");
+        console.log('error: ', error);
+        toast.error("Error al dar de alta a administrador");
       }
     } else {
       if (!validarNombreApellido(nombre)) {
@@ -103,7 +104,7 @@ const FormularioAltaTecnico = () => {
     <>
       <div className="rounded border p-8 shadow-md text-left ml-16">
         <h2 className="mb-8 text-body-1 font-medium flex justify-center">
-          Alta Técnico
+          Alta Administrador
         </h2>
         <div className="mb-4 space-y-2">
           <Label htmlFor="email">Email: </Label>
@@ -156,7 +157,7 @@ const FormularioAltaTecnico = () => {
             className="mt-8"
             onClick={enviarFormulario}
           >
-            Registrar tecnico
+            Registrar administrador
           </Button>
         </div>
       </div>
@@ -164,4 +165,4 @@ const FormularioAltaTecnico = () => {
   );
 };
 
-export default FormularioAltaTecnico;
+export default FormularioAltaAdmin;

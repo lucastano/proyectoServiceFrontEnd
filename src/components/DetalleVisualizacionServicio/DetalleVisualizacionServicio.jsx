@@ -25,7 +25,7 @@ export const DetalleVisualizacionServicio = ({ servicio }) => {
   } = servicio;
 
   const tecnico = useTecnicoPorId(tecnicoId);
-
+  
   const existeFechaPromesaPresupuesto = () => {
     const fechaServicio = new Date(fecha);
     const fechaPromesaPresupuesto = new Date(servicio.fechaPromesaPresupuesto);

@@ -15,6 +15,7 @@ import {
   TRAER_REPARACIONES_EXITO,
   ALTA_FALLA_EXITO,
   TRAER_FALLAS_EXITO,
+  TRAER_ADMINS_EXITO,
 } from "./actions";
 
 const initialState = {
@@ -77,6 +78,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         tecnicos: action.payload,
       };
+    case TRAER_ADMINS_EXITO:
+      return {
+        ...state,
+        admins: action.payload,
+    };
     case LOGIN_EXITO:
       return {
         ...state,
@@ -91,7 +97,6 @@ const reducer = (state = initialState, action) => {
         mensajes: [],
         productos: [],
         fallas: [],
-        ordenReparacion: null,
         sesion: null,
       };
     case ALTA_FALLA_EXITO:

@@ -45,7 +45,7 @@ const FormularioEditarServicio = ({ servicio }) => {
     try {
       await putServicio(dispatch, servicioEditado);
       navigate("/serviciostecnico");
-      toast("Edicion de servicio realizada correctamente");
+      toast.success("Edicion de servicio realizada correctamente");
     } catch (error) {
       toast.error("Error al modificar servicio");
     }

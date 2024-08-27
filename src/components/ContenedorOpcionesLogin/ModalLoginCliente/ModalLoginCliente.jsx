@@ -12,9 +12,10 @@ import {
   ModalHeader,
   ModalFooter,
   ModalContent,
-  ModalTitle
+  ModalTitle,
+  Spinner,
 } from "keep-react";
-import { login } from "../../../store/effects";
+import { login, getTecnicos } from "../../../store/effects";
 import { useNavigate } from "react-router-dom";
 
 export const ModalLoginCliente = () => {
@@ -22,6 +23,7 @@ export const ModalLoginCliente = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const manejarCambioEmail = (evento) => {
     setEmail(evento.target.value);
@@ -39,11 +41,15 @@ export const ModalLoginCliente = () => {
     };
 
     try {
+      setIsLoading(true);
       await login(usuarioParaLogin, dispatch);
+      await getTecnicos(dispatch);
       navigate("/servicios");
-      toast("Login exitoso");
+      toast.success("Login exitoso");
     } catch (error) {
       toast.error("Error al iniciar sesión");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,9 +63,7 @@ export const ModalLoginCliente = () => {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <ModalTitle>
-                Ingreso de cliente
-              </ModalTitle>
+              <ModalTitle>Ingreso de cliente</ModalTitle>
               <form className="mx-auto max-w-md space-y-2 p-4">
                 <fieldset className="space-y-1">
                   <Label htmlFor="email">Email: </Label>
@@ -80,14 +84,22 @@ export const ModalLoginCliente = () => {
             </div>
           </ModalHeader>
           <ModalFooter>
-            <ModalClose asChild>
-              <Button variant="outline" color="secondary" size="sm">
-                Cerrar
-              </Button>
-            </ModalClose>
-            <Button onClick={realizarLoginCliente} size="sm">
-              Ingresar
-            </Button>
+            {isLoading ? (
+              <>
+                <Spinner color="info" size="xl" />
+              </>
+            ) : (
+              <>
+                <ModalClose asChild>
+                  <Button variant="outline" color="secondary" size="sm">
+                    Cerrar
+                  </Button>
+                </ModalClose>
+                <Button onClick={realizarLoginCliente} size="sm">
+                  Ingresar
+                </Button>
+              </>
+            )}
           </ModalFooter>
         </ModalContent>
       </ModalBody>

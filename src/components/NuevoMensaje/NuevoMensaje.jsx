@@ -30,7 +30,7 @@ function NuevoMensaje({ servicio }) {
     try {
       await postMensaje(dispatch, nuevoMensaje);
       setDescripcion("");
-      toast("Mensaje enviado correctamente");
+      toast.success("Mensaje enviado correctamente");
     } catch (error) {
       toast.error("Error al enviar mensaje");
     }

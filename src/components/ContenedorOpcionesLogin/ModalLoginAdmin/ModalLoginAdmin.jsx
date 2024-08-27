@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Modal, Button, Label, Input, toast, ModalAction, ModalBody, ModalClose, ModalHeader, ModalFooter, ModalContent, ModalTitle } from "keep-react";
+import {
+  Modal,
+  Button,
+  Label,
+  Input,
+  toast,
+  ModalAction,
+  ModalBody,
+  ModalClose,
+  ModalHeader,
+  ModalFooter,
+  ModalContent,
+  ModalTitle,
+  Spinner,
+} from "keep-react";
 import { getClientes, login, getProductos } from "../../../store/effects";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +23,7 @@ export const ModalLoginAdmin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const manejarCambioEmail = (evento) => {
     setEmail(evento.target.value);
@@ -24,16 +39,17 @@ export const ModalLoginAdmin = () => {
       password: contrasena,
       rol: "Administrador",
     };
-  
+
     try {
+      setIsLoading(true);
       await login(usuarioParaLogin, dispatch);
       await traerProductos();
       await traerClientes();
       navigate("/metricas");
-      toast("Login exitoso");
+      toast.success("Login exitoso");
     } catch (error) {
       toast.error("Error al iniciar sesión");
-    }   
+    }
   };
 
   const traerProductos = async () => {
@@ -41,9 +57,9 @@ export const ModalLoginAdmin = () => {
       await getProductos(dispatch);
     } catch (error) {
       toast.error("No se pudo obtener productos");
-  }
-};
-  
+    }
+  };
+
   const traerClientes = async () => {
     try {
       await getClientes(dispatch);
@@ -62,9 +78,7 @@ export const ModalLoginAdmin = () => {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <ModalTitle>
-                Ingreso de administrador
-              </ModalTitle>
+              <ModalTitle>Ingreso de administrador</ModalTitle>
               <form className="mx-auto max-w-md space-y-2 p-4">
                 <fieldset className="space-y-1">
                   <Label htmlFor="email">Email: </Label>
@@ -85,18 +99,20 @@ export const ModalLoginAdmin = () => {
             </div>
           </ModalHeader>
           <ModalFooter>
-            <ModalClose asChild>
-              <Button
-                variant="outline"
-                color="secondary"
-                size="sm"
-              >
-                Cerrar
-              </Button>
-            </ModalClose>
-              <Button onClick={realizarLoginAdmin} size="sm">
-                Ingresar
-              </Button>
+            {isLoading ? (
+              <><Spinner color="info" size="xl" /></>
+            ) : (
+              <>
+                <ModalClose asChild>
+                  <Button variant="outline" color="secondary" size="sm">
+                    Cerrar
+                  </Button>
+                </ModalClose>
+                <Button onClick={realizarLoginAdmin} size="sm">
+                  Ingresar
+                </Button>
+              </>
+            )}
           </ModalFooter>
         </ModalContent>
       </ModalBody>

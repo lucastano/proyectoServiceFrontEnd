@@ -13,6 +13,7 @@ import {
   ModalFooter,
   ModalContent,
   ModalTitle,
+  Spinner,
 } from "keep-react";
 import { login, getClientes, getProductos } from "../../../store/effects";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +24,7 @@ export const ModalLoginTecnico = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   
   const traerClientes = async () => {
     try {
@@ -57,14 +59,17 @@ export const ModalLoginTecnico = () => {
     };
   
     try {
+      setIsLoading(true);
       await login(usuarioParaLogin, dispatch);
       await traerClientes();
       await traerProductos();
       navigate("/serviciostecnico");
-      toast("Login exitoso");
+      toast.success("Login exitoso");
     } catch (error) {
       toast.error("Error al iniciar sesión");
-    }   
+    } finally {
+      setIsLoading(false);
+    }
 
   };
 
@@ -101,18 +106,22 @@ export const ModalLoginTecnico = () => {
             </div>
           </ModalHeader>
           <ModalFooter>
-            <ModalClose asChild>
-              <Button
-                variant="outline"
-                color="secondary"
-                size="sm"
-              >
-                Cerrar
-              </Button>
-            </ModalClose>
-              <Button onClick={realizarLoginTecnico} size="sm">
-                Ingresar
-              </Button>
+            {isLoading ? (
+              <>
+                <Spinner color="info" size="xl" />
+              </>
+            ) : (
+              <>
+                <ModalClose asChild>
+                  <Button variant="outline" color="secondary" size="sm">
+                    Cerrar
+                  </Button>
+                </ModalClose>
+                <Button onClick={realizarLoginTecnico} size="sm">
+                  Ingresar
+                </Button>
+              </>
+            )}
           </ModalFooter>
         </ModalContent>
       </ModalBody>

@@ -30,7 +30,7 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
   const esTecnico = rolSesion === "Tecnico";
 
   return (
-    <Sidebar className="h-screen">
+    <Sidebar className="h-screen overflow-y-auto">
       <SidebarBody>
         <SidebarList>
           <img
@@ -118,10 +118,22 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
                   Nuevo Tecnico
                 </SidebarItem>
               </Link>
+              <Link to="/nuevoadmin">
+                <SidebarItem>
+                  <UserPlus size={20} />
+                  Nuevo Administrador
+                </SidebarItem>
+              </Link>
               <Link to="/metricas">
                 <SidebarItem>
                   <ChartPieSlice size={20} />
                   Metricas
+                </SidebarItem>
+              </Link>
+              <Link to="/admins">
+                <SidebarItem>
+                  <Users size={20} />
+                  Admins
                 </SidebarItem>
               </Link>
             </>

@@ -18,7 +18,7 @@ const ModalRecuperarPassword = () => {
         await recuperarPasswordAdmin(mail);
       }
       navigate('/');
-      toast('Solicitud enviada. Si no aparece email, revise casilla de spam');
+      toast.success('Solicitud enviada. Si no aparece email, revise casilla de spam');
     } catch (error) {
       toast.error("Error al solicitar contraseña");
     } 

@@ -8,6 +8,7 @@ import {
   toast,
   Label,
   Input,
+  Spinner,
 } from "keep-react";
 import { useDispatch } from "react-redux";
 import { format } from "date-fns";
@@ -22,6 +23,7 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
   const [manoDeObra, setManoDeObra] = useState(0);
   const [descripcion, setDescripcion] = useState("");
   const [fechaPromesaEntrega, setFechaPromesaEntrega] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const manejarCambioManoDeObra = (e) => {
     const esDigitoValido = /^\d+$/.test(e.target.value);
@@ -37,7 +39,7 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
 
   const validarPresupuesto = () => {
     return manoDeObra > 0 && descripcion.length > 0 && fechaPromesaEntrega;
-  }
+  };
 
   const manejarClickIngresoPresupuesto = async () => {
     if (!validarPresupuesto()) {
@@ -52,13 +54,17 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
     };
 
     try {
+      setIsLoading(true);
       await postPresupuestacionReparacion(presupuesto, dispatch);
+
       navigate("/serviciostecnico");
-      toast("Presupuesto ingresado", {
+      toast.success("Presupuesto ingresado", {
         description: "El presupuesto ha sido ingresado correctamente",
       });
     } catch (error) {
       toast.error("Ha habido un error al ingresar el presupuesto");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -117,13 +123,19 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
             </Popover>
           </fieldset>
         </div>
+
         <Button
           size="sm"
           color="secondary"
           type="submit"
           onClick={manejarClickIngresoPresupuesto}
+          disabled={isLoading}
         >
-          Ingresar presupuesto
+          {isLoading ? (
+            <Spinner color="info" size="xl" />
+          ) : (
+            "Ingresar presupuesto"
+          )}
         </Button>
       </div>
     </>

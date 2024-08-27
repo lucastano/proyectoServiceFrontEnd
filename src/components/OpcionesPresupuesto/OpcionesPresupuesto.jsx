@@ -13,7 +13,7 @@ const OpcionesPresupuesto = ({ servicio }) => {
     try {
       await postAceptarPresupuesto(servicio, dispatch);
       navigate('/serviciostecnico');
-      toast("Presupuesto aceptado", {
+      toast.success("Presupuesto aceptado", {
         description: "El presupuesto ha sido aceptado correctamente",
       });
     } catch (error) {

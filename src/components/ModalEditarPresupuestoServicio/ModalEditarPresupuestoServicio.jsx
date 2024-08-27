@@ -46,7 +46,7 @@ const ModalEditarPresupuestoServicio = ({servicio, disabled}) => {
   
     try {
       await putPresupuesto(dispatch, reparacionEditada);
-      toast("Edicion de presupuesto realizada correctamente");
+      toast.success("Edicion de presupuesto realizada correctamente");
     } catch (error) {
       toast.error("Error al modificar presupuesto");
     }

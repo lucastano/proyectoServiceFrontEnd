@@ -33,7 +33,7 @@ const ModalRechazarPresupuesto = ({servicio, noTienePresupuesto}) => {
     try {
       await postRechazarPresupuesto(rechazoPresupuesto, dispatch);
       navigate('/');
-      toast("Presupuesto rechazado", {
+      toast.success("Presupuesto rechazado", {
         description: "El presupuesto ha sido rechazado correctamente",
       });
     } catch (error) {

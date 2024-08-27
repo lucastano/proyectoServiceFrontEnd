@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
 import MetricasNegocio from "../components/MetricasNegocio/MetricasNegocio";
-import { getReparaciones, getTecnicos } from "../store/effects";
+import { getReparaciones, getTecnicos, getAdministradores } from "../store/effects";
 import { Spinner, toast } from "keep-react";
 
 const PantallaLandingAdmin = () => {
@@ -34,9 +34,19 @@ const PantallaLandingAdmin = () => {
       }
     };
 
+    const fetchAdministradores = async () => {
+      try {
+        await getAdministradores(dispatch);
+        setLoading(false);
+      } catch (error) {
+        toast.error("No se pudo obtener administradores");
+      }
+    }
+
     if (rolSesion && rolSesion !== "Cliente" && emailSesion) {
       fetchTecnicos();
       fetchReparaciones();
+      fetchAdministradores();
     }
   }, [rolSesion, emailSesion, dispatch]);
 

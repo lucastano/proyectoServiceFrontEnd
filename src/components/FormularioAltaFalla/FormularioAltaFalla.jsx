@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useProductos } from "../../store/selectors";
-import {toast, Label, Textarea, Button } from "keep-react"
+import { toast, Label, Textarea, Button, Spinner } from "keep-react"
 import { postFalla } from "../../store/effects";
 
 const FormularioAltaFalla = () => {
   const dispatch = useDispatch();
   const productos = useProductos();
+  const navigate = useNavigate();
   const [productoId, setProductoId] = useState(null);
   const [descripcionFalla, setDescripcionFalla] = useState("");
   const [solucion, setSolucion] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const manejarCambioDescripcion = (event) => {
     setDescripcionFalla(event.target.value);
@@ -41,10 +44,14 @@ const FormularioAltaFalla = () => {
       };
 
       try {
+        setIsLoading(true);
         await postFalla(nuevaFalla, dispatch);
-        toast("Falla dada de alta correctamente");
+        navigate('/fallas');
+        toast.success("Falla dada de alta correctamente");
       } catch (error) {
         toast.error("Error al dar de alta la falla");
+      } finally {
+        setIsLoading(false);
       }
     } else {
       toast.error("Error: Datos invalidos");
@@ -89,8 +96,8 @@ const FormularioAltaFalla = () => {
             onChange={(e) => manejarCambioSolucion(e)}
           />
         </div>
-        <Button size="sm" color="secondary" type="submit" onClick={enviarFormulario}>
-          Registrar Falla
+        <Button size="sm" color="secondary" type="submit" onClick={enviarFormulario} disabled={isLoading}>
+          {isLoading ? (<><Spinner color="info" size="xl" /></>) : "Registrar Falla"}
         </Button>
     </div>
   );

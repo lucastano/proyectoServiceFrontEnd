@@ -63,7 +63,13 @@ const getClientes = state => state.clientes;
 export const useClientes = () => {
     const clientes = useSelector(getClientes); 
     return clientes;
+}
 
+const getAdmins = state => state.admins;
+
+export const useAdmins = () => {
+    const admins = useSelector(getAdmins); 
+    return admins;
 }
 
 const getClientePorCi = (state, ci) => getClientes(state)?.find(cliente => cliente.ci == ci);
@@ -158,7 +164,6 @@ export const useTecnicosReparaciones = () => {
     servicios !== null && servicios.forEach(servicio => {
         if(servicio.tecnicoId) {
             let tecnicoTemp = tecnicos.find(tecnico => Number(tecnico.id) === Number(servicio.tecnicoId));
-            console.log(tecnicoTemp);
             arrayTecnicos.push(servicio.tecnicoId + " " + tecnicoTemp.nombre + " " + tecnicoTemp.apellido);
         }
     });

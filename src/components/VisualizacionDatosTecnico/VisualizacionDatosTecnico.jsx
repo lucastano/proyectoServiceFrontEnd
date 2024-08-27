@@ -14,10 +14,16 @@ import {
   useServiciosPorTecnico,
   useTecnicoPorId,
 } from "../../store/selectors";
+import { useNavigate } from "react-router-dom";
 
 const VisualizacionDatosTecnico = ({ idTecnico }) => {
   const tecnico = useTecnicoPorId(idTecnico);
   const servicios = useServiciosPorTecnico(idTecnico);
+  const navigate = useNavigate();
+
+  const manejarClickDetalle = (id) => {
+    navigate(`/servicios/${id}`);
+  };
 
   const cantidadReparaciones = servicios.length;
   const cantidadReparacionesSinReparar = servicios.filter(
@@ -58,7 +64,7 @@ const VisualizacionDatosTecnico = ({ idTecnico }) => {
           </div>
         </div>
         <Divider />
-        <div className="my-16">
+        <div className="my-16 overflow-y-auto h-[300px]">
           <Table>
             <TableHeader>
               <TableRow>

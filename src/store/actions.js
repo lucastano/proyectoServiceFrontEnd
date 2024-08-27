@@ -170,35 +170,6 @@ export const altaTecnicoExito = (tecnico) => {
     payload: tecnico,
   };
 };
-/*
-export const traerServicioExito = (servicio) => {
-  return {
-    type: TRAER_SERVICIO_EXITO,
-    payload: servicio,
-  };
-};
-
-export const traerServiciosClienteExito = (servicios) => {
-  return {
-    type: TRAER_SERVICIOS_CLIENTE_EXITO,
-    payload: servicios,
-  };
-};
-
-export const traerServiciosExito = (servicios) => {
-  return {
-    type: TRAER_SERVICIOS_EXITO,
-    payload: servicios,
-  };
-};
-
-export const altaServicioExito = (ordenServicio) => {
-  return {
-    type: ALTA_SERVICIO_EXITO,
-    payload: ordenServicio,
-  };
-};
-*/
 
 export const traerClienteExito = (cliente) => {
   return {

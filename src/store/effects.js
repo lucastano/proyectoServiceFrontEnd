@@ -292,10 +292,10 @@ async function getAdministradores(dispatch) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const datos = await respuesta.json();
-      dispatch(traerAdminsExito(datos));
+      console.log('datos: ', datos);
+      dispatch(traerAdminsExito(datos.administradores));
     }
   } catch (error) {
-    console.error("Error al obtener administradores:", error);
     return error;
   }
 }
@@ -794,8 +794,7 @@ async function postTecnico(nuevoTecnico, dispatch) {
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(altaTecnicoExito(datos));
+      await getTecnicos(dispatch);
     }
   } catch (error) {
     return error;
@@ -806,7 +805,7 @@ async function postTecnico(nuevoTecnico, dispatch) {
 async function postAdministrador(nuevoAdmin, dispatch) {
   const url = `${apiUrl}/api/Administradores`;
   const data = JSON.stringify(nuevoAdmin);
-
+  const token = localStorage.getItem("token");
   const opciones = {
     method: "POST",
     headers: {
@@ -822,8 +821,7 @@ async function postAdministrador(nuevoAdmin, dispatch) {
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(altaAdminExito(datos));
+      await getAdministradores(dispatch);
     }
   } catch (error) {
     return error;

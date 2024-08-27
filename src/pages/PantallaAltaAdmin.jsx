@@ -1,6 +1,6 @@
 import React from "react";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
-import FormularioAltaTecnico from "../components/FormularioAltaTecnico/FormularioAltaTecnico";
+import FormularioAltaAdmin from "../components/FormularioAltaAdmin/FormularioAltaAdmin";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const PantallaAltaTecnico = () => {
       <ComponenteNavbar />
       </div>
       <div className="flex justify-center w-3/4">
-        <FormularioAltaTecnico />
+        <FormularioAltaAdmin />
       </div>
     </div>
   );

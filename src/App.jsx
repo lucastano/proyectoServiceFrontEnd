@@ -19,6 +19,8 @@ import PantallaDetalleServicio from "./pages/PantallaDetalleServicio";
 import PantallaHistoriaClinica from "./pages/PantallaHistoriaClinica";
 import PantallaRecuperarContrasena from "./pages/PantallaRecuperarContrasena";
 import PantallaListadoClientes from "./pages/PantallaListadoClientes";
+import PantallaAltaAdmin from "./pages/PantallaAltaAdmin";
+import PantallaListadoAdmins from "./pages/PantallaListadoAdmins";
 
 const ProtectedRoute = ({ roles, children }) => {
   const rolSesion = useRolSesion();
@@ -39,10 +41,6 @@ const ProtectedRoute = ({ roles, children }) => {
 };
 
 function App() {
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-  }, []);
   return (
     <div className="App">
       <Routes>
@@ -105,6 +103,14 @@ function App() {
           }
         />
         <Route
+          path="/nuevoadmin"
+          element={
+            <ProtectedRoute roles={["Administrador"]}>
+              <PantallaAltaAdmin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/tecnico/:idTecnico"
           element={
             <ProtectedRoute roles={["Administrador"]}>
@@ -115,7 +121,7 @@ function App() {
         <Route
           path="/ingresarPresupuesto/:idServicio"
           element={
-            <ProtectedRoute roles={["Tecnico"]}>
+            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
               <PantallaIngresarPresupuesto />
             </ProtectedRoute>
           }
@@ -165,6 +171,14 @@ function App() {
           element={
             <ProtectedRoute roles={["Administrador", "Tecnico"]}>
               <PantallaListadoClientes />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admins"
+          element={
+            <ProtectedRoute roles={["Administrador"]}>
+              <PantallaListadoAdmins />
             </ProtectedRoute>
           }
         />

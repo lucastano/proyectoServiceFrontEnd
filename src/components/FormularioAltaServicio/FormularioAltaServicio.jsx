@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   DatePicker,
+  Spinner
 } from "keep-react";
 import {
   useIdSesion,
@@ -41,6 +42,7 @@ const FormularioAltaServicio = () => {
   const [fechaPromesaPresupuesto, setFechaPromesaPresupuesto] = useState(null);
   const [usuarioEncontrado, setUsuarioEncontrado] = useState(false);
   const [seBuscoUsuario, setSeBuscoUsuario] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const generarOrdenReparacion = (blob) => {
     if (blob == null) return;
@@ -189,7 +191,7 @@ const FormularioAltaServicio = () => {
 
     try {
       await postCliente(nuevoUsuario, dispatch);
-      toast("Cliente dado de alta correctamente");
+      toast.success("Cliente dado de alta correctamente");
     } catch (error) {
       toast.error("Error al dar de alta el cliente");
     }
@@ -218,12 +220,15 @@ const FormularioAltaServicio = () => {
       };
 
       try {
+        setIsLoading(true);
         const blob = await postReparacion(nuevaReparacion);
         generarOrdenReparacion(blob);
         navigate("/serviciostecnico");
-        toast("Reparacion dada de alta correctamente");
+        toast.success("Reparacion dada de alta correctamente");
       } catch (error) {
         toast.error("Error al dar de alta la reparacion");
+      } finally {
+        setIsLoading(false);
       }
     } else {
       toast.error("Error: Datos invalidos");
@@ -374,7 +379,7 @@ const FormularioAltaServicio = () => {
           type="submit"
           onClick={enviarFormulario}
         >
-          Registrar Servicio
+          {isLoading ? (<><Spinner color="info" size="xl" /></>) : "Registrar servicio"}
         </Button>
       </div>
     </>

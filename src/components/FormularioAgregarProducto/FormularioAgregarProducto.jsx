@@ -58,7 +58,7 @@ function FormularioAgregarProducto() {
 
     try {
       await postProducto(dispatch, nuevoProducto);
-      toast("Producto ingresado", {
+      toast.success("Producto ingresado", {
         description: "El producto ha sido ingresado correctamente",
       });
     } catch (error) {

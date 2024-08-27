@@ -19,7 +19,7 @@ const ModalTerminarServicio = ({servicio}) => {
     try {
       await postTerminarReparacion(terminoReparacion, dispatch);
       navigate('/');
-      toast("Servicio finalizado");
+      toast.success("Servicio finalizado");
     } catch (error) {
       toast.error("Ha habido un error al finalizar el servicio");
     }
