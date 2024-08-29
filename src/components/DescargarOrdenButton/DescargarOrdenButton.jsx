@@ -5,7 +5,7 @@ import { getOrden } from "../../dataFetcher";
 function DescargarOrdenButton({ servicio }) {
   const manejarGenerarOrden = async () => {
     const blob = await getOrden(servicio.id);
-
+    
     if (!blob) {
       toast.error("Error al generar orden");
       return;

@@ -6,16 +6,13 @@ import "./index.css";
 import { ToastWrapper } from "keep-react";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "./store/store";
-import { ThemeProvider } from "../src/components/theme-provider";
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <App />
-        </ThemeProvider>
       </Provider>
       <ToastWrapper
         toastOptions={{

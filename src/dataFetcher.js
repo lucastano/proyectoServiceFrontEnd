@@ -3,13 +3,14 @@ import { config } from "../config";
 const { apiUrl } = config;
 
 async function getOrden(idServicio) {
-  const url = `${apiUrl}/api/Reparaciones/GenerarOrdenDeServicio?id=${idServicio}`;
+  const url = `${apiUrl}/api/Reparaciones/GenerarOrdenDeServicio?id=${Number(idServicio)}`;
   const token = localStorage.getItem("token");
 
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
+        accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
