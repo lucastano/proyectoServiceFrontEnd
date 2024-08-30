@@ -34,7 +34,21 @@ const FormularioEditarServicio = ({ servicio }) => {
     setNumeroSerie(e.target.value);
   };
 
+  const validarFormulario = () => {
+    return (
+      descripcion.length > 0 &&
+      numeroSerie.length > 0 &&
+      fechaPromesaPresupuesto
+    );
+  };
+
   const editarServicio = async () => {
+
+    if (!validarFormulario()) {
+      toast.error("Por favor complete todos los campos con datos válidos");
+      return;
+    }
+
     const servicioEditado = {
       ...servicio,
       fechaPromesaPresupuesto: fechaPromesaPresupuesto,
@@ -71,7 +85,7 @@ const FormularioEditarServicio = ({ servicio }) => {
               <Textarea
                 id="descripcion"
                 placeholder={descripcion}
-                className="ps-4"
+                className="ps-4 text-black"
                 onChange={(e) => manejarCambioDescripcion(e)}
               />
             </div>

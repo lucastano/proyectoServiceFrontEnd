@@ -26,24 +26,25 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const manejarCambioManoDeObra = (e) => {
-    const esDigitoValido = /^\d+$/.test(e.target.value);
+    const esDigitoValido = /^[0-9]$/.test(e.target.value);
 
     if (esDigitoValido) {
-      setManoDeObra(e.target.value);
+        setManoDeObra(e.target.value);
     }
-  };
+};
 
   const manejarCambioDescripcion = (e) => {
     setDescripcion(e.target.value);
   };
 
   const validarPresupuesto = () => {
-    return manoDeObra > 0 && descripcion.length > 0 && fechaPromesaEntrega;
+    const manoDeObraIsNumeric = /^\d+$/.test(manoDeObra);
+    return manoDeObraIsNumeric && manoDeObra > 0 && descripcion.length > 0 && fechaPromesaEntrega;
   };
 
   const manejarClickIngresoPresupuesto = async () => {
     if (!validarPresupuesto()) {
-      toast.error("Por favor complete todos los campos");
+      toast.error("Por favor complete todos los campos con datos válidos");
       return;
     }
     const presupuesto = {

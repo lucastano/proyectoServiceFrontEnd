@@ -13,11 +13,11 @@ import {
   Button,
   ModalContent,
   toast,
-  ModalTitle
+  ModalTitle,
 } from "keep-react";
 import { putPresupuesto } from "../../store/effects";
 
-const ModalEditarPresupuestoServicio = ({servicio, disabled}) => {
+const ModalEditarPresupuestoServicio = ({ servicio, disabled }) => {
   const dispatch = useDispatch();
 
   const [costo, setCosto] = useState(servicio.costo);
@@ -37,36 +37,48 @@ const ModalEditarPresupuestoServicio = ({servicio, disabled}) => {
     setDescripcionPresupuesto(e.target.value);
   };
 
+  const validarPresupuesto = () => {
+    const manoDeObraIsNumeric = /^\d+$/.test(costo);
+    return (
+      manoDeObraIsNumeric && costo > 0 && descripcionPresupuesto.length > 0
+    );
+  };
+
   const editarPresupuesto = async () => {
     const reparacionEditada = {
       ...servicio,
       costo: costo,
       descripcion: descripcionPresupuesto,
     };
-  
+
+    if (!validarPresupuesto()) {
+      toast.error("Por favor complete todos los campos con datos válidos");
+      return;
+    }
+
     try {
       await putPresupuesto(dispatch, reparacionEditada);
       toast.success("Edicion de presupuesto realizada correctamente");
     } catch (error) {
       toast.error("Error al modificar presupuesto");
     }
-  
+
     document.getElementById("modalButton").click();
   };
 
   return (
     <Modal>
       <ModalAction asChild>
-        <Button size="xs" id="modalButton" disabled={disabled}>Editar presupuesto</Button>
+        <Button size="xs" id="modalButton" disabled={disabled}>
+          Editar presupuesto
+        </Button>
       </ModalAction>
       <ModalBody className="space-y-3">
         <ModalContent>
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <ModalTitle>
-                Editar presupuesto
-              </ModalTitle>
+              <ModalTitle>Editar presupuesto</ModalTitle>
               <div className="mx-auto max-w-md space-y-2 p-4">
                 <div className="space-y-1">
                   <Label htmlFor="costo">Costo: </Label>

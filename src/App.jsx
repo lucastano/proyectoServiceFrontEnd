@@ -129,7 +129,7 @@ function App() {
         <Route
           path="/editarServicio/:idServicio"
           element={
-            <ProtectedRoute roles={["Tecnico"]}>
+            <ProtectedRoute roles={["Tecnico", "Administrador"]}>
               <PantallaEditarServicio />
             </ProtectedRoute>
           }
