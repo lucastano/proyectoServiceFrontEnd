@@ -81,7 +81,7 @@ async function recuperarPasswordAdmin(email) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -103,7 +103,7 @@ async function recuperarPasswordTecnico(email) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
