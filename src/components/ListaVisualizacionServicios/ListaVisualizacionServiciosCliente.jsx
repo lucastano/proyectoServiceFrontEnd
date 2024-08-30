@@ -65,9 +65,11 @@ const ListaVisualizacionServiciosCliente = () => {
 
       return servicios.filter((servicio) => {
         const servicioFecha = new Date(servicio.fecha);
+        const fechaFiltroToDateEndOfDay = new Date(fechaFiltroToDate);
+        fechaFiltroToDateEndOfDay.setHours(23, 59, 59, 999);
         return (
           servicioFecha >= fechaFiltroFromDate &&
-          servicioFecha <= fechaFiltroToDate
+          servicioFecha <= fechaFiltroToDateEndOfDay
         );
       });
     } else if (tipoFiltro == "Estado") {
