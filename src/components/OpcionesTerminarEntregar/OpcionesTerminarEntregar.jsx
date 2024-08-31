@@ -41,7 +41,6 @@ const OpcionesTerminarEntregar = ({ servicio }) => {
         description: "El servicio ha sido entregado al cliente",
       });
     } catch (error) {
-      console.log('error: ', error);
       toast.error("Ha habido un error al realizar la entrega");
     }
   };

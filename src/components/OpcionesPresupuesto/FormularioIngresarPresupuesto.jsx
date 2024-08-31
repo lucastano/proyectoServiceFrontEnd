@@ -26,7 +26,7 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const manejarCambioManoDeObra = (e) => {
-    const esDigitoValido = /^[0-9]$/.test(e.target.value);
+    const esDigitoValido = /^[0-9]+$/.test(e.target.value);
 
     if (esDigitoValido) {
         setManoDeObra(e.target.value);
@@ -39,7 +39,7 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
 
   const validarPresupuesto = () => {
     const manoDeObraIsNumeric = /^\d+$/.test(manoDeObra);
-    return manoDeObraIsNumeric && manoDeObra > 0 && descripcion.length > 0 && fechaPromesaEntrega;
+    return manoDeObraIsNumeric && Number(manoDeObra) > 0 && descripcion.length > 0 && fechaPromesaEntrega;
   };
 
   const manejarClickIngresoPresupuesto = async () => {
