@@ -796,7 +796,7 @@ async function postTecnico(nuevoTecnico, dispatch) {
       await getTecnicos(dispatch);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
