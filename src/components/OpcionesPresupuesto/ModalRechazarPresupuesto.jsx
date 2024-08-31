@@ -25,7 +25,7 @@ const ModalRechazarPresupuesto = ({ servicio, noTienePresupuesto }) => {
   const [razon, setRazon] = useState("");
 
   const manejarCambioCosto = (e) => {
-    const esDigitoValido = /^[0-9]$/.test(e.target.value);
+    const esDigitoValido = /^[0-9]+$/.test(e.target.value);
 
     if (esDigitoValido) {
       setCosto(e.target.value);

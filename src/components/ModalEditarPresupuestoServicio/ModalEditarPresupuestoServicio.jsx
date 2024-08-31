@@ -26,7 +26,7 @@ const ModalEditarPresupuestoServicio = ({ servicio, disabled }) => {
   );
 
   const manejarCambioCosto = (e) => {
-    const esDigitoValido = /^\d+$/.test(e.target.value);
+    const esDigitoValido = /^[0-9]+$/.test(e.target.value);
 
     if (esDigitoValido) {
       setCosto(e.target.value);
