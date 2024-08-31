@@ -823,7 +823,7 @@ async function postAdministrador(nuevoAdmin, dispatch) {
       await getAdministradores(dispatch);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
