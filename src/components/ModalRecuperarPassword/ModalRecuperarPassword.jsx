@@ -53,7 +53,7 @@ const ModalRecuperarPassword = () => {
           <ModalClose className="absolute right-4 top-4" />
           <ModalHeader>
             <div className="!mb-6">
-              <ModalTitle>Editar presupuesto</ModalTitle>
+              <ModalTitle>Recuperar contraseña</ModalTitle>
               <div className="mt-4">
                 <ModalDescription>
                   Recuerde que si es cliente, su contraseña es su documento de

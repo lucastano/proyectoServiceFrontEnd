@@ -30,10 +30,15 @@ const FormularioCambiarContrasena = ({ email, rolSesion }) => {
   const enviarFormulario = async (evento) => {
     evento.preventDefault();
 
-    if (
-      validarContrasena(contrasena) &&
-      validarConfirmarContrasena(contrasena, confirmarContrasena)
-    ) {
+    if (!validarContrasena(contrasena)) {
+      toast.error("La contraseña no cumple con los requisitos");
+      return;
+    }
+    if (!validarConfirmarContrasena(contrasena, confirmarContrasena)) {
+      toast.error("Las contraseñas no coinciden");
+      return;
+    }
+
       try {
         if (rolSesion === "Administrador") {
           await cambiarPasswordAdmin(email, contrasena);
@@ -45,9 +50,6 @@ const FormularioCambiarContrasena = ({ email, rolSesion }) => {
       } catch (error) {
         toast.error("Error al modificar contraseña");
       }
-    } else {
-      toast.error("Las contraseñas no coinciden o no cumplen con los requisitos");
-    }
   };
 
   return (

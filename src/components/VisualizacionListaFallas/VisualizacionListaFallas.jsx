@@ -58,7 +58,7 @@ const VisualizacionListaFallas = () => {
             onChange={manejarCambioDescripcion}
           />
         </div>
-        <div>
+        <div className="overflow-y-auto h-[500px]">
           <Table>
             <TableHeader>
               <TableRow>

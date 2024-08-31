@@ -9,7 +9,7 @@ const FormularioAltaFalla = () => {
   const dispatch = useDispatch();
   const productos = useProductos();
   const navigate = useNavigate();
-  const [productoId, setProductoId] = useState(null);
+  const [productoId, setProductoId] = useState(productos.length > 0 ? productos[0].id : null);
   const [descripcionFalla, setDescripcionFalla] = useState("");
   const [solucion, setSolucion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +81,7 @@ const FormularioAltaFalla = () => {
           <Textarea
             id="descripcionFalla"
             placeholder="Escriba una descripcion aqui..."
-            className="ps-4"
+            className="ps-4 text-black"
             onChange={(e) => manejarCambioDescripcion(e)}
           />
         </div>
@@ -92,7 +92,7 @@ const FormularioAltaFalla = () => {
           <Textarea
             id="descripcionSolucion"
             placeholder="Escriba una solución aqui..."
-            className="ps-4"
+            className="ps-4 text-black"
             onChange={(e) => manejarCambioSolucion(e)}
           />
         </div>

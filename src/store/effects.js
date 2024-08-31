@@ -292,7 +292,6 @@ async function getAdministradores(dispatch) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const datos = await respuesta.json();
-      console.log('datos: ', datos);
       dispatch(traerAdminsExito(datos.administradores));
     }
   } catch (error) {

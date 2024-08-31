@@ -31,17 +31,17 @@ const ModalDetalleFalla = ({ item }) => {
               <div className="mx-auto max-w-md space-y-2 p-4">
                 <div className="space-y-1">
                   <Label htmlFor="numeroSerie">Producto: </Label>
-                  <p>
+                  <p className="text-black">
                     {producto.marca} - {producto.modelo} - {producto.version}{" "}
                   </p>
                 </div>
                 <div className="space-y-1 mt-4">
                   <Label htmlFor="falla">Falla: </Label>
-                  <p>{falla}</p>
+                  <p className="text-black">{falla}</p>
                 </div>
                 <div className="space-y-1 mt-4">
                   <Label htmlFor="solucion">Solución: </Label>
-                  <p>{solucion}</p>
+                  <p className="text-black">{solucion}</p>
                 </div>
               </div>
             </div>

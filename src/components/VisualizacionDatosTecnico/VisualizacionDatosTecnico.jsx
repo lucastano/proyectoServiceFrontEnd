@@ -26,11 +26,15 @@ const VisualizacionDatosTecnico = ({ idTecnico }) => {
   };
 
   const cantidadReparaciones = servicios.length;
-  const cantidadReparacionesSinReparar = servicios.filter(
-    (servicio) => servicio.estado === "Terminada" && servicio.costo === 0
+
+  const cantidadReparacionesSinCompletar = servicios.filter(
+    (servicio) => {
+      return servicio.estado !== "Terminada" && servicio.estado !== "Entregada";
+    }
   ).length;
+  
   const cantidadReparacionesRealizadas =
-    cantidadReparaciones - cantidadReparacionesSinReparar;
+    cantidadReparaciones - cantidadReparacionesSinCompletar;
 
   const { nombre, apellido, email } = tecnico;
   return (
@@ -58,7 +62,7 @@ const VisualizacionDatosTecnico = ({ idTecnico }) => {
               <li>Reparaciones totales: {cantidadReparaciones}</li>
               <li>Reparaciones realizadas: {cantidadReparacionesRealizadas}</li>
               <li>
-                Reparaciones sin completar: {cantidadReparacionesSinReparar}
+                Reparaciones sin completar: {cantidadReparacionesSinCompletar}
               </li>
             </ul>
           </div>
