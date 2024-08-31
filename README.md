@@ -1,11 +1,5 @@
-# React + Vite
+Este repositorio contiene todo el contenido FrontEnd para el proyecto final integrador para la carrera de Analista en Tecnologías de la Información de Universidad ORT
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-para instalar browsers para playwright:
-npx playwright install
+# Pasos para ejecución de repositorio:
+1-Ejecutar en consola npm install
+2-Ejecutar npm run dev
