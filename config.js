@@ -1,3 +1,3 @@
 export const config = {
-    apiUrl: 'https://proyectoserviceapirest2024.azurewebsites.net' 
+    apiUrl: 'https://proyectoserviceapirest20240901142836.azurewebsites.net/' 
   };
