@@ -1,25 +1,29 @@
 import React, { useState } from "react";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import HistoriaClinica from "../components/HistoriaClinica/HistoriaClinica";
-import { useRolSesion, useEmailSesion } from "../store/selectors";
-import { Input, Label, Button } from "keep-react";
+import { Input, Label, Button, toast, Spinner } from "keep-react";
+import { getHistoriaClinica } from "../dataFetcher";
 
 export const PantallaHistoriaClinica = () => {
-  const rolSesion = useRolSesion();
-  const emailSesion = useEmailSesion();
   const [numeroSerie, setNumeroSerie] = useState("");
-  const [tempNumeroSerie, setTempNumeroSerie] = useState("");
-
-  if (!rolSesion || rolSesion == "Cliente" || !emailSesion) {
-    return null;
-  }
+  const [historiaClinica, setHistoriaClinica] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const manejarCambioNumeroSerie = (e) => {
-    setTempNumeroSerie(e.target.value);
+    setNumeroSerie(e.target.value);
   };
 
-  const manejarClickBoton = () => {
-    setNumeroSerie(tempNumeroSerie);
+  const manejarClickBoton = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getHistoriaClinica(numeroSerie);
+      setHistoriaClinica(data);
+    } catch (error) {
+      toast.error("No se han conseguido reparaciones para ese numero de serie");
+      setHistoriaClinica(null);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -32,7 +36,9 @@ export const PantallaHistoriaClinica = () => {
           <h2 className="mb-8 text-body-1 font-medium">Ver historia clinica</h2>
           <div className="flex flex-col items-center">
             <div className="flex mb-8 space-x-8">
-              <Label className="inline-block" htmlFor="numeroSerie">Numero de serie: </Label>
+              <Label className="inline-block" htmlFor="numeroSerie">
+                Numero de serie:{" "}
+              </Label>
               <Input
                 id="numeroSerieInput"
                 placeholder="numero de serie"
@@ -46,8 +52,16 @@ export const PantallaHistoriaClinica = () => {
           </div>
         </div>
         <div>
-          {numeroSerie == "" ? null : (
-            <HistoriaClinica numeroSerie={numeroSerie} />
+          {isLoading ? (
+            <>
+              <Spinner color="info" size="xl" />
+            </>
+          ) : null}
+          {historiaClinica == null ? null : (
+            <HistoriaClinica
+              numeroSerie={numeroSerie}
+              historiaClinica={historiaClinica}
+            />
           )}
         </div>
       </div>

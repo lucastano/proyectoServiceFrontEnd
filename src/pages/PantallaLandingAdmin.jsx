@@ -3,7 +3,11 @@ import { useDispatch } from "react-redux";
 import ComponenteNavbar from "../components/ComponenteNavbar/ComponenteNavbar";
 import { useRolSesion, useEmailSesion } from "../store/selectors";
 import MetricasNegocio from "../components/MetricasNegocio/MetricasNegocio";
-import { getReparaciones, getTecnicos, getAdministradores } from "../store/effects";
+import {
+  getReparaciones,
+  getTecnicos,
+  getAdministradores,
+} from "../store/effects";
 import { Spinner, toast } from "keep-react";
 
 const PantallaLandingAdmin = () => {
@@ -16,11 +20,10 @@ const PantallaLandingAdmin = () => {
     return null;
   }
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchReparaciones = async () => {
       try {
         await getReparaciones(dispatch);
-        setLoading(false);
       } catch (error) {
         toast.error("No se pudo obtener reparaciones");
       }
@@ -28,26 +31,22 @@ const PantallaLandingAdmin = () => {
     const fetchTecnicos = async () => {
       try {
         await getTecnicos(dispatch);
-        setLoading(false);
       } catch (error) {
         toast.error("No se pudo obtener tecnicos");
       }
     };
-
+  
     const fetchAdministradores = async () => {
       try {
         await getAdministradores(dispatch);
-        setLoading(false);
       } catch (error) {
         toast.error("No se pudo obtener administradores");
       }
-    }
-
-    if (rolSesion && rolSesion !== "Cliente" && emailSesion) {
-      fetchTecnicos();
-      fetchReparaciones();
-      fetchAdministradores();
-    }
+    };
+  
+    Promise.all([fetchTecnicos(), fetchAdministradores()])
+      .then(() => fetchReparaciones())
+      .then(() => setLoading(false));
   }, [rolSesion, emailSesion, dispatch]);
 
   return (
@@ -56,7 +55,7 @@ const PantallaLandingAdmin = () => {
         <ComponenteNavbar />
       </div>
       <div className="flex justify-center w-3/4">
-      {loading ? (<Spinner color="info" size="lg" />) : (<MetricasNegocio />)}
+        {loading ? <Spinner color="info" size="lg" /> : <MetricasNegocio />}
       </div>
     </div>
   );

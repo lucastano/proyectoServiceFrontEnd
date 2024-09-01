@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 const ModalRechazarPresupuesto = ({ servicio, noTienePresupuesto }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [costo, setCosto] = useState(0);
+  const [costo, setCosto] = useState(null);
   const [razon, setRazon] = useState("");
 
   const manejarCambioCosto = (e) => {
@@ -47,7 +47,7 @@ const ModalRechazarPresupuesto = ({ servicio, noTienePresupuesto }) => {
       costo: costo,
       razon: razon,
     };
-
+    
     if (!validarCosto()) {
       toast.error("Por favor agregue un costo válido");
       return;

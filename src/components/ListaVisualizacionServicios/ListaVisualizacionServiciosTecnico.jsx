@@ -323,8 +323,7 @@ const ListaVisualizacionServiciosTecnico = () => {
                         <Button
                           size="xs"
                           disabled={
-                            servicio.estado !== "EnTaller" &&
-                            servicio.estado !== "Presupuestada"
+                            servicio.estado !== "EnTaller"
                           }
                           onClick={() => manejarClickEditarServicio(servicio)}
                         >

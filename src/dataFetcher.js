@@ -46,7 +46,7 @@ async function getOrden(idServicio) {
 
   } catch (error) {
 
-    return error;
+    throw error;
   }
 }
 
@@ -72,8 +72,7 @@ async function getHistoriaClinica(numeroSerie) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-
-    return error;
+    throw error;
   }
 }
 

@@ -56,7 +56,6 @@ const FormularioAltaAdmin = () => {
         navigate('/');
         toast.success("Administrador dado de alta correctamente");
       } catch (error) {
-        console.log('error: ', error);
         toast.error("Error al dar de alta a administrador");
       }
     } else {

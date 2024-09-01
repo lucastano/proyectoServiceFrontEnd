@@ -7,9 +7,6 @@ function PantallaRecuperarContrasena() {
   const mailSesion = useEmailSesion();
   const rolSesion = useRolSesion();
 
-  console.log(mailSesion);
-  console.log(rolSesion);
-
     return (
         <div className="flex ">
           <div className="w-1/4">

@@ -7,11 +7,8 @@ import {
   traerReparacionesPresupuestadasExito,
   traerTecnicosExito,
   altaClienteExito,
-  presupuestarReparacionExito,
-  altaTecnicoExito,
   loginExito,
   logoutExito,
-  aceptarPresupuestoExito,
   traerMensajesExito,
   traerProductosExito,
   crearProductoExito,
@@ -38,7 +35,7 @@ async function cambiarPasswordAdmin(mail, nuevaPassword) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -59,7 +56,7 @@ async function cambiarPasswordTecnico(mail, nuevaPassword) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -130,7 +127,7 @@ async function postProducto(dispatch, producto) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -154,7 +151,7 @@ async function getProductos(dispatch) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -183,7 +180,7 @@ async function getMensajes(dispatch, idServicio) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -240,7 +237,7 @@ async function putServicio(dispatch, servicio) {
       await getReparaciones(dispatch);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 async function putPresupuesto(dispatch, reparacionPresupuestada) {
@@ -270,7 +267,7 @@ async function putPresupuesto(dispatch, reparacionPresupuestada) {
       await getReparaciones(dispatch);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -295,7 +292,7 @@ async function getAdministradores(dispatch) {
       dispatch(traerAdminsExito(datos.administradores));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -320,8 +317,7 @@ async function getClientes(dispatch) {
       dispatch(traerClientesExito(datos.clientes));
     }
   } catch (error) {
-    console.error("Error al obtener clientes:", error);
-    return error;
+    throw error;
   }
 }
 
@@ -346,7 +342,7 @@ async function getClientePorCI(cedula, dispatch) {
       dispatch(traerClienteExito(datos.cliente));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -371,7 +367,7 @@ async function getReparaciones(dispatch) {
       dispatch(traerReparacionesExito(datos.reparaciones));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -395,7 +391,7 @@ async function getReparacionesPorCI(cedula, dispatch) {
       dispatch(traerReparacionesExito(datos));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -420,7 +416,7 @@ async function getReparacionesEnTaller(dispatch) {
       dispatch(traerReparacionesTallerExito(datos));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -445,7 +441,7 @@ async function getReparacionesPresupuestadas(dispatch) {
       dispatch(traerReparacionesPresupuestadasExito(datos));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -470,7 +466,7 @@ async function getTecnicos(dispatch) {
       dispatch(traerTecnicosExito(datos.tecnicos));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -498,7 +494,7 @@ async function postCliente(nuevoCliente, dispatch) {
       dispatch(altaClienteExito(datos));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -525,7 +521,6 @@ async function postReparacion(nuevaReparacion) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const data = await respuesta.json();
-      console.log('llega aca');
 
       if (data.statusCode !== 200) {
         throw new Error("Error al generar la orden");
@@ -554,7 +549,7 @@ async function postReparacion(nuevaReparacion) {
       return blob;
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -572,23 +567,21 @@ async function postPresupuestacionReparacion(reparacion, dispatch) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      id: idReparacion,
+      id: Number(idReparacion),
       manoObra: manoObra,
       descripcion: descripcion,
       fechaPromesaEntrega: fechaPromesaEntrega,
     }),
   };
-
   try {
     const respuesta = await fetch(url, opciones);
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      const datos = await respuesta.json();
-      dispatch(presupuestarReparacionExito(datos));
+      await getReparaciones(dispatch);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -606,15 +599,15 @@ async function postTerminarReparacion(terminoReparacion, dispatch) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    console.log('respuesta: ', respuesta);
+
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       await getReparaciones(dispatch);
     }
   } catch (error) {
-    console.log('error: ', error);
-    return error;
+
+    throw error;
   }
 }
 async function postEntregarReparacion(reparacion) {
@@ -631,12 +624,12 @@ async function postEntregarReparacion(reparacion) {
 
   try {
     const respuesta = await fetch(url, opciones);
-    console.log('respuesta: ', respuesta);
+
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
       const data = await respuesta.json();
-      console.log('data: ', data);
+
       if (data.statusCode !== 200) {
         throw new Error("Error al generar la orden");
       }
@@ -662,8 +655,8 @@ async function postEntregarReparacion(reparacion) {
       return blob;
     }
   } catch (error) {
-    console.log('error: ', error);
-    return error;
+
+    throw error;
   }
 }
 
@@ -688,7 +681,7 @@ async function postAceptarPresupuesto(reparacion, dispatch) {
       await getReparaciones(dispatch);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -715,11 +708,10 @@ async function postFalla(objetoFalla, dispatch) {
     if (!respuesta.ok) {
       throw new Error(`HTTP error! status: ${respuesta.status}`);
     } else {
-      //const datos = await respuesta.json();
       await getFallas(dispatch);
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -743,7 +735,7 @@ async function getFallas(dispatch) {
       dispatch(traerFallasExito(datos));
     }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 

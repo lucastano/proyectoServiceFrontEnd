@@ -132,6 +132,10 @@ const FormularioEditarServicio = ({ servicio }) => {
               color="secondary"
               type="submit"
               onClick={editarServicio}
+              disabled={
+                !(fechaPromesaPresupuesto != servicio.fechaPromesaPresupuesto || numeroSerie != servicio.numeroSerie || descripcion != servicio.descripcion)
+                
+              }
             >
               Modificar servicio
             </Button>

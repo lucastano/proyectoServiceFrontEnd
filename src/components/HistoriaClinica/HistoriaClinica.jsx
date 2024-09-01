@@ -1,31 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Timeline,
   TimelineItem,
   TimelinePoint,
   TimelineContent,
-  Spinner,
 } from "keep-react";
-import { getHistoriaClinica } from "../../dataFetcher";
 import { format } from "date-fns";
 
-function HistoriaClinica({ numeroSerie }) {
-  const [historiaClinica, setHistoriaClinica] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getHistoriaClinica(numeroSerie);
-      setHistoriaClinica(data);
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [numeroSerie]);
-
-  if (isLoading || !historiaClinica) {
-    return <Spinner color="info" size="xl" />;
-  }
+function HistoriaClinica({ numeroSerie, historiaClinica }) {
 
   const {
     cantidadReparacionesRealizadas,

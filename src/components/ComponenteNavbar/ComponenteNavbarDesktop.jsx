@@ -78,7 +78,7 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
               <Link to="/serviciostecnico">
                 <SidebarItem>
                   <ListBullets size={20} />
-                  Servicios - Tecnico
+                  Reparaciones
                 </SidebarItem>
               </Link>
               <Link to="/historiaClinica">
@@ -96,7 +96,7 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
               <Link to="/fallas">
                 <SidebarItem>
                   <ListDashes size={20} />
-                  Ver fallas
+                  Fallas
                 </SidebarItem>
               </Link>
             </>
@@ -133,7 +133,7 @@ const ComponenteNavbarDesktop = ({ rolSesion, emailSesion }) => {
               <Link to="/admins">
                 <SidebarItem>
                   <Users size={20} />
-                  Admins
+                  Administradores
                 </SidebarItem>
               </Link>
             </>

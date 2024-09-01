@@ -49,15 +49,14 @@ const FormularioIngresarPresupuesto = ({ servicio }) => {
     }
     const presupuesto = {
       idReparacion: servicio.id,
-      manoObra: manoDeObra,
+      manoObra: Number(manoDeObra),
       descripcion: descripcion,
       fechaPromesaEntrega: fechaPromesaEntrega,
     };
-
+    
     try {
       setIsLoading(true);
       await postPresupuestacionReparacion(presupuesto, dispatch);
-
       navigate("/serviciostecnico");
       toast.success("Presupuesto ingresado", {
         description: "El presupuesto ha sido ingresado correctamente",

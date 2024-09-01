@@ -103,8 +103,8 @@ const ModalEditarPresupuestoServicio = ({ servicio, disabled }) => {
             <Button
               onClick={editarPresupuesto}
               disabled={
-                costo == servicio.costo &&
-                descripcionPresupuesto == servicio.descripcionPresupuesto
+                !(costo != servicio.costo ||
+                descripcionPresupuesto != servicio.descripcionPresupuesto)
               }
             >
               Editar

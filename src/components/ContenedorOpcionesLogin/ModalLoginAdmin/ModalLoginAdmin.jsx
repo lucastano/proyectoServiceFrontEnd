@@ -49,6 +49,8 @@ export const ModalLoginAdmin = () => {
       toast.success("Login exitoso");
     } catch (error) {
       toast.error("Error al iniciar sesión");
+    } finally {
+      setIsLoading(false);
     }
   };
 
